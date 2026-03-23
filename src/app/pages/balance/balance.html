@@ -1,0 +1,21 @@
+<div class="col-span-12 card">
+    <div class="flex justify-content-between col-12 gap-2 mb-3">
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-lg font-bold m-2">Balance de Actividades</span>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 lg:w-1/1 p-2">
+        <div class="flex flex-col gap-1">
+            <label class="font-semibold">Periodo</label>
+            <p-datepicker view="month" [(ngModel)]="periodo" dateFormat="mm/yy" inputId="yearpicker" [showIcon]="true" size="small" (onSelect)="getBuscar()" appendTo="body"></p-datepicker>
+        </div>
+        
+    </div>
+
+    <div class="p-2">
+        <p-chart type="bar" [data]="data" [options]="options" class="h-[20rem]" />
+    </div>
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

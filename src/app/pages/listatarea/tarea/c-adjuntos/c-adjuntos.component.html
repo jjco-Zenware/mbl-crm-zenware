@@ -1,0 +1,113 @@
+<div  class="flex grid col">
+    <div *ngIf="verAcciones" class="field col-5">
+        <label class="block font-semibold text-blue-600">Descripción</label>
+        <input pInputText type="text" class="mt-1 w-full p-inputtext-sm"[formControl]="descripcion" placeholder="Ingresar Descripción para Adjuntar Archivo..."/>
+    </div>
+    <div *ngIf="verAcciones" class="field mt-6">
+        <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
+            class="text-sm p-inputtext-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" >
+        </p-fileUpload>
+    </div>
+</div>
+
+<!-- <div class="flex justify-content-between col-12 -ml-3">
+    <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
+    class="text-sm" (uploadHandler)="onUpload($event, fubauto)" >
+    </p-fileUpload>
+</div> -->
+
+<p-table #dt1 [value]="listadoArchivos" [rows]="5" [rowHover]="true" responsiveLayout="stack"
+    [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+    [resizableColumns]="true"responsiveLayout="scroll"
+    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" dataKey="id"
+    stateStorage="session" [globalFilterFields]="['title','razonsocial','nomlista','startDate']"
+    styleClass="p-datatable-sm p-datatable-gridlines">
+    <!-- <ng-template pTemplate="caption">
+        <span class="text-900 text-xl font-semibold mt-8">Lista de Archivos</span>
+    </ng-template> -->
+    <ng-template pTemplate="header" let-columns>
+        <tr class="text-sm">
+            <th style="width:5%;" class="bg-teal-50 border-1">
+                <div class="flex justify-content-between align-items-center">
+                    N°
+                </div>
+            </th>
+            <th style="width: 30%;" class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center ">
+                    DESCRIPCIÓN
+                </div>
+            </th>
+            <th style="width: 30%;" class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center ">
+                    NOMBRE
+                </div>
+            </th>
+            <th style="width: 20%;" class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    TIPO
+                </div>
+            </th>
+            <th style="width: 20%;" class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    FECHA
+                </div>
+            </th>
+            <th style="width: 5%;" class="bg-teal-50 border-1">
+                <div class="flex justify-content-between align-items-center">
+                    ACCIONES
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr class="text-sm">
+            <td>
+                {{rowIndex + 1}}
+            </td>
+            <td [pEditableColumn]="data.descripcion | uppercase" pEditableColumnField="descripcion" class="cursor-pointer">
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input pInputText type="text" [(ngModel)]="data.descripcion" required
+                        (blur)="editarRegistro(data)" (keydown.enter)="editarRegistro(data)"/>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ data.descripcion | uppercase }}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <!-- <td>
+                {{data.descripcion | uppercase}}
+            </td> -->
+            <td>
+                {{data.nombreFile | uppercase}}
+            </td>
+            <td>
+                <i class="pi {{data.extensionFile}}" [style.color]="data.colorExtFile"></i>
+            </td>
+            <td>
+                {{data.fechadoc| date: 'dd/MM/yyyy'}}
+            </td>
+            <td>
+                <div class="flex align-items-center m:justify-content-end">
+                    <button *ngIf="verAcciones" pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" (click)="deleteArchivo(data.idmovasset)" 
+                        pTooltip="eliminar" class="p-button-rounded p-button-text -mt-1 text-red-500"></button>
+                    <button pButton pRipple type="button" icon="pi pi-cloud-download" tooltipPosition="left" (click)="download(data)"
+                        pTooltip="Descargar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="7">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="7">Cargando datos. Espere por favor.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog> -->

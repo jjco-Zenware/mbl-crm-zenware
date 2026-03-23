@@ -1,0 +1,11 @@
+:host ::ng-deep {
+     .contenedor {
+  display: flex;
+  justify-content: space-between; // manda uno a cada extremo
+  align-items: center; // opcional: alinea verticalmente
+}
+
+.derecha {
+  margin-left: auto;
+}
+}

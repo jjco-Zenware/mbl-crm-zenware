@@ -1,0 +1,48 @@
+<div [id]="card.id" class="flex flex-col w-full p-3 gap-4 cursor-pointer border-round text-xs border border-slate-300 bg-blue-50">
+    <div class="flex justify-content-between align-items-center">
+        <span class="text-900 font-semibold">{{ card.id + ' - ' + card.title | uppercase}}</span>
+    </div>
+    <span class="text-gray-500 font-semibold">{{ card.razonsocial }}</span>
+
+    <div class="flex flex-col md:flex-row gap-4 md:gap-0">
+        <span class="text-900 font-semibold -mt-3">{{ card.simbmoneda }}</span>
+        <span class="text-900 font-semibold -mt-3 ml-2">{{ card.monto | number: '3.2' }}</span>
+    </div>
+
+    @if (card.description) {
+        <div style="word-break: break-word" class="text-700">
+            {{ card.description.length > 100 ? (card.description.slice(0, 100) + '...' | uppercase) : (card.description | uppercase) }}
+        </div>
+
+        <!-- <div style="word-break: break-word" class="text-700">{{ card.description }}</div> -->
+    }
+
+    @if (card.taskList.tasks.length) {
+        <p-progressBar color="card.bgcolor" class="bg-white" [value]="card.progress" [showValue]="false" [style]="{ height: '.5rem' }"></p-progressBar>
+    }
+
+    <div class="flex contenedor">
+            <p-avatarGroup class="-mt-2">
+                @for (assignee of card.assignees | slice: 0 : 3; track $index) {
+                    <p-avatar image="{{ assignee.image }}" shape="circle"></p-avatar>
+                }
+                @if (card.assignees && card.assignees.length > 3) {
+                    <p-avatar label="+ {{ card.assignees.length - 3 }}" shape="circle"></p-avatar>
+                }
+            </p-avatarGroup>
+
+            @if (card.attachments || card.dueDate) {
+                <div class="flex gap-3">
+                    @if (card.taskList.tasks.length) {
+                        <span class="text-900 font-semibold"><i class="pi pi-check-square mr-2"></i>{{ generateTaskInfo() }}</span>
+                    }
+                    @if (card.attachments) {
+                        <span class="font-semibold "><i class="pi pi-paperclip mr-2"></i>{{ card.nroadjuntos }}</span>
+                    }
+                    @if (card.dueDate) {
+                        <span class="text-green-700 font-semibold"><i class="pi pi-calendar text-green-700 mr-2"></i>{{ parseDate(card.fechacierre ?? '') }}</span>
+                    }
+                </div>
+            }
+    </div>
+</div>

@@ -1,0 +1,167 @@
+<form [formGroup]="frmAccion" class="w-full">
+    <div class="card flex flex-col gap-3 p-fluid">
+        <div class="flex flex-wrap">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <div class="flex">
+                    <label class="block text-900 font-semibold">Prospecto </label>
+                    <i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Cliente" tooltipPosition="right" (click)="NuevoCliente()"></i>
+                </div>
+                <p-select [options]="lstClientes()" formControlName="idcliente" placeholder="Seleccionar..." optionLabel="razonsocial" optionValue="idcliente" 
+                size="small" [filter]="true" [panelStyle]="{ width: '260px' }" appendTo="body"></p-select>
+            </div>
+        </div>
+        <div class="flex flex-wrap">
+            <div class="flex flex-col grow gap-1">
+                <label class="block text-900 font-semibold">Lead</label>
+                <input pInputText type="text" formControlName="title" pSize="small" class="w-auto" [pAutoFocus]="true" />
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <div class="flex">
+                    <label class="block text-900 font-semibold">Descripción del Problema</label>
+                    <i class="pi pi-info-circle text-2xl text-green-500 font-bold" style="margin-left: 10px" pTooltip="¿Situación Actual?, ¿Consecuencia?, ¿Riesgos?" tooltipPosition="right" tooltipStyleClass="tooltip-pro"></i>
+                </div>
+                <textarea rows="3" cols="30" formControlName="description" pTextarea pSize="small"></textarea>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex">
+                <label class="block text-900 font-semibold">Alcance</label>
+
+                <i
+                    class="pi pi-info-circle text-2xl text-green-500 font-bold"
+                    style="margin-left: 10px"
+                    pTooltip="Descripción del modelo de negocio del cliente y definición de los objetivos estratégicos que se pretenden lograr con la implementación de la solución."
+                    tooltipPosition="right"
+                    tooltipStyleClass="tooltip-pro"
+                ></i>
+            </div>
+            <textarea id="justificacion" name="justificacion" type="text" pInputTextarea [rows]="3" formControlName="justificacion" style="resize: none text-500" class="w-full"></textarea>
+        </div>
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="block text-900 font-semibold">Solución (Producto/Servicio)</label>
+            <p-select [options]="lstTipoProducto()" formControlName="idtipoprod" placeholder="Seleccionar..." optionLabel="nomtipoproducto" optionValue="idtipoprod" size="small" [filter]="true"></p-select>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">KAM</label>
+                <p-select [options]="Vendedor()" formControlName="idusuario" placeholder="Seleccionar Vendedor" optionLabel="name" optionValue="idusuario" appendTo="body"></p-select>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Pre-Venta</label>
+                <p-select [options]="Preventa()" formControlName="idpreventa" placeholder="Seleccionar Pre-Venta" optionLabel="name" optionValue="idusuario" appendTo="body"></p-select>
+            </div>
+        </div>
+        
+    </div>
+    <div class="flex flex-wrap gap-2">
+            <button pButton icon="pi pi-save" label="Guardar" class="button-primary w-auto" (click)="onSave()"></button>
+        </div>
+</form>
+<p-toast />
+
+<p-dialog [(visible)]="clienteVisible" [modal]="true" [closable]="true" [closeOnEscape]="false" showEffect="fade" [style]="{ width: '35vw' }" [breakpoints]="{ '960px': '85vw' }">
+    <!-- <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2 text-xl text-blue-500 font-bold"><i class="pi pi-folder-open" style="margin-right: 10px"></i>{{ headerTitle }}</div>
+    </ng-template> -->
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <i class="pi pi-user" style="margin-right: 10px"></i>
+            <span class="font-bold whitespace-nowrap">{{ headerTitle }}</span>
+        </div>
+    </ng-template>
+    <!-- <p-header styleClass="testDialog">
+        <div class="custom-header w-full align-items-center flex gap-2 justify-content-center p-3">
+            <span>{{ headerTitle }}</span>
+        </div>
+    </p-header> -->
+
+    <form [formGroup]="registerFormCliente">
+        <div class="card flex flex-col gap-2 p-fluid">
+            <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Tipo Persona</label>
+                    <p-select [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name" placeholder="Seleccionar Persona" optionValue="code" (onChange)="cambioTipoPer($event.value)" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Nacionalidad</label>
+                    <p-select [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name" placeholder="Seleccionar Nacionalidad" optionValue="code" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Tipo Entidad</label>
+                    <p-select [options]="lstEnti" formControlName="tipoentidad" optionLabel="name" placeholder="Seleccionar Entidad" optionValue="id" size="small"></p-select>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Tipo Documento</label>
+                    <p-select [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar Documento" optionValue="code" (onChange)="cambioTipoDoc($event.value)" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">N° Documento</label>
+                    <input pInputText type="text" formControlName="nrodocumento" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" pSize="small" />
+                </div>
+            </div>
+
+            @if(personaNatural()){
+            <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Paterno</label>
+                    <input pInputText type="text" formControlName="appaterno" size="small" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Materno</label>
+                    <input pInputText type="text" formControlName="apmaterno" size="small" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Nombre</label>
+                    <input pInputText type="text" formControlName="nombres" size="small" />
+                </div>
+            </div>
+
+            } @if(!personaNatural()){
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">Razón Social</label>
+                <input pInputText type="text" formControlName="razonsocial" size="small" />
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Nombre Comercial</label>
+                    <input pInputText type="text" formControlName="nomcomercial" size="small" />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="start" class="font-semibold">Acrónimo<span class="text-red-500 font-bold"> * </span></label>
+                    <input pInputText type="text" formControlName="proyecto_cod" maxlength="8" minlength="3" size="small" />
+                </div>
+            </div>
+
+            }
+
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">Dirección</label>
+                <input pInputText type="text" formControlName="direcresumen" size="small" />
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Telefono</label>
+                    <input pInputText type="text" formControlName="telefresumen" size="small" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Email</label>
+                    <input pInputText type="email" formControlName="email" size="small" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Pagina Web</label>
+                    <input pInputText type="text" formControlName="paginaweb" size="small" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <ng-template #footer>
+        <button pButton pRipple icon="pi pi-check" pTooltip="Guardar" tooltipPosition="bottom" class="button-primary" (click)="guardarCliente()"></button>
+        <button pButton pRipple icon="pi pi-times" class="p-button-outlined" severity="danger" pTooltip="Cancelar" tooltipPosition="bottom"></button>
+    </ng-template>
+</p-dialog>

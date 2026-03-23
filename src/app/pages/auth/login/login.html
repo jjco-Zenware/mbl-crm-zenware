@@ -1,0 +1,28 @@
+<div class="flex items-center justify-center min-h-screen bg-cover" style="background-image: url('/demo/images/logo/fondo_regis_contac.png')">
+    <div class="flex flex-col items-center justify-center">
+        <div class="w-full bg-surface-0 dark:bg-surface-900 py-10 px-10 sm:px-10" style="border-radius: 25px">
+            <div class="text-center mb-4">
+                <div class="flex justify-center">
+                    <img src="/demo/images/logo/logo_color_fon_blanco.png" style="height: 220px" />
+                </div>
+                <div class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-2 -mt-4">Welcome to Zenware!</div>
+                <span class="text-muted-color font-medium">Sign in to continue</span>
+            </div>
+
+            <div>
+                <!-- <span class="p-input-icon-left">
+                                <i class="pi pi-envelope"></i>
+                                <input type="text" class="w-full mb-5" [(ngModel)]="email" pInputText placeholder="Usuario" />
+                            </span> -->
+                <label for="email1" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-1">Email</label>
+                <input pInputText id="email1" type="text" placeholder="Email address" class="w-full mb-2" [(ngModel)]="email" />
+
+                <!-- <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-sm mb-1">Password</label>
+                            <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" Class="mb-4" [fluid]="true" [feedback]="false"></p-password> -->
+
+                <p-button label="Sign In" styleClass="w-full" [loading]="isLoading()" (click)="validaNombreUsuario()"></p-button>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>

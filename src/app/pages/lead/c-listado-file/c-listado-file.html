@@ -1,0 +1,133 @@
+<div class="mt-2"></div>
+
+@if(this.data.idindicador !== 3){
+
+    <p-card>
+    @if(this.data.codtipoproc === 3 || this.data.codtipoproc === 4){
+    <label for="start" class="block text-900 font-semibold">{{nomTarea}}</label>
+    }
+
+    <div class="flex flex-wrap">
+        <div class="flex flex-col grow gap-1">
+            <label>Tipo Documento</label>
+            <p-select [options]="lstTipoDocumento()" [formControl]="tipodoc" optionLabel="valoritem" optionValue="iditem"></p-select>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap">
+        <div class="flex flex-col grow gap-1">
+            <label>Descripción</label>
+            <input pInputText type="text" [formControl]="descripcion" placeholder="Ingresar Descripción..." [pAutoFocus]="true" />
+        </div>
+    </div>
+
+    <div class="field mt-5">
+        <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" (uploadHandler)="onUpload($event, fubauto)" [auto]="true" chooseLabel="Archivo" 
+        chooseIcon="pi pi-file" class="text-sm" [disabled]="disabUpload()"> </p-fileUpload>
+    </div>
+    </p-card>
+
+} @if(this.data.idindicador !== 3){
+<p-divider></p-divider>
+}
+
+<p-card>
+    <p-table
+        #dt1
+        [value]="listadoArchivos()"
+        [rows]="5"
+        [rowHover]="true"
+        [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [resizableColumns]="true"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        dataKey="id"
+        stateStorage="session"
+        [globalFilterFields]="['title','razonsocial','nomlista','startDate']"
+        size="small"
+    >
+        <!-- <ng-template pTemplate="caption">
+            <span class="text-900 text-xl font-semibold mt-8">Lista de Archivos</span>
+        </ng-template> -->
+        <ng-template pTemplate="header" let-columns>
+            <tr class="text-sm">
+                <th style="width: 5%" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">N°</div>
+                </th>
+                <th style="width: 30%" class="surface-200">
+                    <div class="justify-content-between align-items-center">TIPO DOC</div>
+                </th>
+                <th style="width: 30%" class="surface-200">
+                    <div class="justify-content-between align-items-center">DESCRIPCIÓN</div>
+                </th>
+                <th style="width: 30%" class="surface-200">
+                    <div class="justify-content-between align-items-center">NOMBRE</div>
+                </th>
+                <th style="width: 20%" class="surface-200">
+                    <div class="justify-content-between align-items-center">TIPO</div>
+                </th>
+                <th style="width: 20%" class="surface-200">
+                    <div class="justify-content-between align-items-center">FECHA</div>
+                </th>
+                @if(this.data.idindicador !== 3){
+                <th style="width: 5%" class="surface-200">
+                    @if(this.ocultarDiv()){
+                    <div class="flex justify-content-between align-items-center">ACCIONES</div>
+
+                    }
+                </th>
+                }
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>{{rowIndex + 1}}</td>
+                <td>{{data.nomtipodoc | uppercase}}</td>
+                <td [pEditableColumn]="data.descripcion | uppercase" pEditableColumnField="descripcion">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="data.descripcion" required (blur)="editarRegistro(data)" (keydown.enter)="editarRegistro(data)" />
+                        </ng-template>
+                        <ng-template pTemplate="output"> {{ data.descripcion | uppercase }} </ng-template>
+                    </p-cellEditor>
+                </td>
+                <!-- <td>
+                    {{data.descripcion | uppercase}}
+                </td> -->
+                <td>{{data.nombreFile | uppercase}}</td>
+                <td>
+                    <i class="pi {{data.extensionFile}}" [style.color]="data.colorExtFile"></i>
+                </td>
+                <td>{{data.fechadoc| date: 'dd/MM/yyyy'}}</td>
+
+                @if(this.ocultarDiv()){
+                <td>
+                    
+                        <!-- <p-button type="button" icon="pi pi-trash" tooltipPosition="left" pTooltip="eliminar" 
+                        class="p-button-rounded p-button-text -mt-1 text-red-500" (click)="deleteArchivo(data.idmovasset)"></p-button>
+
+                        <p-button type="button" icon="pi pi-cloud-download" tooltipPosition="left" pTooltip="Descargar"
+                         class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="download(data)"></p-button> -->
+                    
+                        <i class="pi pi-trash text-red-600 cursor-pointer" tooltipPosition="bottom" pTooltip="Eliminar" (click)="deleteArchivo(data.idmovasset)"></i>
+                        <i class="pi pi-cloud-download text-green-700 cursor-pointer ml-3" tooltipPosition="bottom" pTooltip="Descargar" (click)="download(data)"></i>
+                </td>
+                }
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="5">Cargando datos. Espere por favor.</td>
+                
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

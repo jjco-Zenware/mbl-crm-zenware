@@ -1,0 +1,167 @@
+<div>
+    <div class="flex justify-between col-12 gap-2 mb-3">
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">INFORMACIÓN GENERAL DE REPORTES</span>
+        </div>
+    </div>
+
+    <form [formGroup]="frmDatos" class="p-fluid grid card">
+        <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
+            <div class="flex flex-col gap-1 grow basis-0">
+                <label class="font-semibold">Vendedor</label>
+                <p-select [options]="Vendedor" formControlName="idvendedor" placeholder="Seleccionar Vendedor" optionLabel="name" optionValue="idusuario" appendTo="body" [filter]="true" size="small"></p-select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold">Año</label>
+                <p-datepicker view="year" dateFormat="yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" size="small" [showOnFocus]="false" [readonlyInput]="true" appendTo="body" [inputStyle]="{ height: '2.5rem' }"> </p-datepicker>
+            </div>
+            <div class="flex flex-col gap-1 grow basis-0">
+                <label class="font-semibold">Quarter</label>
+                <p-multiSelect [options]="lstQ" [(ngModel)]="selectedQ" placeholder="Seleccionar..." optionLabel="desQ" size="small" [ngModelOptions]="{ standalone: true }" />
+            </div>
+            <div class="grow basis-0 mt-5">
+                <button pButton type="button" pTooltip="Consultar" label="Consultar" icon="pi pi-search" class="p-inputtext-sm w-auto" (click)="consultarData()"></button>
+                <button pButton icon="pi pi-file-pdf" class="p-inputtext-sm w-auto p-button-danger ml-2" pTooltip="Reporte por Vendedor" (click)="vistaPreliminar()"></button>
+                <button pButton icon="pi pi-file-pdf" class="w-auto p-button-outlined ml-2 p-button-danger" pTooltip="Reporte General" (click)="vistaPreliminarGen()"></button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card" style="height: 100%">
+        <div class="flex justify-between mb-1">
+            <div class="justify-between flex gap-2">
+                <i class="pi pi-chart-bar text-primary text-lg mt-1"></i>
+                <span class="text-lg font-medium ml-2">Prospección Vendedor</span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 border-top-1 surface-border overflow-auto relative">
+            <p-chart #bar type="bar" [data]="chartMonthlyData" [options]="chartMonthlyOptions" [responsive]="true" height="200px"></p-chart>
+        </div>
+
+        <div class="flex lg:w-1/1 mt-3 justify-between">
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #9c27b0">Lead</span>
+                <span class="mb-2 text-lg">$ {{ totalCloLed() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #673ab7">Pipeline</span>
+                <span class="mb-2 text-lg">$ {{ totalCloPip() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #27eccb">Upside</span>
+                <span class="mb-2 text-lg">$ {{ totalCloUps() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #607d8b">Strong</span>
+                <span class="mb-2 text-lg">$ {{ totalCloStr() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #ff9800">Commit</span>
+                <span class="mb-2 text-lg">$ {{ totalCloCom() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #1ba436">Won</span>
+                <span class="mb-2 text-lg">$ {{ totalCloWon() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                <span class="font-medium text-lg" style="color: #f32905">Lost</span>
+                <span class="mb-2 text-lg">$ {{ totalCloLos() | number: "3.2" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-12 flex justify-between flex-wrap gap-2">
+        <div class="card flex flex-col col-span-3">
+            <div class="justify-between flex gap-2">
+                <span class="text-lg font-medium">Monto a Cerrar en el Año</span>
+                <i class="pi pi-dollar text-lg font-medium text-green-500 mt-1"></i>
+            </div>
+
+            <div class="border-top-1 surface-border mt-2">
+                <p-chart #doughnut type="doughnut" [data]="doughnutData" [options]="doughnutOptions" [responsive]="true" height="200px"></p-chart>
+            </div>
+
+            <div class="border-top-1 surface-border flex contenedor">
+                <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="cargarOportunidades()" pTooltip="Ver Oportunidades Proyectadas">
+                    <span class="font-medium text-blue-500">N° Oportunidades</span>
+                    <span class="text-lg">{{ totOportunidades() }}</span>
+                </div>
+                <div class="text-center p-2 flex flex-col">
+                    <span class="font-medium text-blue-500">Proyectado a Cerrar</span>
+                    <span class="text-lg">U$ {{ totMontoOportunidades() | number: "3.2" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-span-9">
+            <div class="flex mb-3">
+                <div class="flex gap-2">
+                    <i class="pi pi-chart-bar text-primary text-lg mt-1"></i>
+                    <span class="text-lg font-medium ml-2">Cantidad de Oportunidades</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col border-top-1 surface-border">
+                <p-chart #bar type="line" [data]="chartMonthlyData2" [options]="chartMonthlyOptions2" [responsive]="true" height="200px"></p-chart>
+            </div>
+
+            <div class="border-top-1 surface-border flex">
+                <div class="text-center p-1 flex surface-border cursor-pointer" pTooltip="Ver Oportunidades Nuevas" (click)="cargarOportunidadesNuevas()">
+                    <span class="font-medium text-blue-500 text-1xl">Total Oportunidades :</span>
+                    <span class="text-1xl">{{ totopormes() }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="flex flex-wrap gap-4">
+        <div class="flex flex-col gap-2">
+             <div class="flex justify-between mb-3">
+                <div class="justify-between flex gap-2">
+                    <span class="text-lg font-medium">Monto a Cerrar en el Año</span>
+                    <i class="pi pi-dollar text-lg font-medium text-green-500"></i>
+                </div>
+            </div>
+            <div class="border-top-1 surface-border mt-2">
+                <p-chart #doughnut type="doughnut" [data]="doughnutData" [options]="doughnutOptions" [responsive]="true" height="200px"></p-chart>
+            </div>
+
+            <div class="border-top-1 surface-border flex contenedor">
+                <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="cargarOportunidades()" pTooltip="Ver Oportunidades Proyectadas">
+                    <span class="font-medium text-blue-500">N° Oportunidades</span>
+                    <span class="text-lg">{{ totOportunidades }}</span>
+                </div>
+                <div class="text-center p-2 flex flex-col">
+                    <span class="font-medium text-blue-500">Proyectado a Cerrar</span>
+                    <span class="text-lg">U$ {{ totMontoOportunidades | number: "3.2" }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <div class="flex justify-between mb-3">
+                <div class="justify-between flex gap-2">
+                    <i class="pi pi-chart-bar text-primary text-lg"></i>
+                    <span class="text-lg font-medium ml-2">Cantidad de Oportunidades</span>
+                </div>
+            </div>
+
+            <div class="flex align-items-center justify-between">
+                <div class="border-top-1 surface-border col-12">
+                    <p-chart #bar type="line" [data]="chartMonthlyData2" [options]="chartMonthlyOptions2" [responsive]="true" height="200px"></p-chart>
+                </div>
+            </div>
+
+            <div class="border-top-1 surface-border flex justify-between mt-3 align-end">
+                <div class="w-4 text-center p-1 flex flex-col surface-border cursor-pointer" pTooltip="Ver Oportunidades Nuevas" (click)="cargarOportunidadesNuevas()">
+                    <span class="font-medium text-green-500 text-1xl">Total Oportunidades</span>
+                    <span class="text-1xl">{{ totopormes }}</span>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+
+<p-confirmDialog [style]="{ width: '30vw' }" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>
+<p-toast></p-toast>

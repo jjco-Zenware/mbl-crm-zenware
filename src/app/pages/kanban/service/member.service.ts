@@ -1,0 +1,33 @@
+import { Member } from '@/app/types/member';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Contacto } from '../../model/interfaces';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class MemberService {
+
+    constructor(private http: HttpClient) { }
+
+    getMembers() {
+        return this.http.get<any>('assets/demo/data/members.json')
+            .toPromise()
+            .then(res => res.data as Member[])
+            .then(data => data);
+    }
+
+    getContactos() {
+        return this.http.get<any>('assets/demo/data/contac.json')
+            .toPromise()
+            .then(res => res.data as Contacto[])
+            .then(data => data);
+    }
+
+    getClientes() {
+        return this.http.get<any>('assets/demo/data/clientes.json')
+            .toPromise()
+            .then(res => res.data as Member[])
+            .then(data => data);
+    }
+}

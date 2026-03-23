@@ -1,0 +1,32 @@
+<div class="p-fluid col-12 p-2 m-2">
+    <div class="flex mb-1">
+        <i class="pi pi-comments text-green-600"></i>
+        <label class="block text-900 font-semibold text-blue-600 ml-2">Comentarios de la Tarea</label>
+    </div>
+    <div class="flex mb-4">
+        <!-- <p-avatar icon="pi pi-user" class="mr-3" shape="circle" size="large"></p-avatar> -->
+        <textarea type="text" pInputTextarea name="comment" [(ngModel)]="comentario" style="resize: none" class="w-full"
+            placeholder="Escribir un comentario..." (keydown.enter)="onComment($event)"></textarea>
+    </div>
+
+    <div *ngFor="let comment of comentarios" class="flex align-items-center border-round mt-2">
+        <p-avatar *ngIf="comment.image" image="{{ comment.image }}" class="mb-1 m-1" shape="circle"
+            size="large"></p-avatar>
+
+        <div class="w-full">
+            <div class="flex justify-content-between mb-2">
+                <span class="block text-900">{{ comment.name }}</span>
+                <span class="block text-700">{{ comment.fecreg }}</span>
+            </div>
+            <div class="flex justify-content-between mb-2">
+                <span class="w-full text-900 border-1 surface-border p-2 border-round surface-ground">{{
+                    comment?.comentario }}</span>
+                <button pRipple pButton type="button" icon="pi pi-trash text-red-700" pTooltip="Eliminar Comentario"
+                    tooltipPosition="left" class="p-button-rounded p-button-text"
+                    (click)="delComentario(comment)"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

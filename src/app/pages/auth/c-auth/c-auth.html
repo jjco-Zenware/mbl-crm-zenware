@@ -1,0 +1,38 @@
+<!-- <div class="h-screen flex flex-column bg-cover" style="background: url('assets/layout/images/pages/fondo_regis_contac.png')">
+    <div class="align-self-center mt-auto mb-auto">
+        <div class="text-center z-5 flex flex-column border-1 border-round-md surface-border surface-card p-3">
+            <div>
+                <img class="h-17rem" src="assets/layout/images/logo_color_fon_blanco.png" />
+            </div>
+            <div class="text-color-secondary mb-3 px-7 -mt-5">Ingrese su usuario de acceso, por favor!</div>
+            @if(visibleNombre()){
+            <app-c-auth-usuario (OB_pass)="getPasoPass($event)" (OS_nombreUser)="getUsuario($event)" />
+            } @if(!visibleNombre()){
+            <app-c-auth-clave [IS_nombreUser]="nombreUsuario" />
+            }
+        </div>
+    </div>
+</div> -->
+
+<div class="flex items-center justify-center min-h-screen bg-cover" style="background-image: url('/demo/images/logo/fondo_regis_contac.png')">
+    <div class="flex flex-col items-center justify-center">
+        <div class="w-full bg-surface-0 dark:bg-surface-900 py-10 px-10 sm:px-10" style="border-radius: 25px">
+            <div class="text-center mb-4">
+                <div class="flex justify-center">
+                    <img src="/demo/images/logo/logo_color_fon_blanco.png" style="height: 220px" />
+                </div>
+                <div class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-2 -mt-4">Welcome to Zenware!</div>
+                <span class="text-muted-color font-medium">Sign in to continue</span>
+            </div>
+
+            <div>
+                 @if(!visibleNombre()){
+            <app-c-auth-usuario (OB_pass)="getPasoPass($event)" (OS_nombreUser)="getUsuario($event)" />
+            } @if(visibleNombre()){
+            <app-c-auth-clave [IS_nombreUser]="nombreUsuario" />
+            }
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>

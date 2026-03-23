@@ -1,0 +1,36 @@
+
+
+
+    <form [formGroup]="registerFormRegistro" class="p-fluid grid p-2 m-1 gap-3" > 
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="text-blue-600 font-semibold"> <i class="pi pi-folder-open" style="margin-right: 10px"></i> Oportunidad :</label>
+            <span>{{ registerFormRegistro.get('oportunidad')?.value }}</span>
+        </div>   
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="text-blue-600 font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>Cliente :</label>
+            <span>{{ registerFormRegistro.get('cliente')?.value }}</span>
+        </div>   
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="text-blue-600 font-semibold"> <i class="pi pi-calendar" style="margin-right: 10px"></i>Fecha :</label>
+            <div>
+                <!-- <span> Del </span> -->
+                <span>{{ registerFormRegistro.get('fechaini')?.value }}</span>
+                <!-- <span> al </span>
+                <span>{{ registerFormRegistro.get('fin')?.value }}</span>
+                <span> Desde </span>
+                <span>{{ registerFormRegistro.get('horaini')?.value }}</span>
+                <span> Hasta </span>
+                <span>{{ registerFormRegistro.get('horafin')?.value }}</span> -->
+            </div>
+        </div> 
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="text-blue-600 font-semibold"> <i class="pi pi-cog" style="margin-right: 10px"></i>Plan de Acción :</label>
+            <span>{{ registerFormRegistro.get('desplan')?.value }}</span>
+        </div>  
+        <div class="flex flex-col grow basis-0 gap-1">
+            <label class="text-blue-600 font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>Account Manager:</label>
+            <span>{{ registerFormRegistro.get('nomusuario')?.value }}</span>
+        </div>    
+           
+    </form>
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

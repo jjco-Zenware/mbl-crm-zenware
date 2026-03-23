@@ -1,0 +1,25 @@
+::ng-deep .testDialog {
+    .p-dialog-header{
+        background:#0288d1;
+        height: 3.5rem;
+        color: white;
+
+      .p-dialog-header-icons{
+        .p-dialog-header-icon{
+            color: white;
+        }
+      }
+    }
+  }
+
+
+.custom-marker {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    border-radius: 50%;
+    z-index: 1;
+}

@@ -1,0 +1,220 @@
+<!-- <div class="col-span-12 card">
+    <div class="align-items-center flex">
+        <div class="text-4xl">👋</div>
+        <div>
+            <span class="flex text-2xl font-semibold">Hola, {{ nomUsuario }}!</span>
+            <span class="flex font-bold text-primary">{{ nomPerfil }}</span>
+        </div>
+    </div>
+    <div class="gap-4 p-2">
+        <div class="card flex flex-col h-[2rem]">
+            <div class="flex flex-wrap gap-4">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>Estado</label>
+                    <p-multiSelect [options]="events" size="small" [(ngModel)]="selectedEstados" optionLabel="title" placeholder="Seleccionar..." />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label>Quarter</label>
+                    <p-multiSelect [options]="lstQ" size="small" [(ngModel)]="selectedQ" placeholder="Seleccionar..." optionLabel="desQ" />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label>Prob. Cierre %</label>
+                    <p-inputNumber [(ngModel)]="porcierre" locale="es-PE" mode="decimal" name="por_cierre" [min]="0" [max]="100" size="small"></p-inputNumber>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label>Monto</label>
+                    <p-select [options]="lstDesMontos" [(ngModel)]="idmonto" id="idmonto" placeholder="Seleccionar..." optionLabel="desmonto" optionValue="id" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>Producto/Servicio</label>
+                    <p-select [options]="lstTipoProducto" [(ngModel)]="idtipoprod" size="small" placeholder="Seleccionar..." optionLabel="nomtipoproducto" filter="true" [ngModelOptions]="{ standalone: true }" optionValue="idtipoprod"></p-select>
+                </div>
+            </div>
+        </div>
+        <div class="card flex flex-col h-[2rem] mt-4">
+            <div class="flex flex-wrap gap-4">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>Cliente</label>
+                    <p-select [options]="Clientes" [(ngModel)]="idcliente" id="idcliente" placeholder="Seleccionar..." optionLabel="nomcomercial" [ngModelOptions]="{ standalone: true }" optionValue="idcliente" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>Sector</label>
+                    <p-select [options]="lstEnti" [(ngModel)]="tipoentidad" id="tipoentidad" optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="id" placeholder="Seleccionar..." size="small"></p-select>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label>Año</label>
+                    <p-datepicker [(ngModel)]="annio" view="year" dateFormat="yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>Vendedor</label>
+                    <p-select [options]="Vendedor" [(ngModel)]="idvendedor" id="idvendedor" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label>PreVenta</label>
+                    <p-select [options]="Preventa" [(ngModel)]="idpreventa" id="idpreventa" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-10"></div>
+
+    <div class="card flex gap-2">
+        <div class="md:w-1/2">
+            <p-chart type="bar" [data]="data2" [options]="options2" class="h-[25rem]" />
+        </div>
+        <div class="md:w-1/2">
+            <p-chart type="bar" [data]="data" [options]="options" class="h-[25rem]" />
+        </div>
+    </div>
+</div>
+
+   
+ <div class="md:w-1/1">
+<p-table
+        [value]="listaTareas"
+        [tableStyle]="{'min-width': '50rem'}"
+        [showCurrentPageReport]="true"
+        [resizablecols]="true"
+        size="small"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 20px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="width: 100px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        ESTADO
+                    </div>
+                </th>
+                <th style="width: 70px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        AVANCE
+                    </div>
+                </th>
+                <th style="width: 70px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        CANTIDAD
+                    </div>
+                </th>
+                <th style="width: 70px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        MONTO
+                    </div>
+                </th>
+                <th style="width: 120px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-between align-items-center">
+                        PONDERADO
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr>
+                <td>{{rowIndex + 1}}</td>
+                <td>{{data.fechaini}}</td>
+                <td>{{ data.nomlista}}</td>
+                <td>{{data.oportunidad }}</td>
+                <td>{{data.id}}</td>
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="11">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="11">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+             -->
+
+@if(verDashboard()){
+<div class="grid grid-cols-12 gap-1">
+    <div class="flex align-items-center col-span-12 md:col-span-8 p-3">
+        <div class="text-4xl">👋</div>
+        <div class="flex flex-col gap-1 text-600">
+            <span class="text-2xl font-semibold">Hola,<span class="text-primary"> {{nomUsuario}}!</span></span>
+            <span class="font-bold text-primary">{{nomPerfil}}</span>
+        </div>
+    </div>
+    <div class="card col-span-12 m-4">
+        <div class="flex flex-wrap gap-2 col-span-12 md:col-span-12">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>Estado</label>
+                <p-multiSelect [options]="events()" size="small" [(ngModel)]="selectedEstados" optionLabel="title" placeholder="Seleccionar..." />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label>Quarter</label>
+                <p-multiSelect [options]="lstQ" size="small" [(ngModel)]="selectedQ" placeholder="Seleccionar..." optionLabel="desQ" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label>Prob. Cierre %</label>
+                <p-inputNumber [(ngModel)]="porcierre" locale="es-PE" mode="decimal" name="por_cierre" [min]="0" [max]="100" size="small"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label>Monto</label>
+                <p-select [options]="lstDesMontos" [(ngModel)]="idmonto" id="idmonto" placeholder="Seleccionar..." optionLabel="desmonto" optionValue="id" size="small"></p-select>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>Producto/Servicio</label>
+                <p-select [options]="lstTipoProducto()" [(ngModel)]="idtipoprod" size="small" placeholder="Seleccionar..." optionLabel="nomtipoproducto" filter="true" [ngModelOptions]="{ standalone: true }" optionValue="idtipoprod"></p-select>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2 col-span-12 md:col-span-12 mt-3">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>Cliente</label>
+                <p-select [options]="Clientes()" [(ngModel)]="idcliente" id="idcliente" placeholder="Seleccionar..." optionLabel="nomcomercial" [ngModelOptions]="{ standalone: true }" optionValue="idcliente" size="small" [filter]="true"></p-select>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>Sector</label>
+                <p-select [options]="lstEnti()" [(ngModel)]="tipoentidad" id="tipoentidad" optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="id" placeholder="Seleccionar..." size="small"></p-select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label>Año</label>
+                <p-datepicker [(ngModel)]="annio" view="year" dateFormat="yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>Vendedor</label>
+                <p-select [options]="Vendedor()" [(ngModel)]="idvendedor" id="idvendedor" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label>PreVenta</label>
+                <p-select [options]="Preventa()" [(ngModel)]="idpreventa" id="idpreventa" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+            </div>
+            <div class="flex flex-col mt-1">
+                <button pButton type="button" (click)="consultarData2()" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-3 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 col-span-12 md:col-span-12">
+        <div class="grid grid-cols-12 flex flex-col justify-between m-2">
+            <div class="col-span-12 md:col-span-12">
+                <app-c-dist-oportunidad [IS_codigo]="0" [IA_data]="dataCT" />
+            </div>
+            <div class="col-span-12 md:col-span-12">
+                <p-divider />
+            </div>
+            <div class="col-span-12 md:col-span-12">
+                <app-c-lst-oportunidad (OB_back)="getOportunidadKanban($event)" [IA_data]="dataCT" />
+            </div>
+        </div>
+    </div>
+</div>
+
+} @if(visQuote()){
+<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)" />
+} @if(visBussines()){
+<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)" />
+} @if(blockedDocumentk()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-toast />
+
+<p-confirmdialog />

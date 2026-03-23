@@ -1,0 +1,337 @@
+<div class="card">
+    <form [formGroup]="frmDatosCot">
+        <!-- <div class="flex grid col-12 -mt-2 field h-4rem">
+            <div class="col-6 sm:col-12 lg:col-3 md:col-12">
+                <label class="font-semibold">N° Cot Proveedor</label>
+                <input pInputText type="text" placeholder="N° de Cotización de Proveedor" class="mt-1" formControlName="nrodocumentoadd" />
+            </div>
+            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end">
+                <label class="block text-900 font-semibold">Fecha</label>
+                <span class="p-input-icon-left w-auto mt-1" style="height: 3.5rem">
+                    <p-datepicker formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer" appendTo="body"></p-datepicker>
+                </span>
+            </div>
+            <div class="sm:col-12 lg:col-4 md:col-12"></div>
+            <div class="col-6 sm:col-12 lg:col-2 md:col-12">
+                <label class="font-semibold">N° Cotización</label>
+                <input pInputText type="text" class="mt-1 font-semibold" formControlName="idcotiza" />
+            </div>
+        </div>
+        <div class="flex grid col-12 h-5rem">
+            <div class="col-6 sm:col-6 lg:col-6 md:col-6">
+                <div class="flex">
+                    <label class="block text-900 font-semibold mb-3">Proveedor</label>
+                    <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px" pTooltip="Nuevo Proveedor" tooltipPosition="right" (click)="NuevoProveedor();"></i>
+                </div>
+                <div class="-mt-1">
+                    <p-select [options]="lstProveedores()" placeholder="Seleccionar Proveedor" formControlName="idproveedor" optionLabel="razonsocial" optionValue="idcliente" (onChange)="getContactos2($event.value)"></p-select>
+                </div>
+            </div>
+            <div class="col-6 sm:col-6 lg:col-3 md:col-3 mt-1">
+                <label class="block text-900 font-semibold">Moneda</label>
+                <div class="mt-2">
+                    <p-select [options]="lstMonedas()" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"></p-select>
+                </div>
+            </div>
+        </div>
+        <div class="flex grid col-12 mt-3">
+            <div class="col-12 sm:col-12 lg:col-9 md:col-12">
+                <label class="font-semibold">Condiciones Comerciales</label>
+                <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="3" style="resize: none" class="w-full mt-1"></textarea>
+            </div>
+        </div> -->
+        <div class="flex flex-wrap gap-3 lg:w-1/1 mb-1">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">N° Cotización</label>
+                <input pInputText type="text" formControlName="idcotiza" pSize="small" />
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">N° Cot Proveedor</label>
+                <input pInputText type="text" placeholder="N° de Cotización de Proveedor" formControlName="nrodocumentoadd" pSize="small" />
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">Fecha</label>
+                <p-datepicker formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer" appendTo="body" size="small"></p-datepicker>
+            </div>
+
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
+                <div class="flex flex-col gap-1">
+                    <label class="font-semibold">Moneda</label>
+                    <p-select [options]="lstMonedas()" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda" size="small"></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    
+                     <div class="flex">
+                        <label class="font-semibold">Proveedor</label>
+                        <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px" pTooltip="Nuevo Proveedor" tooltipPosition="right" (click)="NuevoProveedor();"></i>
+                    </div>
+                    <p-select [options]="lstProveedores()" placeholder="Seleccionar Proveedor" formControlName="idproveedor" optionLabel="razonsocial" optionValue="idcliente" 
+                    size="small" [filter]="true" (onChange)="getContactos2($event.value)"></p-select>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Condiciones Comerciales</label>
+                    <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="3" style="resize: none" class="w-full mt-1" size="small"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="flex flex-wrap gap-3 lg:w-1/1">
+        <div class="flex flex-col grow basis-0 gap-1">
+            <div class="flex">
+                <label class="font-semibold mb-3">Contactos Proveedor</label>
+                 <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event);"></i>
+            </div>
+            <p-autoComplete
+                name="contacs"
+                [(ngModel)]="asignadosContacto"
+                [suggestions]="filteredContac()"
+                (completeMethod)="filterContac($event)"
+                [multiple]="true"
+                [showEmptyMessage]="true"
+                emptyMessage="No se han encontrado resultados"
+                placeholder="Elegir Contactos"
+                [inputStyle]="{'height': '2.5rem'}"
+                [dropdown]="true"
+            >
+                <ng-template let-contac pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-3 border-round">
+                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" (click)="op2.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer" />
+                        <span class="text-900">{{contac.nombrecontacto}}</span>
+                        <p-popover #op2>
+                            <div>
+                                <div class="flex">
+                                    <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" class="h-3rem w-3rem border-2 border-circle surface-border mr-2" />
+                                    <div>
+                                        <span class="text-900 font-semibold">{{contac.nombrecontacto}}</span>
+                                        <br />
+                                        <span>{{contac.cargo}}</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="flex align-items-center text-900">
+                                    <i class="pi pi-phone font-semibold" style="left: 3.5rem; margin-left: 15px"></i>
+                                    <span style="margin-left: 10px">{{contac.telefono}}</span>
+                                </div>
+                                <br />
+                                <div class="flex align-items-center text-900">
+                                    <i class="pi pi-envelope font-semibold" style="left: 1.5rem; margin-left: 15px"></i>
+                                    <span style="margin-left: 10px">{{contac.email}}</span>
+                                </div>
+                                <br /><br />
+                                <div class="flex justify-content-end">
+                                    <i class="pi pi-pencil cursor-pointer" pTooltip="Editar Contacto" tooltipPosition="left" (click)="op2.hide(); changeHeaderTitle(2, contac);"></i>
+                                </div>
+                            </div>
+                        </p-popover>
+                    </div>
+                </ng-template>
+                <ng-template let-contac pTemplate="item">
+                    <div class="flex align-items-center border-round">
+                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" class="h-2rem w-2rem border-2 border-circle surface-border mr-2" />
+                        <span class="text-900">{{contac.nombrecontacto}}</span>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+        </div>
+    </div>
+</div>
+
+<div class="p-fluid p-3 p-card mt-3 mb-1">
+    <p-tabs lazy value="0">
+        <p-tablist>
+            <p-tab value="0">Items</p-tab>
+            <p-tab value="1">Documentos</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel value="0">
+                <div class="flex align-items-center mt-3 ml-2">
+                    <!-- <span class="font-semibold text-900 text-lg">Lista de Items</span> -->
+                    <button pButton class="font-semibold p-button-outlined w-auto" pTooltip="Agregar Nuevo Item" icon="pi pi-folder" label="Nuevo" (click)="getItem([],0)"></button>
+
+                    <!-- <i class="pi pi-plus-circle cursor-pointer text-blue-600" style="margin-left: 20px;" pTooltip="Nueva Item" (click)="getItem([],0)" tooltipPosition="right" ></i> -->
+                    <!-- <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" (uploadHandler)="ReadExcel($event, fubauto)" [auto]="true" chooseIcon="pi pi-cloud-download" class="text-sm ml-3" pTooltip="Importar Archivo">
+                    </p-fileUpload> -->
+                </div>
+                <p-table [value]="lstCotizacionItem()" class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="surface-200">Producto</th>
+                            <th class="surface-200">Marca</th>
+                            <th class="surface-200">Descripción</th>
+                            <th class="surface-200">Cant</th>
+                            <th class="surface-200">c/u</th>
+                            <th class="surface-200">Total</th>
+                            <th class="surface-200"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr>
+                            <td>{{ product.nomtipoprod }}</td>
+                            <td>{{ product.nommarca }}</td>
+                            <td>{{ product.descripcion }}</td>
+                            <td>{{ product.cantidad }}</td>
+                            <td>{{ product.preciocosto | number: '0.2'}}</td>
+                            <td>{{ product.preciocostototal | number: '0.2'}}</td>
+                            <td>
+                                <div class="flex justify-content-end">
+                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="1" class="text-right">Total:</td>
+                            <td>{{montoTotal | number: '0.2'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabpanel>
+
+            <p-tabpanel value="1">
+                <app-c-listado-file [I_CodCotiza]="idCotiza" [I_Quote]="i_valor" />
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>
+
+<div class="flex justify-end flex-wrap mt-3">
+    <div class="flex">
+        <button pButton icon="pi pi-save" label="Grabar" (click)="grabarCotizacion()" class="p-button-primary"></button>
+    </div>
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-confirmDialog header="Confirmation" key="confirm3" [style]="{width: '450px'}" acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+
+
+
+<p-dialog [(visible)]="proveedorVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '45vw'}" [breakpoints]="{'960px': '85vw'}">
+    <p-header> <i class="pi pi-user" style="margin-right: 10px"></i> {{ headerTitle }} </p-header>
+
+    <form [formGroup]="registerFormCliente" (ngSubmit)="guardarProveedor()">
+        <div class="p-fluid py-4 border-1 border-round surface-border mb-3 bg-blue-50">
+            <div class="flex -mt-2 h-7rem">
+                <div class="col-6 field">
+                    <label class="font-semibold">Tipo Persona</label>
+                    <p-select [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name" placeholder="Seleccionar Persona" optionValue="code" (onChange)="cambioTipoPer($event.value)"></p-select>
+                </div>
+                <div class="col-6 field">
+                    <label class="font-semibold">Nacionalidad</label>
+                    <p-select [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name" placeholder="Seleccionar Nacionalidad" optionValue="code"></p-select>
+                </div>
+            </div>
+            <div class="flex h-7rem">
+                <div class="col-6 field">
+                    <label class="font-semibold">Tipo Documento</label>
+                    <p-select [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar Documento" optionValue="code" (onChange)="cambioTipoDoc($event.value)"></p-select>
+                </div>
+                <div class="col-6 field">
+                    <label class="font-semibold">N° Documento</label>
+                    <input pInputText type="text" formControlName="nrodocumento" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                </div>
+            </div>
+            <ng-container *ngIf="personaNatural ; else mostrarjuridico">
+                <div class="flex h-7rem">
+                    <div class="col-4 field">
+                        <label for="start" class="font-semibold">Paterno</label>
+                        <input pInputText type="text" formControlName="appaterno" />
+                    </div>
+                    <div class="col-4 field">
+                        <label for="start" class="font-semibold">Materno</label>
+                        <input pInputText type="text" formControlName="apmaterno" />
+                    </div>
+                    <div class="col-4 field">
+                        <label for="start" class="font-semibold">Nombre</label>
+                        <input pInputText type="text" formControlName="nombres" />
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-template #mostrarjuridico>
+                <div class="flex h-7rem">
+                    <div class="col-6 field">
+                        <label for="start" class="font-semibold">Razón Social</label>
+                        <input pInputText type="text" formControlName="razonsocial" />
+                    </div>
+                    <div class="col-6 field">
+                        <label for="start" class="font-semibold">Nombre Comercial</label>
+                        <input pInputText type="text" formControlName="nomcomercial" />
+                    </div>
+                </div>
+            </ng-template>
+            <div class="flex h-6rem">
+                <div class="col-8 field">
+                    <label for="start" class="font-semibold">Dirección</label>
+                    <input pInputText type="text" formControlName="direcresumen" />
+                </div>
+                <div class="col-4 field">
+                    <label for="start" class="font-semibold">Telefono</label>
+                    <input pInputText type="text" formControlName="telefresumen" />
+                </div>
+            </div>
+            <div class="flex h-7rem">
+                <div class="col-6 field">
+                    <label for="start" class="font-semibold">Email</label>
+                    <input pInputText type="email" formControlName="email" />
+                    <!-- <small class="p-error" *ngIf="submitted && !cliente.email">Email es requerido.</small> -->
+                </div>
+                <div class="col-6 field">
+                    <label for="start" class="font-semibold">Pagina Web</label>
+                    <input pInputText type="text" formControlName="paginaweb" />
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-content-end">
+            <button pButton icon="pi pi-save" label="Grabar" type="submit" class="p-button-primary"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog [(visible)]="contactoVisible" [modal]="true" [closeOnEscape]="false" [style]="{width: '20vw'}" >
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <i class="pi pi-user" style="margin-right: 10px"></i>
+            <span class="font-bold whitespace-nowrap">{{ headerTitle }}</span>
+        </div>
+    </ng-template>   
+
+    <form [formGroup]="registerFormContacto" (ngSubmit)="guardarContacto()">
+        <div class="p-fluid py-4 border-1 surface-border mb-3 bg-blue-50 p-3 border-round mt-2">
+            <span [hidden]="true"> {{ IdContacto }} </span>
+            <div class="mb-3 field">
+                <label class="font-semibold">Nombre</label>
+                <input pInputText type="text" formControlName="nombrecontacto" id="nombrecontacto" />
+            </div>
+            <div class="mb-3 field">
+                <label for="email" class="font-semibold">Email</label>
+                <input pInputText type="email" formControlName="email" id="email" class="bg-white" />
+            </div>
+            <div class="mb-3 field">
+                <label htmlFor="cel1" class="font-semibold">Celular</label>
+                <input pInputText type="text" formControlName="telefono" id="telefono" class="bg-white" />
+            </div>
+            <div class="mb-3 field">
+                <label htmlFor="age1" class="font-semibold">Cargo</label>
+                <input pInputText id="age1" type="text" formControlName="cargo" id="cargo" />
+            </div>
+            <div class="mb-3 field">
+                <label class="font-semibold">Rol</label>
+                <p-select appendto="body" [options]="lstTipoRol()" optionLabel="valoritem" optionValue="iditem" formControlName="tiporol" placeholder="Seleccionar Rol"></p-select>
+            </div>
+        </div>
+        <div class="flex justify-content-end">
+            <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
+        </div>
+    </form>
+
+</p-dialog>

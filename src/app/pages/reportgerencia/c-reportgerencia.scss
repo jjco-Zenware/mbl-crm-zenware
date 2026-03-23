@@ -1,0 +1,29 @@
+.column-adaptable {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.column-adaptable span {
+    display: inline-block;
+    background-color: lightblue;
+    padding: 2px;
+}
+
+.customProgress .ui-progressbar .ui-progressbar-label {
+    color: yellow;
+}
+
+.customProgress .ui-progressbar .ui-progressbar-value {
+    background: red;
+}
+
+::ng-deep .fonthead {
+    background:#0288d1;
+    color: #ffffff;
+  }
+
+  .contenedor {
+  display: flex;
+  justify-content: space-between; // manda uno a cada extremo
+  align-items: center; // opcional: alinea verticalmente
+}

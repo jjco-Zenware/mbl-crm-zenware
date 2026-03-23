@@ -1,0 +1,42 @@
+<form [formGroup]="frmAccion" class="w-full">
+    <div class="card flex flex-col gap-3 p-fluid">
+        <div class="flex flex-col">
+            <label class="font-semibold">Oportunidad </label>
+            <span>{{ frmAccion.get('nomoportunidad')?.value | uppercase }}</span>
+        </div>
+        <p-divider align="left" type="solid"><b>Ultima Acción</b></p-divider>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Fecha </label>
+                <p-datepicker dateFormat="dd/mm/yy" formControlName="fecplan_ant" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Prioridad </label>
+                <p-select [options]="lstPrioridad()" formControlName="idprioridad_ant" optionLabel="valoritem" optionValue="iditem" size="small" />
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <label class="font-semibold">Acción </label>
+            <textarea pInputText type="text" formControlName="desplan_ant" size="small" class="w-auto"></textarea>
+        </div>
+        <p-divider align="left" type="solid"><b>Siguiente Acción</b></p-divider>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Fecha </label>
+                <p-datepicker dateFormat="dd/mm/yy" formControlName="fecplan" inputId="yearpicker" [showIcon]="true" size="small" appendTo="body"></p-datepicker>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Prioridad </label>
+                <p-select [options]="lstPrioridad()" formControlName="idprioridad" optionLabel="valoritem" optionValue="iditem" size="small" appendTo="body" [pAutoFocus]="true"></p-select>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <label class="font-semibold">Acción </label>
+            <textarea pInputText type="text" formControlName="desplan" size="small" class="w-auto" [pAutoFocus]="true"></textarea>
+        </div>
+        <div>
+            <button pButton pRipple icon="pi pi-save" label="Guardar" class="button-primary w-auto" (click)="prcPlanAccion()"></button>
+        </div>
+    </div>
+</form>
+<p-toast />

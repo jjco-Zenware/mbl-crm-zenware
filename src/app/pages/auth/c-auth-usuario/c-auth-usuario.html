@@ -1,0 +1,15 @@
+<div class="flex flex-col gap-3" (keydown.enter)="validaNombreUsuario()">
+    <!-- <span class="p-input-icon-left">
+        <i class="pi pi-envelope"></i>
+        <input type="text" class="w-full" [formControl]="loginUser" [autofocus]="true" pInputText placeholder="Usuario" />
+    </span> -->
+
+     <p-icon-field>
+        <p-inputicon class="pi pi-envelope" />
+        <input type="text" class="w-full" [formControl]="loginUser"  [autofocus]="true" pInputText placeholder="Usuario" />
+    </p-icon-field>
+
+    <button pButton pRipple class="w-full my-3 px-3" label="Sign in"
+        [loading]="isLoading()" (click)="validaNombreUsuario()"></button>
+</div>
+<p-toast></p-toast>

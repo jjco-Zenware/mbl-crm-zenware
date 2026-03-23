@@ -1,0 +1,716 @@
+<div class="card">
+    <form [formGroup]="registerFormRegistro">
+        <div class="card flex flex-col gap-4 grid grid-cols-12">
+            <div class="col-span-7 flex flex-wrap gap-2">
+                <div class="flex flex-col gap-1">
+                    <label class="text-900 font-semibold">N° Oport.</label>
+                    <input type="text" pInputText formControlName="idoportunidad" rows="2" class="surface-100 p-inputtext-sm" readonly="true" style="text-transform: uppercase" />
+                </div>
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Oportunidad</label>
+                    <input type="text" pInputText formControlName="oportunidad" rows="2" class="surface-100 p-inputtext-sm" readonly="true" style="text-transform: uppercase" />
+                </div>
+            </div>
+            <div class="col-span-5 flex flex-wrap gap-2"></div>
+            <div class="flex flex-wrap gap-2 col-span-7">
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Descripción Detallada</label>
+                    <textarea type="text" pInputText formControlName="detoportunidad" rows="2" class="surface-100 p-inputtext-sm" readonly="true" style="text-transform: uppercase"></textarea>
+                </div>
+            </div>
+            <div class="col-span-5 flex flex-wrap gap-2"></div>
+            <div class="flex flex-wrap gap-2 col-span-7">
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Cliente</label>
+                    <input type="text" pInputText formControlName="cliente" rows="2" class="surface-100 p-inputtext-sm" readonly="true" style="text-transform: uppercase" />
+                </div>
+                <div class="flex flex-col gap-1 grow basis-0">
+                    @if(verPreventa()){
+                    <label class="text-900 font-semibold">Gestión PreVenta</label>
+                    } @if(verComercial()){
+                    <label class="text-900 font-semibold">Gestión Comercial</label>
+                    }
+                    <input type="text" pInputText formControlName="descripcion" rows="2" class="surface-100 p-inputtext-sm" readonly="true" style="text-transform: uppercase" />
+                </div>
+            </div>
+            <div class="col-span-5 flex flex-wrap gap-2"></div>
+            <div class="flex flex-wrap gap-2 col-span-7">
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Fecha Inicio</label>
+                    <input type="text" pInputText formControlName="fechaini" sise="small" readonly="true" />
+                </div>
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Fecha Fin</label>
+                    <input type="text" pInputText formControlName="fechafin" sise="small" readonly="true" />
+                </div>
+                <div class="flex flex-col gap-1 grow basis-0">
+                    @if(verPreventa()){
+                    <label class="text-900 font-semibold">Responsable</label>
+                    <p-select [options]="assignees()" formControlName="idresponsabletar" sise="small" optionLabel="name" optionValue="idasignado" appendTo="body" [filter]="true" (onChange)="prcTreaResponsable($event.value)"></p-select>
+                    }
+                </div>
+            </div>
+            <div class="col-span-5 flex flex-wrap gap-2"></div>
+            <div class="flex flex-wrap gap-2 col-span-7">
+                <div class="flex flex-col gap-1 grow basis-0">
+                    <label class="text-900 font-semibold">Progreso - <span class="text-900 font-semibold">{{registerFormRegistro.value.progreso}}%</span></label>
+                    <p-progressBar color="card.bgcolor" class="bg-white" [value]="registerFormRegistro.value.progreso" [showValue]="false" [style]="{ height: '.5rem' }"></p-progressBar>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if(verPreventa()){
+<p-tabs lazy value="0">
+    <p-tablist>
+        <p-tab value="0">Etapas y Tareas</p-tab>
+        <p-tab value="1">Resumen</p-tab>
+        <p-tab value="2">Gantt</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            <p-table
+                #dt1
+                [value]="lstSubTareas()"
+                [showCurrentPageReport]="true"
+                selectionMode="single"
+                [expandedRowKeys]="expandedRows"
+                sortField="idtarea_acti"
+                sortMode="single"
+                dataKey="idtarea_acti"
+                rowGroupMode="subheader"
+                groupRowsBy="idtarea_acti"
+                size="small"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="flex m-2 gap-2">
+                        <button pButton pRipple type="button" icon="pi pi-plus" label="AGREGAR ETAPA" class="h-2rem w-auto p-button-outlined text-xs" (click)="agregarTarea([],1)"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 40px" class="bg-teal-50 border-1">
+                            <div class="flex justify-between align-items-center">Sel</div>
+                        </th>
+                        <!-- <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1"></th> -->
+                        <th style="width: 250px" class="bg-teal-50 border-1" colspan="2">Tareas en Proceso</th>
+                        <th style="width: 120px" class="bg-teal-50 border-1">Responsable</th>
+                        <th class="bg-teal-50 border-1">Estado</th>
+                        <th style="width: 80px" class="bg-teal-50 border-1">
+                            Fecha <br />
+                            Inicio
+                        </th>
+                        <!-- <th style="width: 80px;" class="bg-teal-50 border-1">
+                                    Hora. Inicio
+                                </th>                -->
+                        <th style="width: 80px" class="bg-teal-50 border-1">
+                            Fecha <br />
+                            Límite
+                        </th>
+                        <!-- <th style="width: 80px;" class="bg-teal-50 border-1">
+                                    Hora. Final
+                                </th>                  -->
+                        <th style="width: 80px" class="bg-teal-50 border-1">Fecha<br />Finalización</th>
+                        <th style="width: 50px" class="bg-teal-50 border-1">
+                            Días <br />
+                            (Atraso)
+                        </th>
+                        <th style="width: 100px; align-items: center" class="bg-teal-50 border-1">Avance %</th>
+                        <th style="width: 130px; align-items: center" class="bg-teal-50 border-1">Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="groupheader" let-data let-rowIndex="rowIndex" let-expanded="expanded">
+                    <tr>
+                        <td colspan="9">
+                            <div class="justify-start flex align-items-center">
+                                <!-- <button type="button" pButton pRipple [pRowToggler]="data" class="p-button-text p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button> -->
+                                <span class="ml-2 text-blue-600 text-lg font-semibold">{{data.destarea_acti | uppercase}}</span>
+
+                                <i class="pi pi-plus ml-4 text-blue-400 text-xs cursor-pointer font-bold" pTooltip="Agregar Tareas" (click)="agregarTarea(data, 0)"></i>
+                                <i class="pi pi-question ml-3 text-blue-400 text-xs cursor-pointer font-bold" pTooltip="Información de Ayuda" (click)="mostrarAyuda(data)"></i>
+
+                                <!-- <button pButton pRipple type="button" icon="pi pi-plus text-xs m-1" tooltipPosition="top" pTooltip="Agregar Tareas"
+                                            class="ml-3 text-white h-2rem w-auto" (click)="agregarTarea(data, 0)" ></button>
+                                         <button pButton pRipple type="button" icon="pi pi-question" tooltipPosition="top" pTooltip="Información de Ayuda"
+                                            class="ml-3 text-white h-2rem w-auto" (click)="mostrarAyuda(data)"></button>             -->
+                            </div>
+                        </td>
+                        <td colspan="1">
+                            <div class="-mt-1 flex flex-column">
+                                <!-- <span>{{data.porcentaje}}%</span> -->
+                                <div *ngIf="data.porcentaje < 100">
+                                    <p-progressBar [value]="data.porcentaje" [showValue]="true" [style]="{'height':'20px'}" />
+                                </div>
+                                <div *ngIf="data.porcentaje === 100">
+                                    <p-progressBar [value]="data.porcentaje" [showValue]="true" [styleClass]="'custom-progress'" [style]="{'height':'20px'}" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                    <tr>
+                        <td>
+                            <input type="checkbox" [(ngModel)]="data.completo" [ngModelOptions]="{standalone: true}" style="width: 15px; height: 15px; cursor: pointer" (ngModelChange)="editarRegistro(data,1)" />
+                        </td>
+                        <td>{{rowIndex + 1}}</td>
+                        <td [pEditableColumn]="data.descripcion" pEditableColumnField="descripcion" class="cursor-pointer">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="data.descripcion" required (blur)="editarRegistro(data,1)" (keydown.enter)="editarRegistro(data,1)" />
+                                </ng-template>
+                                <ng-template pTemplate="output"> {{ data.descripcion }} </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td>
+                            <div class="flex gap-1 align-items-center">
+                                <i class="pi pi-user-plus text-green-500 cursor-pointer font-bold mr-3" tooltipPosition="top" pTooltip="Asignar Responsable" style="margin-left: 8px; font-size: 1rem" (click)="asignarTarea(data)"></i>
+                                <div [ngStyle]="{'width':'100px', 'text-align':'left'}">{{ data.nomasignado }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <p-tag [style]="{'width':'100%','border-radius': '0'}" [value]="data.estado_s" [severity]="getSeverity(data.estado_s)"></p-tag>
+                        </td>
+                        <td [pEditableColumn]="data.fechaini" pEditableColumnField="fechaini" class="cursor-pointer">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <p-datepicker
+                                        dateFormat="dd/mm/yy"
+                                        [showIcon]="true"
+                                        [(ngModel)]="data.fechaini"
+                                        [showOnFocus]="false"
+                                        [readonlyInput]="true"
+                                        appendTo="body"
+                                        [inputStyle]="{'height':'2.5rem'}"
+                                        class="p-inputtext-sm"
+                                        (onSelect)="editarRegistro(data,1)"
+                                        [minDate]="minimaFechaDesde"
+                                        [maxDate]="maximaFechaHasta"
+                                    >
+                                    </p-datepicker>
+                                </ng-template>
+                                <ng-template pTemplate="output"> {{ data.fechaini }} </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <!-- <td [pEditableColumn]="data.horaini" pEditableColumnField="horaini" class="cursor-pointer"> 
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input type="time" [(ngModel)]="data.horaini" (keydown.enter)="editarRegistro(data,1)" (blur)="editarRegistro(data,1)"/>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ data.horaini }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td> -->
+                        <td [pEditableColumn]="data.fechafin" pEditableColumnField="fechafin" class="cursor-pointer">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <p-datepicker
+                                        dateFormat="dd/mm/yy"
+                                        [showIcon]="true"
+                                        [(ngModel)]="data.fechafin"
+                                        [showOnFocus]="true"
+                                        [readonlyInput]="true"
+                                        appendTo="body"
+                                        [inputStyle]="{'height':'2.5rem'}"
+                                        class="p-inputtext-sm"
+                                        (onSelect)="editarRegistro(data,1)"
+                                        [readonlyInput]="true"
+                                        [minDate]="minimaFechaDesde"
+                                        [maxDate]="maximaFechaHasta"
+                                    >
+                                    </p-datepicker>
+                                </ng-template>
+                                <ng-template pTemplate="output"> {{ data.fechafin }} </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <!-- <td [pEditableColumn]="data.horafin" pEditableColumnField="horafin" class="cursor-pointer"> 
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input type="time" [(ngModel)]="data.horafin" (keydown.enter)="editarRegistro(data,1)" (blur)="editarRegistro(data,1)"/>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ data.horafin }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td> -->
+                        <!-- <td [pEditableColumn]="data.fechanvafin" pEditableColumnField="fechanvafin" class="cursor-pointer"> 
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-datepicker dateFormat="dd/mm/yy" [showIcon]="true" [(ngModel)]="data.fechanvafin" [showOnFocus]="true"
+                                                [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm"
+                                                (onSelect)="editarRegistro(data,1)" [readonlyInput]="true">
+                                            </p-datepicker> 
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ data.fechanvafin }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>    -->
+                        <td>{{ data.fechanvafin }}</td>
+                        <td>{{data.dias_vencidos}}</td>
+
+                        <td>
+                            @if(!data.completo){
+                            <div class="-mt-1">
+                                <p-progressBar [value]="data.porcentaje" [showValue]="false" [style]="{'height':'10px'}" />
+                            </div>
+                            }
+
+                            <div *ngIf="data.completo" class="-mt-1">
+                                <p-progressBar [value]="100" [showValue]="false" [styleClass]="'custom-progress'" [style]="{'height':'10px'}" />
+                            </div>
+                        </td>
+                        <td class="gap-2">
+                            <i class="pi pi-trash text-red-600 cursor-pointer" tooltipPosition="bottom" pTooltip="Eliminar" style="margin-left: 8px; font-size: 1rem" (click)="eliminarRegistro(data)"></i>
+                            <i class="pi pi-comments text-green-600 ml-4 cursor-pointer" tooltipPosition="bottom" pTooltip="Comentarios" style="margin-left: 8px; font-size: 1rem" severity="success" (click)="agregarComentario(data)"></i>
+                            <i class="pi pi-paperclip text-blue-600 ml-4 cursor-pointer" tooltipPosition="bottom" pTooltip="Anexos" style="margin-left: 8px; font-size: 1rem" (click)="anexos(data, 'B')"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="8">No se encontró resultados</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="8">Leyendo data. Por favor espere.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-tabpanel>
+
+        <p-tabpanel value="1">
+            <p-table
+                #dt1
+                [value]="lstSubTareas()"
+                [showCurrentPageReport]="true"
+                selectionMode="single"
+                [expandedRowKeys]="expandedRows"
+                scrollHeight="400px"
+                sortField="idtarea_acti"
+                sortMode="single"
+                dataKey="idtarea_acti"
+                rowGroupMode="subheader"
+                groupRowsBy="idtarea_acti"
+                size="small"
+            >
+                <!--  -->
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 300px" class="bg-teal-50 border-1">Nombre de la Etapa</th>
+                        <th style="width: 100px; align-items: center" class="bg-teal-50 border-1">Fec. Inicio</th>
+                        <th style="width: 100px; align-items: center" class="bg-teal-50 border-1">Fec. Final</th>
+                        <th style="width: 50px; align-items: center" class="bg-teal-50 border-1">Días</th>
+                        <th style="width: 100px; align-items: center" class="bg-teal-50 border-1">Avance %</th>
+                        <th style="width: 80px; align-items: center" class="bg-teal-50 border-1"># Tareas</th>
+                        <th style="width: 70px; align-items: center" class="bg-teal-50 border-1">Gantt</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="groupheader" let-data let-rowIndex="rowIndex">
+                    <tr>
+                        <td colspan="1">
+                            <div class="justify-start flex align-items-center">
+                                <span class="ml-2 text-lg">{{data.destarea_acti | uppercase}}</span>
+                            </div>
+                        </td>
+                        <td colspan="1">
+                            <div class="-mt-1 flex flex-column">
+                                <span>{{data.fechaini}}</span>
+                            </div>
+                        </td>
+                        <td colspan="1">
+                            <div class="-mt-1 flex flex-column">
+                                <span>{{data.fechafinal}}</span>
+                            </div>
+                        </td>
+                        <!-- <td>{{mayorDiaFinal(data.idetapa)}}</td> -->
+                        <td>{{data.duracion}}</td>
+                        <td colspan="1">
+                            <div class="-mt-1">
+                                <span>{{data.porcentaje}}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{ 'text-align': 'right' }">{{data.tot_tareas}}</div>
+                        </td>
+                        <td colspan="1">
+                            <div class="-mt-1">
+                                <p-progressBar [value]="data.porcentaje" [showValue]="false" [style]="{'height':'15px'}" />
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="5" class="font-bold">
+                            <div [ngStyle]="{ 'text-align': 'right' }" class="font-bold">Totales:</div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{ 'text-align': 'right' }" class="font-bold">{{ sumtareas }}</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-tabpanel>
+
+        <p-tabpanel value="2">
+            <p-table [value]="lstSubTareas()" dataKey="idtarea_acti" rowGroupMode="subheader" groupRowsBy="idtarea_acti" [scrollable]="true" size="small">
+                <ng-template pTemplate="caption">
+                    <div class="flex m-2 gap-2">
+                        <button pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="bg-teal-50 border-1" style="width: 300px" pFrozenColumn>Tareas en Proceso</th>
+                        @for (dia of dias; track $index) {
+                        <th class="bg-teal-50 border-1">{{ dia | date:'dd/MM' }}</th>
+                        }
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="groupheader" let-data>
+                    <tr>
+                        <td colspan="1" pFrozenColumn>
+                            <div class="justify-start flex align-items-center">
+                                <span class="font-bold">{{data.destarea_acti | uppercase}}</span>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-tarea let-rowIndex="rowIndex">
+                    <tr>
+                        <td pFrozenColumn class="text-lg">
+                            <!-- <div [ngStyle]="{'width':'300px'}" class="ml-4" >
+                                {{(tarea.descripcion.length > 50) ? ((tarea.descripcion).slice(0, 50) + '...' ) :   tarea.descripcion }}
+                            </div> -->
+                            <div pTooltip="{{tarea.descripcion}}" [ngStyle]="{'width':'300px'}" class="ml-4">{{(tarea.descripcion.length > 50) ? ((tarea.descripcion).slice(0, 50) + '...' ) : tarea.descripcion }}</div>
+                        </td>
+                        @for (dia of dias; track $index) {
+                        <td [ngStyle]="getEstiloCelda(tarea, dia)" pTooltip="{{ dia | date:'dd/MM/yyyy' }}"></td>
+                        }
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-tabpanel>
+    </p-tabpanels>
+</p-tabs>
+} @if(verComercial()){
+<p-tabs lazy value="0">
+    <p-tablist>
+        <p-tab value="0">Actividades</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-table
+            #dt1
+            [value]="lstSubTareas()"
+            [showCurrentPageReport]="true"
+            selectionMode="single"
+            class="p-fluid grid col-12 border-1 border-round surface-border m-2"
+            scrollHeight="400px"
+            sortField="idtarea_acti"
+            sortMode="single"
+            dataKey="idtarea_acti"
+            rowGroupMode="subheader"
+            groupRowsBy="idtarea_acti"
+            size="small"
+        >
+            <!-- rowGroupMode="subheader" groupRowsBy="descripcion" -->
+            <ng-template pTemplate="caption">
+                <div class="flex m-2">
+                    <!-- <span class="font-semibold text-blue-500">Actividades</span> -->
+                    <button pButton pRipple type="button" icon="pi pi-plus" label="Agregar" class="p-button-primary w-auto" (click)="agregarEtapa()"></button>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 40px" class="bg-teal-50 border-1">
+                        <div class="flex justify-between align-items-center">N°</div>
+                    </th>
+                    <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">Completo</th>
+                    <th style="width: 250px" class="bg-teal-50 border-1">Descripción</th>
+                    <th style="width: 100px" class="bg-teal-50 border-1">Fec. Inicio</th>
+                    <th style="width: 100px" class="bg-teal-50 border-1">Hora. Inicio</th>
+                    <th style="width: 100px" class="bg-teal-50 border-1">Fec. Final</th>
+                    <th style="width: 100px" class="bg-teal-50 border-1">Hora. Final</th>
+                    <th class="bg-teal-50 border-1">Estado</th>
+                    <th style="width: 100px; align-items: center" class="bg-teal-50 border-1">Acciones</th>
+                </tr>
+            </ng-template>
+            <!-- <ng-template pTemplate="groupheader" let-data let-rowIndex="rowIndex" let-expanded="expanded">
+                            <tr>
+                                <td colspan="10">
+                                    <div class="justify-start flex align-items-center">
+                                        <button type="button" pButton pRipple [pRowToggler]="data" class="p-button-text p-button-rounded p-button-plain mr-2 " [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                                        
+                                        <span class="font-bold ml-2 text-blue-600 text-lg">{{data.destarea_acti | uppercase}}</span>
+                                        <button pButton pRipple type="button" icon="pi pi-plus font-bold" 
+                                        tooltipPosition="bottom" pTooltip="Agregar Tareas"
+                                        class="ml-3 w-auto p-button-success" (click)="agregarTarea(data, 0)"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template> -->
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{rowIndex + 1}}</td>
+                    <td>
+                        <input type="checkbox" [(ngModel)]="data.completo" [ngModelOptions]="{standalone: true}" style="width: 15px; height: 15px; cursor: pointer" (ngModelChange)="editarRegistro(data,1)" />
+                    </td>
+                    <td [pEditableColumn]="data.descripcion | uppercase" pEditableColumnField="descripcion" class="cursor-pointer">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="data.descripcion" required (blur)="editarRegistro(data,1)" (keydown.enter)="editarRegistro(data,1)" />
+                            </ng-template>
+                            <ng-template pTemplate="output"> {{ data.descripcion | uppercase }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="data.fechaini" pEditableColumnField="fechaini" class="cursor-pointer">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-datepicker
+                                    dateFormat="dd/mm/yy"
+                                    [showIcon]="true"
+                                    [(ngModel)]="data.fechaini"
+                                    [showOnFocus]="false"
+                                    [readonlyInput]="true"
+                                    appendTo="body"
+                                    [inputStyle]="{'height':'2.5rem'}"
+                                    class="p-inputtext-sm"
+                                    (onSelect)="editarRegistro(data,1)"
+                                >
+                                </p-datepicker>
+                            </ng-template>
+                            <ng-template pTemplate="output"> {{ data.fechaini }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="data.horaini" pEditableColumnField="horaini" class="cursor-pointer">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input type="time" [(ngModel)]="data.horaini" (keydown.enter)="editarRegistro(data,1)" (blur)="editarRegistro(data,1)" />
+                            </ng-template>
+                            <ng-template pTemplate="output"> {{ data.horaini }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="data.fechafin" pEditableColumnField="fechafin" class="cursor-pointer">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-datepicker
+                                    dateFormat="dd/mm/yy"
+                                    [showIcon]="true"
+                                    [(ngModel)]="data.fechafin"
+                                    [showOnFocus]="true"
+                                    [readonlyInput]="true"
+                                    appendTo="body"
+                                    [inputStyle]="{'height':'2.5rem'}"
+                                    class="p-inputtext-sm"
+                                    (onSelect)="editarRegistro(data,1)"
+                                    [readonlyInput]="true"
+                                >
+                                </p-datepicker>
+                            </ng-template>
+                            <ng-template pTemplate="output"> {{ data.fechafin }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="data.horafin" pEditableColumnField="horafin" class="cursor-pointer">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input type="time" [(ngModel)]="data.horafin" (keydown.enter)="editarRegistro(data,1)" (blur)="editarRegistro(data,1)" />
+                            </ng-template>
+                            <ng-template pTemplate="output"> {{ data.horafin }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-tag [style]="{'width':'100%'}" [value]="data.estado_s" [severity]="getSeverity(data.estado_s)"></p-tag>
+                    </td>
+                    <td class="gap-2">
+                        <i class="pi pi-trash text-red-600 cursor-pointer" tooltipPosition="bottom" pTooltip="Eliminar" style="margin-left: 8px; font-size: 1rem" (click)="eliminarRegistro(data)"></i>
+                        <i class="pi pi-comments text-green-600 ml-4 cursor-pointer" tooltipPosition="bottom" pTooltip="Comentarios" style="margin-left: 8px; font-size: 1rem" severity="success" (click)="agregarComentario(data)"></i>
+                        <i class="pi pi-paperclip text-blue-600 ml-4 cursor-pointer" tooltipPosition="bottom" pTooltip="Anexos" style="margin-left: 8px; font-size: 1rem" (click)="anexos(data, 'B')"></i>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontró resultados</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="8">Leyendo data. Por favor espere.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabpanels>
+</p-tabs>
+} @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-toast />
+
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}" acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+
+<p-dialog [(visible)]="asignadosTareaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{ width: '30vw' }" [breakpoints]="{ '960px': '85vw' }">
+    <!-- <p-header styleClass="testDialog">
+        <i class="pi pi-users" style="margin-right: 15px"></i>
+        {{ headerTitle }}
+    </p-header> -->
+    <ng-template #header>
+        <div class="testDialog items-center justify-center gap-2">
+            <i class="pi pi-user" style="margin-right: 10px"></i>
+            <span class="font-bold whitespace-nowrap">{{ headerTitle }}</span>
+        </div>
+    </ng-template>
+
+    <div class="m-2 flex-col gap-4 grid-cols-12">
+        <div class="col-span-12 mt-2 mb-4">
+            <span class="text-lg">{{ headerTarea }}</span>
+        </div>
+        <div class="flex flex-col gap-4 mb-4">
+            
+            <p-autoComplete
+                name="assignees"
+                [(ngModel)]="asignadosTareas"
+                appendTo="body"
+                [suggestions]="filteredAsignadosTareas()"
+                (completeMethod)="filterAsignadoTarea($event)"
+                field="name"
+                [multiple]="true"
+                [showEmptyMessage]="true"
+                emptyMessage="No se han encontrado resultados"
+                placeholder="Elegir Asignados"
+                [inputStyle]="{ height: '2.5rem' }"
+                [dropdown]="true"
+            >
+                <ng-template let-assignee pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-3 border-round">
+                        <p-avatar image="{{ assignee.image }}" shape="circle" (click)="op1.toggle($event)" class="cursor-pointer"></p-avatar>
+                        <span class="text-900">{{ assignee.name }}</span>
+                        <p-popover #op1>
+                            <div class="flex">
+                                <p-avatar image="{{ assignee.image }}" shape="circle"></p-avatar>
+                                <div style="margin-left: 10px">
+                                    <span class="text-900 font-semibold">{{ assignee.name }}</span>
+                                    <br />
+                                    <span>Gerente Financiero</span>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="flex align-items-center text-900">
+                                <i class="pi pi-phone font-semibold" style="left: 3.5rem; margin-left: 15px"></i>
+                                <span style="margin-left: 10px">993 050 988</span>
+                            </div>
+                            <br />
+                            <div class="flex align-items-center text-900">
+                                <i class="pi pi-envelope font-semibold" style="left: 1.5rem; margin-left: 15px"></i>
+                                <span style="margin-left: 10px">democorreo&#64;mail.com</span>
+                            </div>
+                            <br />
+                        </p-popover>
+                    </div>
+                </ng-template>
+                <ng-template let-assignee pTemplate="item">
+                    <div class="flex align-items-center border-round">
+                        <p-avatar image="{{ assignee.image }}" shape="circle"></p-avatar>
+                        <span class="text-900">{{ assignee.name }}</span>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+
+            
+        </div>
+
+            <div class="flex justify-end">
+        <button pButton icon="pi pi-save" (click)="aceptarAsignado()" class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button>
+    </div>
+    </div>
+</p-dialog>
+
+<p-dialog [header]="tituloAyuda" [modal]="true" [(visible)]="verayuda" [style]="{ width: '35rem' }" [position]="'top'">
+    <!-- <h6 *ngIf="this.idEtapa === 1" class="m-2">1. ETAPA DE DESCUBRIMIENTO</h6> -->
+    <div *ngIf="this.idEtapa === 1" class="m-2 font-semibold">
+        <span>Objetivo: Comprender el entorno del cliente, sus necesidades y objetivos<br /></span>
+    </div>
+    <div *ngIf="this.idEtapa === 1" class="m-2 font-semibold text-blue-500">
+        <span>Tareas Sugeridas:<br /></span>
+    </div>
+    <div *ngIf="this.idEtapa === 1">
+        <p class="text-grey-400 ml-3 text-sm">
+            1· Reunión inicial con el cliente agendada y realizada<br />
+            2· Stakeholders técnicos y de negocio identificados<br />
+            3· Objetivos del negocio y del proyecto entendidos<br />
+            4· Requerimientos funcionales levantados (¿qué quiere lograr el cliente?)<br />
+            5· Requerimientos no funcionales identificados (seguridad, disponibilidad, rendimiento)<br />
+            6· Restricciones identificadas (presupuesto, tiempo, tecnologías, normativas)<br />
+            7· Inventario de la infraestructura y sistemas actuales solicitado o recibido<br />
+            8· Revisión de documentación técnica del cliente (si la hay)<br />
+            9· Registro en CRM u otra plataforma completado
+        </p>
+    </div>
+
+    <!-- <h6 *ngIf="this.idEtapa === 2" class="m-2">2. ETAPA DE ANÁLISIS</h6> -->
+    <div *ngIf="this.idEtapa === 2" class="m-2 font-semibold">
+        <span>Objetivo: Evaluar la situación actual, identificar brechas y definir criterios de diseño</span>
+    </div>
+    <div *ngIf="this.idEtapa === 2" class="m-2 font-semibold text-blue-500">
+        <span>Tareas Sugeridas:<br /></span>
+    </div>
+    <div *ngIf="this.idEtapa === 2">
+        <p class="text-grey-400 ml-3 text-sm">
+            1· Arquitectura actual (AS-IS) comprendida y documentada<br />
+            2· Diagrama de sistemas y flujos actuales elaborado (si no lo tiene el cliente)<br />
+            3· Identificación de dependencias técnicas y de negocio<br />
+            4· Identificación de sistemas legados o incompatibles<br />
+            5· Análisis de brechas entre el estado actual y los requerimientos (gap analysis)<br />
+            6· Riesgos técnicos identificados y documentados<br />
+            7· Estimación preliminar de recursos y costos validada<br />
+            8· Validación del análisis con el cliente (alineación técnica)
+        </p>
+    </div>
+
+    <!-- <h6 *ngIf="this.idEtapa === 3" class="m-2">3. ETAPA DE DISEÑO</h6> -->
+    <div *ngIf="this.idEtapa === 3" class="m-2 font-semibold">
+        <span>Objetivo: Definir la solución técnica que cubre los requerimientos, mitigando riesgos</span>
+    </div>
+    <div *ngIf="this.idEtapa === 3" class="m-2 font-semibold text-blue-500">
+        <span>Tareas Sugeridas:<br /></span>
+    </div>
+    <div *ngIf="this.idEtapa === 3">
+        <p class="text-grey-400 ml-3 text-sm">
+            1· Arquitectura propuesta (TO-BE) diseñada y documentada<br />
+            o Diagrama lógico<br />
+            o Diagrama físico<br />
+            o Flujos de datos y servicios<br />
+            2· Tecnología y herramientas seleccionadas y justificadas<br />
+            3· Consideraciones de seguridad integradas (acceso, cifrado, cumplimiento)<br />
+            4· Diseño pensando en escalabilidad y resiliencia<br />
+            5· Definición de integraciones (APIs, middleware, conectores, etc.)<br />
+            6· Dimensionamiento de infraestructura (cómputo, red, almacenamiento)<br />
+            7· Estimación detallada de recursos y costos (CAPEX/OPEX)<br />
+            8· Definición de entregables, alcance y exclusiones técnicas<br />
+            9· Documento de propuesta técnica redactado<br />
+            10· Cronograma tentativo de implementación propuesto<br />
+            11· Validación técnica interna (revisión con arquitectura, infraestructura, etc.)
+        </p>
+    </div>
+
+    <!-- <h6 *ngIf="this.idEtapa === 4" class="m-2">4. ETAPA DE CIERRE TÉCNICO</h6> -->
+    <div *ngIf="this.idEtapa === 4" class="m-2 font-semibold">
+        <span>Objetivo: Obtener aprobación técnica y preparar la transición al equipo de delivery</span>
+    </div>
+    <div *ngIf="this.idEtapa === 4" class="m-2 font-semibold text-blue-500">
+        <span>Tareas Sugeridas:<br /></span>
+    </div>
+    <div *ngIf="this.idEtapa == 4">
+        <p class="text-grey-400 ml-3 text-sm">
+            1· Presentación técnica de la solución al cliente realizada<br />
+            2· Feedback técnico del cliente recopilado y atendido<br />
+            3· Ajustes finales a la propuesta incorporados (si aplica)<br />
+            4· Prueba de concepto (PoC) planificada o ejecutada (si requerida)<br />
+            5· Documentación final aprobada por el cliente<br />
+            6· Traspaso técnico al equipo de delivery planificado y ejecutado<br />
+            7· Kick-off de proyecto preparado (si la venta se concreta)<br />
+            8· Lecciones aprendidas registradas (para mejora continua del proceso preventa)
+        </p>
+    </div>
+</p-dialog>

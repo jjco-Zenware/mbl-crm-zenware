@@ -1,0 +1,30 @@
+:host ::ng-deep {
+    .custom-marker {
+        display: flex;
+        width: 1.5rem;
+        height: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        border-radius: 50%;
+        z-index: 1;
+        margin: 4px;
+    }
+
+    .empty {
+        height: 100px;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .kanban-column {
+        width: 230px;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 0px;
+        min-height: 500px;
+    }
+
+   
+}

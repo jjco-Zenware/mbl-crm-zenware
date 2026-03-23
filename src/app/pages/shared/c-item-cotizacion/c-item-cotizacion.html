@@ -1,0 +1,87 @@
+<div class="p-fluid py-0 border-1 surface-border border-round bg-blue-50 col-12 mt-2">
+
+    <form [formGroup]="frmDatosItem">
+            <div class="flex grid col-12 h-7rem">
+                <div class="col-12 sm:col-12 lg:col-7 md:col-12">
+                    <label class="block text-900 font-semibold">Producto</label>
+                    <p-select [options]="lstTipoProducto()" formControlName="idtipoprod" optionLabel="nomtipoprod"
+                        optionValue="idtipoprod" placeholder="Seleccionar Producto"></p-select>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-5 md:col-12">
+                    <!-- <label class="block text-900 font-semibold">Marca</label> -->
+                    <div class="flex">
+                        <label class="block text-900 font-semibold">Marca</label>
+                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
+                            tooltipPosition="right" (click)="NuevaMarca();"></i>
+                    </div>
+                    <p-select [options]="lstMarcas()" formControlName="idmarca" optionLabel="nommarca"
+                        optionValue="idmarca" placeholder="Seleccionar Marca"></p-select>
+                </div>
+            </div>
+            <div class="flex grid col-12 ">
+                <div class="col-12 sm:col-12 lg:col-12 md:col-12">
+                    <label class="font-semibold">Descripción</label>
+                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="3"
+                        style="resize: none" class="w-full mt-1"></textarea>
+                </div>
+            </div>
+            <div class="flex grid col-12 h-7rem ">
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
+                    <label class="font-semibold">N° Serie</label>
+                    <input pInputText type="text" formControlName="serialnumber"/>
+                </div>
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
+                    <label class="font-semibold">SKU</label>
+                    <input pInputText type="text" formControlName="sku"/>
+                </div>
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
+                    <label class="font-semibold">N° Contrato</label>
+                    <input pInputText type="text" formControlName="nrocontrato"/>
+                </div>
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
+                    <label class="font-semibold">N° Meses</label>
+                    <input pInputText type="text" formControlName="nromeses"/>
+                </div>
+            </div>
+            <div class="flex grid col-12 h-7rem ">
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
+                    <label class="font-semibold">Cantidad</label>
+                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad"></p-inputNumber>
+                </div>
+                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
+                    <label class="font-semibold">Precio Unitario</label>
+                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                </div>
+                <div class="col-4 sm:col-12 lg:col-5 md:col-12">
+                    <label class="font-semibold">Total</label>
+                    <p-inputNumber class="surface-100 font-bold" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                </div>
+            </div>
+
+    </form>
+    <div class="flex justify-content-end flex-wrap p-dialog-footer bg-blue-50">
+        <div class="flex bg-blue-50">
+            <button pButton icon="pi pi-check" label="Agregar" (click)="guardarItem()"
+                class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary -mt-2"></button>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="marcaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+    <p-header styleClass="testDialog"> <i class="pi pi-tag" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
+        <form [formGroup]="registerFormMarca" (ngSubmit)="guardarMarca()">
+            <div class="p-fluid py-4 border-1 surface-border mb-3 bg-blue-50 p-3 border-round mt-2">
+                <div class="mb-3 field">
+                    <label class="font-semibold">Marca</label>
+                    <input pInputText type="text" formControlName="nommarca" id="nommarca"/>
+                    <!-- <p class="text-red-600" *ngIf="submitted && formContacto.nombrecontacto.errors">* Debe ingresar Marca</p> -->
+                </div>
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
+            </div>
+        </form>
+</p-dialog>
+
+
+

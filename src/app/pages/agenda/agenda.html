@@ -1,0 +1,22 @@
+<div class="card">
+    <div class="flex justify-content-between col-12 gap-2 mb-3">
+        <!-- <div>
+            <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"></button>
+        </div> -->
+        <div class="flex border-round fonthead w-full">
+            <span class="text-base font-bold mt-2 ml-2">AGENDA</span>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 lg:w-1/1 p-2">
+        <div class="flex flex-col gap-1">
+            <label class="font-semibold">Periodo</label>
+            <p-datepicker view="month" [(ngModel)]="periodo" dateFormat="mm/yy" inputId="yearpicker" [showIcon]="true" size="small" (onSelect)="changePeriodo($event)" appendTo="body"></p-datepicker>
+        </div>
+    </div>
+
+    <div class="card">
+        <full-calendar [options]="calendarOptions" [events]="events" #calendar></full-calendar>
+    </div>
+    @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+</div>

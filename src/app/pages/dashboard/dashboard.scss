@@ -1,0 +1,16 @@
+:root {
+  --font-size: 11px;
+  --border-radius: 6px;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-multiselect {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.p-button {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+}

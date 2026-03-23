@@ -1,0 +1,166 @@
+<div class="card">
+    <div class="flex gap-2 mb-5">
+        <div>
+            <button pButton class="font-semibold p-button-outlined" icon="pi pi-backward" label="Regresar" (click)="getBack()"></button>
+        </div>
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">{{titleQuoteOportunidad}}</span>
+        </div>
+    </div>
+    <div class="border-1 surface-border border-round -mb-2 bg-blue-50 mt-2">
+        <div class="flex flex-wrap justify-between gap-1">
+            <div class="flex flex-col m-2">
+                <div class="py-0 flex-wrap">
+                    <i class="pi pi-user text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Cliente:</span>
+                    <label class="text-600 ml-3"> {{headCliente | uppercase}} </label>
+                </div>
+                <div class="py-0">
+                    <i class="pi pi-calendar text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Fecha BC:</span>
+                    <label class="text-600 ml-3"> {{headFecha}} </label>
+                </div>
+                <div class="py-0">
+                    <i class="pi pi-user text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Autor:</span>
+                    <label class="text-600 ml-3"> {{ headNomCreador | uppercase }} </label>
+                </div>
+            </div>
+            <div class="sm:col-12 lg:col-4 flex-wrap m-2">
+                <div class="py-0">
+                    <i class="pi pi-dollar text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Tipo de Cambio:</span>
+                    <label class="ml-3"> {{this.headTipoCambio | number: '0.2'}} </label>
+                </div>
+                <div class="py-0">
+                    <i class="pi pi-money-bill text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Moneda: </span>
+                    <label class="ml-3"> {{headMoneda | uppercase}} </label>
+                </div>
+                <div class="py-0">
+                    <i class="pi pi-money-bill text-primary text-1xl"></i>
+                    <span class="font-semibold ml-3">Total Quotes: </span>
+                    <label class="ml-3"> {{headTotalQuote() | number: '0.2'}} </label>
+                </div>
+            </div>
+            <div class="py-0 ml-1 mb-1">
+                <div class="flex ml-2">
+                    <span class="font-semibold text-900 ml-3">Descripción/Problema</span>
+                </div>
+                <div class="ml-5">
+                    <label> {{this.headDescrip | uppercase }} </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-3 mt-2">
+        <div class="col-span-3 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto">
+            <div class="surface-border ml-3 border-round-md flex flex-col gap-3">
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between align-items-center mb-2">
+                        <span class="font-semibold text-900">Quote </span>
+                        <button pButton class="font-semibold p-button-outlined" icon="pi pi-folder" label="Nuevo Quote" (click)="getCotizacion([], 0)"></button>
+                        <!-- <i class="pi pi-plus-circle cursor-pointer text-blue-600" style="margin-left: 20px; " pTooltip="Nueva Cotización" tooltipPosition="right" (click)="getCotizacion([])" ></i> -->
+                    </div>
+                    <!-- <span class="text-sm text-color-secondary">{{titleQuote}} </span> -->
+                </div>
+            </div>
+            <div class="surface-border ml-3 border-round-md flex flex-col gap-3">
+                <div class="flex flex-col gap-1">
+                    <div
+                        (click)="cotizaFilter(team)"
+                        *ngFor="let team of lstCotizacion()"
+                        class="flex justify-between align-items-center border-1 border-transparent border-round-md p-3 -mx-2 cursor-pointer hover:surface-hover"
+                        [ngClass]="{'bg-primary-50 border-primary-100':selectedCoti === team.idcotiza }"
+                    >
+                        <div class="flex align-items-center gap-3 text-600 font-semibold">
+                            <span>{{nroCotizacion + team.idcotiza}}</span>
+                            <span class="font-semibold -mr-2">{{ team.simbmoneda }}</span>
+                            <span class="font-semibold">{{ team.s_monto | number: '0.2' }}</span>
+                        </div>
+                        <div class="flex gap-2 align-items-center">
+                            <i class="pi pi-pencil cursor-pointer text-blue-600" style="margin-left: 20px" pTooltip="Editar Cotización" tooltipPosition="right" (click)="getCotizacion(team, 1)"></i>
+                            @if(selectedCoti === team.idcotiza){
+                            <i class="pi pi-chevron-right text-primary"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-9 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto">
+            <div class="grid grid-cols-12 flex align-items-center border-primary-100 border-1 border-round px-3 fonthead p-2">
+                <div class="col-span-7 text-sm">
+                    <span class="font-semibold">{{nroCotizacion + selectedCoti + ' - ' + nomproveedor | uppercase}}</span>
+                    <span class="font-semibold"> - </span>
+                    <span class="font-semibold mr-1 text-base">{{ simbmoneda}}</span>
+                    <span class="font-semibold text-base">{{ smonto | number: '0.2' }}</span>
+                </div>
+                <div class="col-span-5 -ml-3">
+                    <div class="flex justify-between gap-2 flex-1 font-semibold text-sm">
+                        <div class="flex flex-col justify-between" style="flex-basis: 100%">
+                            <span>CANTIDAD</span>
+                        </div>
+                        <div class="flex flex-col justify-between" style="flex-basis: 100%">
+                            <span>COSTO {{ simbmoneda}}</span>
+                        </div>
+                        <div class="flex flex-col justify-between" style="flex-basis: 100%">
+                            <span>TOTAL {{ simbmoneda}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="surface-border border-round-md h-28rem overflow-y-auto text-sm">
+                @for(member of filteredCotizaItems(); track $index){
+                <div class="grid grid-cols-12 align-items-center p-2 border-round border-1 surface-border text-700 hover:text-color">
+                    <div class="col-span-7">
+                        <div class="flex flex-col flex-wrap">
+                            <span class="font-semibold text-sm">{{ member.descripcion | uppercase }}</span>
+                            <div class="flex-wrap text-sm">
+                                <span>{{ member.nommarca | uppercase}}</span>
+                                <span> - </span>
+                                <span>{{ member.nomtipoprod | uppercase}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-5">
+                        <div class="flex justify-between gap-2 flex-1 text-left">
+                            <div class="aling-end" style="flex-basis: 100%">
+                                <span>{{ member.cantidad }}</span>
+                            </div>
+                            <div style="flex-basis: 100%">
+                                <span>{{member.preciocosto | number: '0.2'}}</span>
+                            </div>
+                            <div style="flex-basis: 100%">
+                                <span>{{member.preciocostototal | number: '0.2'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <div class="grid grid-cols-12 flex">
+                    <div class="col-span-6"></div>
+                    <div class="col-span-6">
+                        <div class="flex justify-between font-semibold gap-2 flex-1 text-left">
+                            <div style="flex-basis: 50%">
+                                <label>TOTALES : </label>
+                            </div>
+                            <div style="flex-basis: 100%">
+                                <span>{{Cantidad | number}}</span>
+                            </div>
+                            <div style="flex-basis: 140%"></div>
+                            <div style="flex-basis: 100%">
+                                <span>{{ simbmoneda | uppercase}} {{PreciocostoTotal() | number: '0.2'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<!-- <p-confirmDialog [style]="{width: '30vw'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog> -->

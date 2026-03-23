@@ -1,0 +1,16 @@
+<div class="w-full flex flex-col gap-3 px-3 pb-6" (keydown.enter)="validaLogin()">
+
+    <p-icon-field>
+        <p-inputicon class="pi pi pi-key" />
+        <input type="password" class="w-full p-inputtext-sm" [formControl]="claveUser" [autofocus]="true" pInputText placeholder="Contraseña" />
+    </p-icon-field>
+
+    <!-- <span class="p-input-icon-left">
+        <i class="pi pi-key"></i>
+        <input type="password" class="w-full p-inputtext-sm" [formControl]="claveUser" [autofocus]="true" pInputText placeholder="Contraseña" />
+    </span> -->
+    <button pButton pRipple class="w-full my-3 px-3" label="Sign in"
+        [loading]="isLoading" (click)="validaLogin()"></button>
+</div>
+
+<p-toast></p-toast>

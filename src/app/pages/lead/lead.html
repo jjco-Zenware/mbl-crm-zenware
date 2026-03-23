@@ -1,0 +1,163 @@
+@if(vistaLista) {
+<div class="card gap-3">
+    <div class="flex col-12 gap-2 mb-3">
+        <div>
+            <button pButton class="font-semibold p-button-outlined" icon="pi pi-file" label="Nuevo" (click)="onNuevo()"></button>
+        </div>
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">LEADS</span>
+        </div>
+    </div>
+
+    <form [formGroup]="frmDatos" class="p-fluid grid">
+        <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold">Desde</label>
+                <p-datepicker formControlName="fechaini" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold">Hasta</label>
+                <p-datepicker formControlName="fechafin" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <!-- <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">Vendedor</label>
+                <p-select [options]="Vendedor" formControlName="idvendedor" placeholder="Seleccionar Vendedor..." optionLabel="name"
+                 optionValue="idusuario" size="small" [filter]="true" ></p-select>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="font-semibold">Cliente</label>
+                <p-select [options]="lstProveedores" formControlName="idcliente" id="idcliente" placeholder="Seleccionar Cliente..." optionLabel="nomcomercial"
+                 optionValue="idcliente" size="small" [filter]="true" (onChange)="listarOportunidades()"></p-select>
+            </div>
+            <div class="flex flex-col grow gap-1">
+                <label class="font-semibold">Oportunidad</label>
+                <p-select [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad..." optionLabel="nomcomercial"
+                optionLabel="titulo" appendTo="body" [filter]="true" optionValue="id" size="small"></p-select>
+            </div> -->
+            <div class="flex grow basis-0 gap-1">
+                <button pButton type="button"  pTooltip="Consultar" tooltipPosition="bottom" [raised]="true"
+                                class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="getBuscar()"></button>
+
+                            <!-- <button pButton icon="pi pi-file" label="Nuevo" (click)="onNuevo()" pTooltip="Nuevo" tooltipPosition="bottom"
+                            
+                            class="font-semibold mt-5 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2"></button> -->
+
+            </div>
+        </div>
+    </form>
+
+    <p-table
+        #dt1
+        [value]="lstOportunidades()"
+        [rows]="25"
+        [rowHover]="true"
+        [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [resizableColumns]="true"
+        [rowsPerPageOptions]="[25,50]"
+        selectionMode="single"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        size="small"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>N°</th>
+                <th>FECHA</th>
+                <th>N° OPOR</th>
+                <th>NOMBRE OPORTUNIDAD</th>
+                <th>EMPRESA</th>
+                <th>ORIGEN</th>
+                <th>MONEDA</th>
+                <th>MONTO</th>
+                <th>F. CIERRE</th>
+                <th>ESTADO</th>
+                <th>TRANSACCIONES</th>
+                <!-- <th class="bg-teal-50 border-1">
+                        <div class="flex justify-content-between align-items-center">
+                            DETALLE
+                        </div>
+                    </th>
+                    <th style="width: 80px;" class="bg-teal-50 border-1">
+                        <div class="flex justify-content-between align-items-center">
+                            ACCIONES
+                        </div>
+                    </th> -->
+            </tr>
+            <!-- <tr >
+                    <th></th>
+                    <th *ngFor="let col of cols">
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
+                        
+                    </th>
+                </tr> -->
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <!-- [pSelectableRow]="data" -->
+            <tr>
+                <td>{{rowIndex + 1}}</td>
+                <td>{{data.startDate}}</td>
+                <td>{{data.id}}</td>
+                <td>
+                    <div style="width: 150px">{{data.title}}</div>
+                </td>
+                <td>
+                    <div style="width: 200px">{{data.razonsocial}}</div>
+                </td>
+                <td>{{data.origenopor}}</td>
+                <td>{{data.simbmoneda }} </td>
+                <td>{{ data.monto }}</td>
+                <td>{{data.dueDate}}</td>
+                <td>{{ data.nomlista}}</td>
+                <!-- <td>
+                        <div class="flex align-items-center">
+                            <span *ngIf="data.nrotareas" pTooltip="Tareas" class="flex align-items-center font-semibold mr-3 text-blue-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>
+                            <span *ngIf="data.nroadjuntos" pTooltip="Adjuntos" class="flex align-items-center font-semibold mr-3 text-orange-600"><i class="pi pi-paperclip mr-2"></i>{{data.nroadjuntos}}</span>
+                            <span *ngIf="data.nroasignados" pTooltip="Asignados" class="flex align-items-center font-semibold mr-3 text-green-600"><i class="pi pi-users mr-2"></i>{{data.nroasignados}}</span>
+                            <span pTooltip="Fecha Final" class="flex align-items-center font-semibold white-space-nowrap" *ngIf="data.startDate"><i class="pi pi-clock mr-2"></i>{{data.fechafinal | formatoFecha}}</span>
+                        </div>
+                    </td> -->
+                  <td>
+                        <div class="flex align-items-center m:justify-content-end">
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="ver Lead" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <!-- <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button> -->
+
+                            <!-- <button *ngIf="data.acciones" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
+                                pTooltip="Transacciones Disponibles" tooltipPosition="left"></button>
+                            <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu> -->
+                        </div>
+                    </td> 
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="11">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="11">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+} @else{
+
+<div class="card">
+    <div class="flex justify-content-between col-12 gap-2 mb-3">
+        <div>
+            <button pButton class="font-semibold p-button-outlined" icon="pi pi-backward" label="Regresar" (click)="getBack()" [raised]="true"></button>
+        </div>
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold mt-2 ml-2">{{tituloDetalle}}</span>
+        </div>
+    </div>    
+    <app-c-lead-reg [IS_Data]="dataPrc"></app-c-lead-reg>
+</div>
+
+} @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-toast />
+
+ <p-confirmdialog />

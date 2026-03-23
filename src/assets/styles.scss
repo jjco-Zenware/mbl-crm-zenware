@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'primeicons/primeicons.css';
+@use './layout/layout.scss';
+@use './demo/demo.scss';
+
+
+html {
+  font-size: 10px; // prueba 12px o 13px
+
+  .fonthead {
+    background:var(--primary-color);
+    color: #ffffff;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  //estilos del header de p-table
+  .p-datatable thead th {
+    background: linear-gradient(180deg, #ffffff, #e1e4eb);
+    color: #222429;
+    border-bottom: 1px solid #c0d4dd;
+    font-size: 9px;
+  }
+
+  //colorel calendario
+  .fc .fc-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+  }
+
+ .testDialog {
+    .p-dialog-header{
+        background:var(--primary-color);
+        height: 3.5rem;
+        color: white;
+  
+      .p-dialog-header-icons{
+        .p-dialog-header-icon{
+            color: white;
+            
+        }
+      }
+    }
+  }
+
+  .tooltip-pro {
+  max-width: 280px;
+}
+
+.tooltip-pro .p-tooltip-text {
+  padding: 0.75rem 1rem;
+  line-height: 1.4;
+  white-space: normal;
+  text-align: left;
+  font-size: 1rem;
+}
+}

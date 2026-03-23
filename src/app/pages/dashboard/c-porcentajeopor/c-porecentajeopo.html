@@ -1,0 +1,111 @@
+<p-table
+    #dt1
+    [value]="lista"
+    [rowHover]="true"
+    responsiveLayout="stack"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [resizableColumns]="true"
+    selectionMode="single"
+    stateStorage="session"
+    styleClass="p-datatable-sm"
+    class="m-2"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th class="bg-teal-50 border-1">
+                <div class="flex justify-content-between align-items-center">
+                    N°
+                </div>
+            </th>
+            <th style="width: 25%" class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    CLIENTE
+                </div>
+            </th>
+            <th class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    TITULO
+                </div>
+            </th>
+            <th class="bg-teal-50 border-1">QUARTER</th>
+            <th class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    MONEDA
+                </div>
+            </th>
+            <th class="bg-teal-50 border-1">
+                <div class="justify-content-between align-items-center">
+                    MONTO
+                </div>
+            </th>
+            <th class="bg-teal-50 border-1">PRY CERRAR</th>
+            <th class="bg-teal-50 border-1">%</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="data">
+            <td>
+                {{ rowIndex + 1 }}
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '100px' }">
+                    {{ data.nomcomercial | uppercase }}
+                </div>
+            </td>
+            <td>
+                <div pTooltip="{{ data.title | uppercase }}">
+                    {{
+                        data.title.length > 40
+                            ? (data.title.slice(0, 40) + "..." | uppercase)
+                            : (data.title | uppercase)
+                    }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '80px' }">
+                    {{ data.Q }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '20px' }">
+                    {{ data.simbmoneda | uppercase }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '80px' }">
+                    {{ data.monto | number: "0.2" }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '50px' }">
+                    {{ data.proyectoacerrar | number: "0.2" }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ width: '50px', 'text-align': 'right' }">
+                    {{ data.porcentaje_est }}
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <tr>
+            <td colspan="5" class="text-right font-bold">Total %:</td>
+            <td>
+                <div [ngStyle]="{ 'text-align': 'right' }" class="font-bold">
+                    {{ totmonto | number: "3.2"}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ 'text-align': 'right' }" class="font-bold">
+                    {{ totproyectado | number: "3.2"}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{ 'text-align': 'right' }" class="font-bold">
+                    {{ sumtareas }}
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

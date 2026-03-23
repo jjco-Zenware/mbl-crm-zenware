@@ -1,0 +1,106 @@
+<form [formGroup]="registerFormRegistro">
+    @if (!verControl()) {
+        <div class="m-2 flex-col gap-4 grid grid-cols-12">
+            <div class="col-span-12 flex flex-col gap-2">
+                <div class="flex">
+                    <label class="block text-900 font-semibold">Etapas: </label>
+                    <i class="pi pi-plus cursor-pointer font-bold text-blue-600" style="margin-left: 10px" pTooltip="Nueva Etapa" tooltipPosition="right" (click)="NuevaEtapa()"></i>
+                </div>
+                <p-select [options]="lstEtapas()" placeholder="Seleccionar Etapa..." formControlName="idetapa" optionLabel="nometapa" optionValue="idetapa" appendTo="body" size="small" (onChange)="seleccionarEtapa($event.value)"></p-select>
+            </div>
+        </div>
+    }
+
+    @if (verControl()) {
+        <div class="m-2 flex-col gap-4 grid grid-cols-12">
+            <div class="col-span-12 flex flex-col gap-2">
+                <label class="text-900 font-semibold">Descripción</label>
+                <input type="text" pInputText formControlName="descripcion" size="small" style="text-transform: uppercase" />
+            </div>
+        </div>
+
+        <div class="m-2 flex-col gap-4 grid grid-cols-12">
+            <div class="col-span-6 flex flex-col gap-2">
+                <label class="text-900 font-semibold">Fecha Inicio</label>
+                <p-datepicker
+                    formControlName="fechaini"
+                    dateFormat="dd/mm/yy"
+                    [showTime]="false"
+                    [showIcon]="true"
+                    [required]="true"
+                    inputId="start"
+                    inputStyleClass="w-full cursor-pointer"
+                    appendTo="body"
+                    size="small"
+                    [readonlyInput]="true"
+                    [minDate]="minimaFechaDesde"
+                    [maxDate]="maximaFechaHasta"
+                    (onSelect)="changeFechaDesde($event)"
+                ></p-datepicker>
+            </div>
+            <div class="col-span-6 flex flex-col gap-2">
+                <label class="text-900 font-semibold">Fecha Fin</label>
+                <p-datepicker
+                    formControlName="fechafin"
+                    dateFormat="dd/mm/yy"
+                    [showTime]="false"
+                    [showIcon]="true"
+                    [required]="true"
+                    inputId="start"
+                    inputStyleClass="w-full cursor-pointer"
+                    appendTo="body"
+                    size="small"
+                    [minDate]="minimaFechaHasta"
+                    [maxDate]="maximaFechaHasta"
+                    [readonlyInput]="true"
+                    (onSelect)="changeFechaHasta($event)"
+                ></p-datepicker>
+            </div>
+        </div>
+    }
+
+    <!-- <div *ngIf="verControl" class="sm:col-6 lg:col-3 md:col-12 justify-end h-4rem field">
+                <div class="flex mb-1">
+                    <label class="block text-900 font-semibold">Hora Inicio</label>    
+                </div>
+                <span >
+                    <input type="time" formControlName="horaini" inputStyleClass="w-full cursor-pointer"/>
+                        
+                </span>
+            </div> 
+            <div *ngIf="verControl" class="sm:col-6 lg:col-3 md:col-12 justify-end h-4rem field">
+                <div class="flex mb-1">
+                    <label class="block text-900 font-semibold">Hora Fin</label>    
+                </div>
+                <span >
+                    <input type="time" formControlName="horafin" inputStyleClass="w-full cursor-pointer"/>
+                </span>
+            </div>  -->
+    <div class="flex justify-end">
+        <button pButton icon="pi pi-save" label="Grabar" (click)="grabarTarea()" class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button>
+    </div>
+</form>
+
+@if (blockedDocument()) {
+    <app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+}
+
+<p-dialog [(visible)]="etapaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{ width: '20vw' }" [breakpoints]="{ '960px': '75vw' }">
+    <p-header> {{ headerTitle }} </p-header>
+    <form [formGroup]="registerFormEtapa" (ngSubmit)="guardarEtapa()">
+        <div class="field flex flex-column col-12 field h-4rem">
+            <label class="font-semibold">Descripción </label>
+            <input
+                pInputText
+                type="text"
+                formControlName="nometapa"
+                id="nommarca"
+                size="small"
+                [ngClass]="{ 'p-invalid': registerFormEtapa.get('nometapa')?.invalid && (registerFormEtapa.get('nometapa')?.dirty || registerFormEtapa.get('nometapa')?.touched) }"
+            />
+        </div>
+        <div class="flex justify-end mt-4 mr-3">
+            <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
+        </div>
+    </form>
+</p-dialog>
