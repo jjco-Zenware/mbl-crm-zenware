@@ -383,9 +383,6 @@
                 <ng-template pTemplate="body" let-tarea let-rowIndex="rowIndex">
                     <tr>
                         <td pFrozenColumn class="text-lg">
-                            <!-- <div [ngStyle]="{'width':'300px'}" class="ml-4" >
-                                {{(tarea.descripcion.length > 50) ? ((tarea.descripcion).slice(0, 50) + '...' ) :   tarea.descripcion }}
-                            </div> -->
                             <div pTooltip="{{tarea.descripcion}}" [ngStyle]="{'width':'300px'}" class="ml-4">{{(tarea.descripcion.length > 50) ? ((tarea.descripcion).slice(0, 50) + '...' ) : tarea.descripcion }}</div>
                         </td>
                         @for (dia of dias; track $index) {
