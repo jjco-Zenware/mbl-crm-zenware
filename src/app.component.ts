@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MSAL_INSTANCE } from '@azure/msal-angular';
 import { IPublicClientApplication} from '@azure/msal-browser';
-import { constantesLocalStorage } from './app/pages/model/constantes';
 import { LocalStorageService } from './app/pages/service/localStorage.service';
 
 @Component({
@@ -17,13 +16,7 @@ export class AppComponent {
   constructor(
     private localStorageService: LocalStorageService,
   ){
-    console.log('localStorageService...', localStorageService);
-        // constantesLocalStorage.nombreUsuario = localStorageService.obtenerUsuario();
-        // constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
-        // constantesLocalStorage.idusuario = localStorageService.obtenerDataGeneral().idusuario;
-        // constantesLocalStorage.imagen = localStorageService.obtenerDataGeneral().imagen;
-        // constantesLocalStorage.idperfil = localStorageService.obtenerDataGeneral().idperfil;
-        // constantesLocalStorage.nomperfil = localStorageService.obtenerDataGeneral().nomperfil;
+    localStorageService.rehydrate();
   }
 
   ngOnInit() {

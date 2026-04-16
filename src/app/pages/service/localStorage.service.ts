@@ -26,6 +26,15 @@ export class LocalStorageService {
     constantesLocalStorage.imagen        = respuestaData.imagen ?? '';
     constantesLocalStorage.idperfil      = respuestaData.idperfil ?? 0;
     constantesLocalStorage.nomperfil     = respuestaData.nomperfil ?? '';
+    
+    console.log('constantesLocalStorage', constantesLocalStorage );
+  }
+
+  rehydrate() {
+    const data = localStorage.getItem('ZENWARE_OPOR');
+    if (data) {
+      this.setearLocalStorage(JSON.parse(data));
+    }
   }
 
   limpiar() {
