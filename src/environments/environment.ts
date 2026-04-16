@@ -5,7 +5,8 @@ export const environment = {
 
     /*DESARROLLO*/
     //webAPI: 'https://zenwareadmin-001-site3.rtempurl.com/bac/api/',
-    webAPI: 'https://localhost:7050/api/',
+    webAPI: 'https://zenwareadmin-001-site7.rtempurl.com/bac/api/',
+    //webAPI: 'https://localhost:7050/api/',
     msalConfig: {
         /*PRODUCCIÓN*/
         // auth: {

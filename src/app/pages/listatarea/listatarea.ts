@@ -54,10 +54,13 @@ export class Listatareas implements OnInit, OnDestroy {
         private serviceSharedApp: SharedAppService,
         public dialogService: DialogService
     ) {
+        
         this.idperfil = constantesLocalStorage.idperfil;
     }
 
     setSpinner(valor: boolean) {
+
+        console.log('constantesLocalStorage.idperfil...', constantesLocalStorage.idperfil);
         this.blockedDocument.set(valor);
     }
 

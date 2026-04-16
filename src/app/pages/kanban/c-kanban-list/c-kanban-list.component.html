@@ -1,13 +1,13 @@
 <div class="card">
     <div class="flex bg-blue-200 text-sm border-round border justify-center">
-        <span class="custom-marker m-2" [style.backgroundColor]="list.bgcolor">
+        <span class="custom-marker" [style.backgroundColor]="list.bgcolor">
             <i [ngClass]="list.bgicon"></i>
         </span>
         <span class="text-900 font-semibold pl-2 mt-3">{{ list.title }}</span>
     </div>
 
     <div class="flex flex-wrap gap-2">
-        @if (list.creaOportunidad !== 0 && list.listId === '1') {
+        @if (list.creaOportunidad !== 0 && list.listId === '0') {
             <div class="w-full mt-2 flex">
                 <button pButton pRipple label="Nuevo Lead" icon="pi pi-plus font-semibold" 
                 class="justify-center font-semibold w-full border-round" (click)="insertCard()"></button>

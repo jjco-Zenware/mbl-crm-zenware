@@ -14,7 +14,6 @@
             {{ card.description.length > 100 ? (card.description.slice(0, 100) + '...' | uppercase) : (card.description | uppercase) }}
         </div>
 
-        <!-- <div style="word-break: break-word" class="text-700">{{ card.description }}</div> -->
     }
 
     @if (card.taskList.tasks.length) {

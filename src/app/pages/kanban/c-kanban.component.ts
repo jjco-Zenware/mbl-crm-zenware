@@ -29,14 +29,8 @@ export class CKanbanAppComponent implements OnInit {
     listIds: string[] = [];
     style!: HTMLStyleElement;
     isMobileDevice: boolean = false;
-    subscription: any;
     visOportunidad: boolean = true;
     visMntOportunidad: boolean = false;
-    visQuote: boolean = false;
-    visTarea: boolean = false;
-    dataCT: any;
-    codigoBC: string = '';
-    datoKanban: any;
     frmDatos!: FormGroup;
     dataOportunidad: any;
 
@@ -62,68 +56,19 @@ export class CKanbanAppComponent implements OnInit {
     ) {
     }
 
-    getOportunidadKanban(dato: any) {
-
+    getOportunidadKanban(_dato: any) {
         this.visOportunidad = true;
         this.visMntOportunidad = false;
-        // this.visBussines = false;
-        // this.visQuote = false;
-        // this.visTarea = false;
-        //this.setSpinner(true);
-
-        // this.kanbanService.onCardSeleccionar(this.datoKanban.id, this.datoKanban.idlista).subscribe({
-        //     next: (rpta: any) => {
-        //         this.setSpinner(false);
-        //         //this.sidebarVisible.set(true);
-        //     },
-        //     error: (err) => {
-        //         console.info('error : ', err);
-        //         this.messageService.clear();
-        //         this.messageService.add({
-        //             severity: 'error',
-        //             summary: 'Error',
-        //             detail: mensajesQuestion.msgErrorGenerico
-        //         });
-        //     },
-        //     complete: () => {}
-        // });
         this.getKanbanList();
     }
 
-    verQuote(dato: any) {
-        console.log(' verQuote :  ', dato);
-
-        // this.visOportunidad = false;
-        // this.visBussines = false;
-        // this.visQuote = true;
-        // this.visTarea = false;
-
-        // this.datoKanban = dato;
-
-        // const { id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista } = dato;
-        // this.dataCT = { id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista };
-    }
-
-    verBussines(dato: any) {
-        console.log(' verBussines :  ', dato);
-    }
-
     verOportunidadMnt(dato: any) {
-        console.log(' verBussines :  ', dato);
-
         this.visOportunidad = false;
         this.visMntOportunidad = true;
-        // this.visBussines = false;
-        // this.visQuote = false;
-        // this.visTarea = true;
-
-        const objeto = {id: dato.id, paramReg: 'k'}
-
-        this.dataOportunidad = objeto;
+        this.dataOportunidad = { id: dato.id, paramReg: 'k' };
     }
 
     actualizarKanban() {
-        console.log('actualizar getKanbanList :  ');
         this.getKanbanList();
     }
 
@@ -171,11 +116,10 @@ export class CKanbanAppComponent implements OnInit {
             ...this.frmDatos.value,
             annio: this.frmDatos.value.annio.getFullYear()
         };
-        console.log(' getKanbanList : ', objeto);
         const $kanbanList = this.kanbanService.kanbanList(objeto).subscribe({
             next: (rpta: any) => {
+                console.log('getKanbanList...', rpta.listas);
                 this.setSpinner(false);
-                console.log('rpta service : ', rpta);
                 this.lists = rpta.listas;
                 this.listIds = this.lists.map((l) => l.listId || '');
             },
@@ -208,7 +152,7 @@ export class CKanbanAppComponent implements OnInit {
                 this.lstProveedores.unshift(objeto);
             },
             error: (err) => {
-                console.info('error : ', err);
+                console.error('error : ', err);
                 this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',

@@ -64,7 +64,7 @@ export class CModalAgendaComponent implements OnInit, OnDestroy {
       this.setSpinner(true);
 
         const objeto = {
-            idplan: this.config.data[0].description
+            idtarea: this.config.data[0].description
         };
 
         const $listaTareas = this.oportunidadService.TraerUnoAcciones(objeto).subscribe({

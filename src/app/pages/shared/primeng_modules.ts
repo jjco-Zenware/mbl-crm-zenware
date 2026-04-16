@@ -41,6 +41,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { Ripple } from 'primeng/ripple';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const PRIMENG_MODULES = [
   InputTextModule,
@@ -86,5 +87,6 @@ export const PRIMENG_MODULES = [
         StyleClassModule,
         Ripple,
         BadgeModule,
-        OverlayBadgeModule
+        OverlayBadgeModule,
+        NgxEchartsModule
 ];

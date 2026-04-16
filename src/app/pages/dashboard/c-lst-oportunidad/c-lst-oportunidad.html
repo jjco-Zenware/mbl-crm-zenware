@@ -1,7 +1,7 @@
-<div class="flex justify-between align-items-center col-12 card">
+<div class="flex justify-between align-items-center col-span-12 card">
     <div class="h-full w-full flex flex-col justify-between">
         <div class="grid px-3">
-            <!-- <div class="grid grid-cols-12 flex -mb-4 justify-between">
+            <div class="grid grid-cols-12 flex -mb-4 justify-between">
                 <div class="col-span-12">
                     <p-timeline [value]="events()" layout="horizontal" align="top">
                         <ng-template pTemplate="marker" let-event>
@@ -14,10 +14,10 @@
                         <ng-template pTemplate="opposite" let-event> {{event.title}} </ng-template>
                     </p-timeline>
                 </div>
-            </div> -->
+            </div> 
             <div class="mb-2 py-3 h-3rem flex border-round p-2 w-full text-base justify-between">
                 <div>
-                    <span class="font-semibold text-blue-600">OPORTUNIDADES</span>
+                    <span class="font-semibold">OPORTUNIDADES</span>
                     <!-- <i class="pi pi-external-link font-semibold text-blue-600 cursor-pointer" style="margin-left: 10px; font-size: 1.2rem" (click)="showDialog()" pTooltip="Maximizar Tabla" tooltipPosition="bottom"></i> -->
                     <!-- <i class="pi pi-file-excel font-semibold text-green-600 cursor-pointer" style="margin-left: 10px; font-size: 1.2rem" (click)="exportExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom"></i> -->
                 </div>
@@ -27,139 +27,6 @@
                 </div>
             </div>
         </div>
-        <p-dialog styleClass="testDialog" [resizable]="false" [maximizable]="true" appendTo="body" [(visible)]="dialogVisible">
-            <p-header> <i class="pi pi-bars mb-2" style="margin-right: 10px"></i>Oportunidades </p-header>
-            <p-table
-                #dt1
-                [value]="cardList()"
-                [rows]="10"
-                [rowHover]="true"
-                [tableStyle]="{'min-width': '50rem'}"
-                [paginator]="true"
-                [showCurrentPageReport]="true"
-                [rowsPerPageOptions]="[10,25,50]"
-                selectionMode="single"
-                currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
-                dataKey="id"
-                stateStorage="session"
-            >
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th class="bg-teal-50 border-1">
-                            <div class="flex justify-between align-items-center">N°</div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">FEC. REGISTRO</div>
-                        </th>
-                        <th pSortablecol="id" style="width: 25%" class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">N° OPOR <p-sortIcon field="id" /></div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">TITULO</div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">MONEDA</div>
-                        </th>
-                        <th pSortablecol="monto" style="width: 25%" class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">MONTO <p-sortIcon field="monto" /></div>
-                        </th>
-                        <th pSortablecol="nomcomercial" style="width: 25%" class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">CLIENTE <p-sortIcon field="nomcomercial" /></div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">ESTADO</div>
-                        </th>
-
-                        <th class="bg-teal-50 border-1">QUARTER</th>
-                        <th class="bg-teal-50 border-1">MES CIERRE</th>
-                        <th class="bg-teal-50 border-1">% PROB. CIERRE</th>
-                        <th class="bg-teal-50 border-1">V. PROB. CIERRE</th>
-                        <th *ngIf="!verPreventa" class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">PREVENTA</div>
-                        </th>
-                        <th *ngIf="!verComercial" class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">VENDEDOR</div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="justify-between align-items-center">PROVEEDOR</div>
-                        </th>
-                        <th class="bg-teal-50 border-1">
-                            <div class="flex justify-between align-items-center">ACCIONES</div>
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                    <tr [pSelectableRow]="data">
-                        <td>{{rowIndex + 1}}</td>
-                        <td>
-                            <div [ngStyle]="{'width':'30px'}">{{ data.startDate }}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'30px'}">{{ data.id }}</div>
-                        </td>
-                        <td>
-                            <div pTooltip="{{data.title | uppercase}}">{{(data.title.length > 40) ? ((data.title).slice(0, 40) + '...' | uppercase) : data.title | uppercase}}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'20px'}">{{data.simbmoneda | uppercase}}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'80px'}">{{data.monto | number: '0.2'}}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">{{data.nomcomercial | uppercase}}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'80px'}" class="justify-start align-items-center flex">
-                                <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
-                                    <i [ngClass]="data.bgicon"></i>
-                                </span>
-                                <span>{{ data.nomlista | uppercase}}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'50px'}">{{data.Q }}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'40px'}">{{data.mescierre }}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'40px'}">{{data.porcentaje }}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'40px'}">{{data.proyectoacerrar | number: '0.2'}}</div>
-                        </td>
-                        <td *ngIf="!verPreventa">
-                            <div [ngStyle]="{'width':'100px'}">{{data.nompreventa | uppercase}}</div>
-                        </td>
-                        <td *ngIf="!verComercial">
-                            <div [ngStyle]="{'width':'100px'}">{{data.nomcreador | uppercase}}</div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">{{data.lst_regoportuext | uppercase}}</div>
-                        </td>
-                        <td>
-                            <div class="flex align-items-center m:justify-end gap-0" [ngStyle]="{'width':'60px'}">
-                                <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button> -->
-                                <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="bottom" pTooltip="Business Case" class="p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
-                                <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Ir a Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="8">No se encontraron registros.</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="loadingbody">
-                    <tr>
-                        <td colspan="8">Cargando datos. Espere por favor.</td>
-                        8
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-dialog>
         <p-table
             #dt1
             [value]="cardList()"
@@ -248,11 +115,12 @@
                         <div [ngStyle]="{'width':'100px'}">{{data.nomcomercial}}</div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'70px'}" class="justify-start align-items-center flex">
+                        <div [ngStyle]="{'width':'100px'}" class="justify-start align-items-center flex">
                             <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
                                 <i [ngClass]="data.bgicon"></i>
                             </span>
                             <span class="mt-1">{{ data.nomlista | uppercase}}</span>
+
                         </div>
                     </td>
                     <td>

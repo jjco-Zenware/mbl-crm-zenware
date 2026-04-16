@@ -1,0 +1,167 @@
+<div class="grid grid-cols-12 gap-2">
+
+    <!-- Header -->
+    <div class="col-span-12 flex align-items-center gap-3">
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">OPORTUNIDADES</span>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="col-span-12 card">
+        <div class="flex flex-wrap gap-3 align-items-end">
+            <div class="flex flex-col gap-1" style="min-width: 200px">
+                <label class="font-semibold text-sm">Quarter</label>
+                <p-multiSelect
+                    [options]="lstQ"
+                    size="small"
+                    [ngModel]="selectedQ()"
+                    (ngModelChange)="selectedQ.set($event)"
+                    placeholder="Seleccionar..."
+                    optionLabel="desQ"
+                />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold text-sm">Año</label>
+                <p-datepicker
+                    [(ngModel)]="annio"
+                    view="year"
+                    dateFormat="yy"
+                    inputId="yearpicker"
+                    [showIcon]="true"
+                    size="small"
+                    class="w-32"
+                />
+            </div>
+            <div class="flex flex-col gap-1" style="min-width: 300px">
+                <label class="font-semibold text-sm">Vendedor</label>
+                <p-select
+                    [options]="Vendedor()"
+                    [(ngModel)]="idvendedor"
+                    id="idvendedor"
+                    placeholder="Seleccionar..."
+                    optionLabel="name"
+                    [ngModelOptions]="{ standalone: true }"
+                    optionValue="idusuario"
+                    [filter]="true"
+                    size="small"
+                />
+            </div>
+            <button
+                pButton
+                type="button"
+                label="Consultar"
+                icon="pi pi-search"
+                (click)="getDataFunnel()"
+                class="bg-blue-500 border-0 h-9 mt-6"
+                size="small"
+            ></button>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="col-span-12 md:col-span-6 card flex flex-col gap-2">
+        <!-- <div class="flex align-items-center gap-2">
+            <i class="pi pi-filter text-primary"></i>
+            <span class="font-semibold">Funnel por Monto</span>
+        </div>
+        <p-divider class="my-1" /> -->
+        <div echarts [options]="chartOption" style="height: 360px; width: 100%"></div>
+    </div>
+
+    <div class="col-span-12 md:col-span-6 card flex flex-col gap-2">
+        <!-- <div class="flex align-items-center gap-2">
+            <i class="pi pi-chart-pie text-primary"></i>
+            <span class="font-semibold">Distribución por Cantidad</span>
+        </div>
+        <p-divider class="my-1" /> -->
+        <div echarts [options]="chartOption2" style="height: 360px; width: 100%"></div>
+    </div>
+    
+     <!-- KPI Cards -->
+    <div class="col-span-12 grid grid-cols-12 gap-3 card">
+        <div class="col-span-12 md:col-span-4 flex align-items-center gap-3 py-3 h-10">
+            <div class="flex align-items-center justify-center w-10 h-10 rounded-full ">
+                <i class="pi pi-percentage text-blue-500 text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-medium">Closing Ratio</span>
+                <span class="text-base font-bold">
+                    # {{ closingRatioCantidad | number: '1.2-2' }}%
+                    <span class="text-muted font-normal">/</span>
+                    $ {{ closingRatioMonto | number: '1.2-2' }}%
+                </span>
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-4 flex align-items-center gap-3 py-3">
+            <div class="flex align-items-center justify-center w-10 h-10 rounded-full">
+                <i class="pi pi-chart-line text-orange-500 text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-medium">Forecast</span>
+                <span class="text-base font-bold">
+                    {{ forecastCantidad }}
+                    <span class="text-muted font-normal">/</span>
+                    $ {{ forecastMonto | number: '1.0-0' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-4 flex align-items-center gap-3 py-3">
+            <div class="flex align-items-center justify-center w-10 h-10 rounded-full ">
+                <i class="pi pi-check-circle text-green-500 text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-medium">Cerrado</span>
+                <span class="text-base font-bold">
+                    {{ cerradoCantidad }}
+                    <span class="text-muted font-normal">/</span>
+                    $ {{ cerradoMonto | number: '1.0-0' }}
+                </span>
+            </div>
+        </div>
+
+        
+    </div>
+
+    
+
+    <!-- Tabla resumen -->
+    <div class="col-span-12 card">
+        <div class="flex align-items-center gap-2 mb-2">
+            <i class="pi pi-table text-primary"></i>
+            <span class="font-semibold">Resumen por Etapa</span>
+        </div>
+        <p-divider class="my-1" />
+        <p-table [value]="resumenEtapas" size="small" [tableStyle]="{ 'min-width': '36rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Estado</th>
+                    <th class="text-center">Avance</th>
+                    <th class="text-right">Cantidad</th>
+                    <th class="text-right">Monto</th>
+                    <th class="text-right">Ponderado</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr>
+                    <td class="font-medium">{{ row.estado }}</td>
+                    <td class="text-center">{{ row.avance }}</td>
+                    <td class="text-right">{{ row.cantidad }}</td>
+                    <td class="text-right">$ {{ row.monto | number: '1.0-0' }}</td>
+                    <td class="text-right">$ {{ row.ponderado | number: '1.0-0' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">Sin datos para mostrar.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-toast />

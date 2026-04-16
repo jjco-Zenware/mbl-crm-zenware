@@ -1,0 +1,8 @@
+{
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
+    "terminal.integrated.suggest.quickSuggestions": {
+        "commands": "on",
+        "arguments": "on",
+        "unknown": "on"
+    }
+}

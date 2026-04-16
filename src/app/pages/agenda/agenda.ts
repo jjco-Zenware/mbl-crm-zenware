@@ -8,7 +8,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Subscription } from 'rxjs';
-import { mensajesQuestion, mensajesSpinner } from '../model/constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '../model/constantes';
 import { LeadService } from '../lead/lead.services';
 import { UtilitariosService } from '../service/utilitarios.service';
 import { MessageService } from 'primeng/api';
@@ -75,7 +75,8 @@ export class Agenda {
         },
         datesSet: (arg) => {
             this.onDateChange(arg);
-        }
+        },
+        displayEventTime: false
         // events: [
         //     { title: 'Reunión', date: '2026-01-10' },
         //     { title: 'Demo Zenware', date: '2026-01-12' }
@@ -111,12 +112,12 @@ export class Agenda {
         const objeto = {
             fechaini: this.desde,
             fechafin: this.hasta,
-            idusuario: 0,
+            idusuario: constantesLocalStorage.idusuario,
             idcliente: 0,
-            idoprotunidad: 0
+            idoportunidad: 0
         };
 
-        const $listaTareas = this.oportunidadService.listaAcciones(objeto).subscribe({
+        const $listaTareas = this.oportunidadService.listaTareas10(objeto).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
                 console.log('rpta listaAgenda', rpta);
@@ -124,12 +125,12 @@ export class Agenda {
 
                 rpta.forEach((element: any) => {
                     _eventos.push({
-                        title: element.desplan,
-                        start: element.fecplan,
+                        title: element.descripcion,
+                        start: element.fechaini,
                         //end:  element.fechafin,
 
                         //description: element.desplan,
-                        description: element.idplan,
+                        description: element.idtarea,
                         color: element.completo ? 'green' : 'blue'
                     });
                 });
@@ -175,7 +176,7 @@ export class Agenda {
         let objeto = this.events.filter((item: any) => item.description === data);
         const refMensaje = this.dialogService.open(CModalAgendaComponent, {
             data: objeto,
-            header: objeto[0].title,
+            header: 'Detalle del Plan',//objeto[0].title,
             styleClass: 'testDialog',
             closeOnEscape: false,
             closable: true,

@@ -20,42 +20,27 @@
                 </div>
                 <div class="flex grow basis-0 gap-1">
                     <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" [raised]="true" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="getKanbanList()"></button>
-
-                    <!-- <button pButton icon="pi pi-file" label="Nuevo" (click)="onNuevo()" pTooltip="Nuevo" tooltipPosition="bottom"
-                            
-                            class="font-semibold mt-5 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2"></button> -->
                 </div>
             </div>
         </form>
 
-        <div id="kanban-wrapper" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropList($event)" [cdkDropListData]="lists" 
+        <div id="kanban-wrapper" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropList($event)" [cdkDropListData]="lists"
         class="flex" [style]="{ 'overflow-x': 'auto' }">
             @for (list of lists; track $index) {
-                <c-kanban-list (actualizarKanban)="actualizarKanban()" [list]="list" [listIds]="listIds" (verOportunidadMnt)="verOportunidadMnt($event)" (OB_back)="getOportunidadKanban($event)"></c-kanban-list>
+                <c-kanban-list (actualizarKanban)="actualizarKanban()" [list]="list" [listIds]="listIds" (verOportunidadMnt)="verOportunidadMnt($event)"></c-kanban-list>
             }
-            <!-- <c-kanban-sidebar (actualizarKanban)="actualizarKanban()" (verCotizacion)="verQuote($event)" (verBussines)="verBussines($event)" 
-            (verTareas)="verTareas($event)"></c-kanban-sidebar> -->
         </div>
     </div>
 }
 
 @if (visMntOportunidad) {
-    <app-c-lead-reg  [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)"/>
+    <app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)"/>
 }
 
-
-<!-- <ng-template #visSecciones>
-    <app-c-cotizacion *ngIf="visQuote" [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)"/>
-    <app-c-business-case  *ngIf="visBussines" [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)"/>
-    <app-listatareas  *ngIf="visTarea" [IA_data]="dataTarea" (OB_back)="getOportunidadKanban($event)"/>
-    
-</ng-template> -->
-
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{ width: '450px' }" acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+
 @if (blockedDocument()) {
     <app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 }
 
 <p-toast />
-
-<p-confirmdialog />

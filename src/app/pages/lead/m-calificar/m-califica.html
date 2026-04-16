@@ -2,62 +2,62 @@
     <div class="grid">
         <div class="flex align-items-center p-2">
             <span class="font-bold">1. Problema : </span>
-            @if(verProblema()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verProblema()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>} }
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">2. Persona : </span>
-            @if(verPersona()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verPersona()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
-            <span class="font-bold">3. Proyecto : </span>            
-            @if(verProyecto()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            <span class="font-bold">3. Proyecto : </span>
+            @if(verCalificacion()){ @if(verProyecto()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">. Presupuesto : </span>
-            @if(verPresupuesto()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verPresupuesto()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">5. Prioridad : </span>
-            @if(verPrioridad()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verPrioridad()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">6. Plazo : </span>
-            @if(verPlazo()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verPlazo()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">7. Proceso : </span>
-            @if(verProceso()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verProceso()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
         <div class="flex align-items-center p-2">
             <span class="font-bold">8. Competencia : </span>
-            @if(verCompetencia()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}
+            @if(verCalificacion()){ @if(verCompetencia()){<span class="text-green-500 font-bolt ml-4">✔ Cumple</span>}@else{<span class="text-red-500 font-bolt ml-4">✖ No Cumple</span>}}
         </div>
         <div>
             <p-divider></p-divider>
         </div>
     </div>
-
+    @if(verCalificacion()){
     <div class="mt-3"><strong>Score:</strong> {{ this.score() }} / 8</div>
 
     <div class="mt-2">
@@ -70,4 +70,7 @@
             {{ estaCalificada() ? '✅ Oportunidad calificada' : '⚠️ Falta completar información' }}
         </span>
     </div>
+    }
 </p-card>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

@@ -40,32 +40,32 @@
 
         <div class="flex lg:w-1/1 mt-3 justify-between">
             <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #9c27b0">Lead</span>
-                <span class="mb-2 text-lg">$ {{ totalCloLed() | number: "3.2" }}</span>
+                <span class="font-medium text-lg" style="color: #9c27b0">Contacto</span>
+                <span class="mb-2 text-lg">$ {{ totalCloCon() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border" >
+                <span class="font-medium text-lg" style="color: #673ab7">Calificiación</span>
+                <span class="mb-2 text-lg">$ {{ totalCloCal() | number: "3.2" }}</span>
             </div>
             <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #673ab7">Pipeline</span>
-                <span class="mb-2 text-lg">$ {{ totalCloPip() | number: "3.2" }}</span>
+                <span class="font-medium text-lg" style="color: #27eccb">Investigación</span>
+                <span class="mb-2 text-lg">$ {{ totalCloInv() | number: "3.2" }}</span>
+            </div>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border ">
+                <span class="font-medium text-lg" style="color: #607d8b">Presentación</span>
+                <span class="mb-2 text-lg">$ {{ totalCloPre() | number: "3.2" }}</span>
             </div>
             <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #27eccb">Upside</span>
-                <span class="mb-2 text-lg">$ {{ totalCloUps() | number: "3.2" }}</span>
+                <span class="font-medium text-lg" style="color: #ff9800">Cierre</span>
+                <span class="mb-2 text-lg">$ {{ totalCloCie() | number: "3.2" }}</span>
             </div>
-            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #607d8b">Strong</span>
-                <span class="mb-2 text-lg">$ {{ totalCloStr() | number: "3.2" }}</span>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border ">
+                <span class="font-medium text-lg" style="color: #1ba436">Cerrado</span>
+                <span class="mb-2 text-lg">$ {{ totalCloCer() | number: "3.2" }}</span>
             </div>
-            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #ff9800">Commit</span>
-                <span class="mb-2 text-lg">$ {{ totalCloCom() | number: "3.2" }}</span>
-            </div>
-            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #1ba436">Won</span>
-                <span class="mb-2 text-lg">$ {{ totalCloWon() | number: "3.2" }}</span>
-            </div>
-            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
-                <span class="font-medium text-lg" style="color: #f32905">Lost</span>
-                <span class="mb-2 text-lg">$ {{ totalCloLos() | number: "3.2" }}</span>
+            <div class="text-center p-2 flex flex-col border-right-1 surface-border ">
+                <span class="font-medium text-lg" style="color: #f32905">Perdido</span>
+                <span class="mb-2 text-lg">$ {{ totalCloPer() | number: "3.2" }}</span>
             </div>
         </div>
     </div>

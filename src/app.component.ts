@@ -17,6 +17,7 @@ export class AppComponent {
   constructor(
     private localStorageService: LocalStorageService,
   ){
+    console.log('localStorageService...', localStorageService.obtenerUsuario());
         constantesLocalStorage.nombreUsuario = localStorageService.obtenerUsuario();
         constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
         constantesLocalStorage.idusuario = localStorageService.obtenerDataGeneral().idusuario;

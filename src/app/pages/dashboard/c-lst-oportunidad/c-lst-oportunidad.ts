@@ -23,9 +23,10 @@ export class CLstOportunidad implements OnInit, OnDestroy {
     @Input() IA_data: any;
     $listSubcription: Subscription[] = [];
     @ViewChild('menu') menu!: Menu;
-    @Output() verCotizacion = new EventEmitter<any>();
+    @Output() verQuote = new EventEmitter<any>();
     @Output() verBussines = new EventEmitter<any>();
-    @Output() OB_back = new EventEmitter<any>();
+    @Output() OB_back = new EventEmitter<any>();     
+    @Output() verMntOportunidad = new EventEmitter<any>();
     codigoBC: string = '';
     cardList= signal<any[]>([]);
     dataCT: any;
@@ -158,16 +159,17 @@ export class CLstOportunidad implements OnInit, OnDestroy {
     }
 
     businessCase(data: KanbanCard) {
+        console.log('businessCase : ', data);
         this.verBussines.emit(data);
         //this.codigoBC = data.id;
     }
 
     quote(data: KanbanCard) {
-        this.verCotizacion.emit(data);
-        console.log('data : ', data);
+        console.log('quote : ', data);
+        this.verQuote.emit(data);
 
-        // const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio} = data;
-        // this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio};
+        //const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio} = data;
+        //this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio};
     }
 
     // anexos(dato: any, param: string) {
@@ -182,6 +184,7 @@ export class CLstOportunidad implements OnInit, OnDestroy {
     // }
 
     cargarOportunidades(datos: any) {
+        this.cardList.set([]);
         this.lstExportar.set([]);
         this.setSpinner(true);
         //console.log('cargarOportunidades', datos);
@@ -208,6 +211,8 @@ export class CLstOportunidad implements OnInit, OnDestroy {
     }
 
     getListakanban() {
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Cargando...';
         const $getListakanban = this.kanbanService.ListaKanban().subscribe({
             next: (rpta: any) => {
                 console.log('rpta getListakanban : ', rpta);
@@ -215,6 +220,7 @@ export class CLstOportunidad implements OnInit, OnDestroy {
                 //this.lstExportar = rpta;
             },
             error: (err) => {
+                this.setSpinner(false);
                 console.error('error : ', err);
                 this.messageService.clear();
                 this.messageService.add({
@@ -223,7 +229,9 @@ export class CLstOportunidad implements OnInit, OnDestroy {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {
+                this.setSpinner(false);
+            }
         });
         this.$listSubcription.push($getListakanban);
     }
@@ -285,7 +293,9 @@ export class CLstOportunidad implements OnInit, OnDestroy {
 
     onRowSelect(event: any) {
         console.log('onRowSelect', event.data);
-        this.dataOpo = event.data;
+
+        this.verMntOportunidad.emit(event.data);
+        /*this.dataOpo = event.data;
         this.setSpinner2(true);
         this.mensajeSpinner = 'Cargando...!';
 
@@ -304,7 +314,7 @@ export class CLstOportunidad implements OnInit, OnDestroy {
                 });
             },
             complete: () => {}
-        });
+        });*/
     }
 
     actualizarKanban(data: any) {
@@ -321,7 +331,7 @@ export class CLstOportunidad implements OnInit, OnDestroy {
 
     quote2(data: KanbanCard) {
         console.log('quote2 : ', data);
-        this.verCotizacion.emit(data);
+        this.verQuote.emit(data);
     }
 
     oportunidadextList() {

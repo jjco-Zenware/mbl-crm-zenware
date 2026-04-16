@@ -3,15 +3,15 @@
 
     <form [formGroup]="registerFormRegistro" class="p-fluid grid p-2 m-1 gap-3" > 
         <div class="flex flex-col grow basis-0 gap-1">
-            <label class="text-blue-600 font-semibold"> <i class="pi pi-folder-open" style="margin-right: 10px"></i> Oportunidad :</label>
+            <label class="font-semibold"> <i class="pi pi-folder-open" style="margin-right: 10px"></i> Oportunidad :</label>
             <span>{{ registerFormRegistro.get('oportunidad')?.value }}</span>
         </div>   
         <div class="flex flex-col grow basis-0 gap-1">
-            <label class="text-blue-600 font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>Cliente :</label>
+            <label class="font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>Cliente :</label>
             <span>{{ registerFormRegistro.get('cliente')?.value }}</span>
         </div>   
         <div class="flex flex-col grow basis-0 gap-1">
-            <label class="text-blue-600 font-semibold"> <i class="pi pi-calendar" style="margin-right: 10px"></i>Fecha :</label>
+            <label class="font-semibold"> <i class="pi pi-calendar" style="margin-right: 10px"></i>Fecha :</label>
             <div>
                 <!-- <span> Del </span> -->
                 <span>{{ registerFormRegistro.get('fechaini')?.value }}</span>
@@ -24,11 +24,11 @@
             </div>
         </div> 
         <div class="flex flex-col grow basis-0 gap-1">
-            <label class="text-blue-600 font-semibold"> <i class="pi pi-cog" style="margin-right: 10px"></i>Plan de Acción :</label>
+            <label class="font-semibold"> <i class="pi pi-cog" style="margin-right: 10px"></i>Plan de Acción :</label>
             <span>{{ registerFormRegistro.get('desplan')?.value }}</span>
         </div>  
         <div class="flex flex-col grow basis-0 gap-1">
-            <label class="text-blue-600 font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>Account Manager:</label>
+            <label class="font-semibold"> <i class="pi pi-user" style="margin-right: 10px"></i>KAM:</label>
             <span>{{ registerFormRegistro.get('nomusuario')?.value }}</span>
         </div>    
            

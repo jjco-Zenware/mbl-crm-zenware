@@ -6,11 +6,12 @@ import { SharedAppService } from '../../shared/sharedApp.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { LeadService } from '../lead.services';
 import { Subscription } from 'rxjs';
+import { CProgressSpinnerComponent } from '../../shared/c-progress-spinner/c-progress-spinner.component';
 
 @Component({
     selector: 'app-c-calificacion',
     templateUrl: './m-califica.html',
-    imports: [PRIMENG_MODULES],
+    imports: [PRIMENG_MODULES, CProgressSpinnerComponent],
     standalone: true,
     providers: [MessageService, ShareService, ConfirmationService, SharedAppService]
 })
@@ -29,6 +30,10 @@ export class CalificacionOport {
     verPlazo = signal<boolean>(false);
     verProceso = signal<boolean>(false);
     verCompetencia = signal<boolean>(false);
+    
+    verCalificacion = signal<boolean>(false);
+    mensajeSpinner: string = 'Cargando...!';
+    blockedDocument = signal<boolean>(false);
 
     constructor(
         public ref: DynamicDialogRef,
@@ -44,7 +49,14 @@ export class CalificacionOport {
         this.mostrarCalificacion();
     }
 
+    setSpinner(valor: boolean) {
+        this.blockedDocument.set(valor);
+    }
+
     mostrarCalificacion() {
+        this.mensajeSpinner = 'Calificando Oportunidad...!';
+        this.setSpinner(true);
+
         this.lstCalificacion.set([]);
         const $OportunidadesLista = this.leadService
             .calificaroport(this.config.data)
@@ -64,15 +76,23 @@ export class CalificacionOport {
                     this.verPlazo.set(rpta[0].plazo);
                     this.verProceso.set(rpta[0].proceso);
                     this.verCompetencia.set(rpta[0].competencia);
+
+                    if (this.score() === 8) {
+                        this.estaCalificada.set(true);
+                    }
+                    this.setSpinner(false);
                 },
                 error: (err) => {
+                    this.setSpinner(false);
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error...',
                         detail: err
                     });
                 },
-                complete: () => {}
+                complete: () => {
+                    this.verCalificacion.set(true);
+                }
             });
         this.$listSubcription.push($OportunidadesLista);
     }    

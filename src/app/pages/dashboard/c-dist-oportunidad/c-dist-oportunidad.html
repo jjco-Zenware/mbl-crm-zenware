@@ -11,8 +11,8 @@
 
                     <div class="flex flex-col justify-center p-2 col-6 -mt-1">
                         <div class="flex ml-1">
-                            <label class="font-semibold text-xl text-blue-600">Montos de Oportunidades por Etapa</label>
-                        </div>
+                            <label class="font-semibold text-xl">Monto Total de Oportunidades por Etapa</label>
+                        </div>                        
                     </div>
                     @if(verVendedor()){
                     <div class="flex flex-col justify-center p-2 col-6 -mt-1">
@@ -41,36 +41,40 @@
 
                         <div class="flex lg:w-1/1 mt-3 justify-between">
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(1)">
-                                <span class="font-medium text-lg" style="color: #9c27b0">Lead</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloLed() | number: "3.2" }}</span>
+                                <span class="font-medium text-lg" style="color: #DEBBF2">Lead</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloLea() | number: "3.2" }}</span>
+                            </div>
+                            <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(1)">
+                                <span class="font-medium text-lg" style="color: #9c27b0">Contacto</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloCon() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(2)">
-                                <span class="font-medium text-lg" style="color: #673ab7">Contacto</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloPip() | number: "3.2" }}</span>
+                                <span class="font-medium text-lg" style="color: #673ab7">Calificiación</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloCal() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(3)">
-                                <span class="font-medium text-lg" style="color: #27eccb">Calificiación</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloUps() | number: "3.2" }}</span>
+                                <span class="font-medium text-lg" style="color: #27eccb">Investigación</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloInv() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(4)">
-                                <span class="font-medium text-lg" style="color: #607d8b">Investigación</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloStr() | number: "3.2" }}</span>
+                                <span class="font-medium text-lg" style="color: #607d8b">Presentación</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloPre() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(5)">
-                                <span class="font-medium text-lg" style="color: #ff9800">Presentación</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloCom() | number: "3.2" }}</span>
-                            </div>
-                            <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(6)">
-                                <span class="font-medium text-lg" style="color: #D6F0AA">Cierre</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloWon() | number: "3.2" }}</span>
+                                <span class="font-medium text-lg" style="color: #ff9800">Cierre</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloCie() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(6)">
                                 <span class="font-medium text-lg" style="color: #1ba436">Cerrado</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloWon2() | number: "3.2" }}</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloCer() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col border-right-1 surface-border cursor-pointer" (click)="mostrarDetalle(7)">
                                 <span class="font-medium text-lg" style="color: #f32905">Perdido</span>
-                                <span class="mb-2 text-lg">$ {{ totalCloLos() | number: "3.2" }}</span>
+                                <span class="mb-2 text-lg">$ {{ totalCloPer() | number: "3.2" }}</span>
+                            </div>
+                            <div class="text-center p-2 flex flex-col border-right-1 surface-border">
+                                <span class="font-medium text-lg">TOTALES</span>
+                                <span class="mb-2 text-lg">$ {{ totales | number: "3.2" }}</span>
                             </div>
                         </div>
                     </div>

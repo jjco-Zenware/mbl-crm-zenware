@@ -31,7 +31,7 @@ export class CLeadReg {
     @Output() OB_back = new EventEmitter<boolean>();
     
     $listSubcription: Subscription[] = [];
-    card: KanbanCard = { id: '0', idlista: 1, monto: 0, tipocambio: 0, dueDate: '', taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '' };
+    card: KanbanCard = { id: '0', idlista: 0, monto: 0, tipocambio: 0, dueDate: '', taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '' };
 
     frmDatos: KanbanCard = { id: '0', idlista: 1, monto: 0, tipocambio: 0, dueDate: '', taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '', regoportunidadesext: [] };
     mensajeSpinner: string = 'Cargando...!';
@@ -1448,7 +1448,7 @@ tituloDetalle: any;
                     console.log('rpta gettipocambiodia', rpta);
                     console.log('rpta valTipo', rpta.valTipo);
                     this.tc = rpta.valTipo;
-                    //this.frmDatos.tipocambio = rpta.valTipo;
+                    this.frmDatos.tipocambio = rpta.valTipo;
                 },
                 error: (err) => {
                     this.setSpinner(false);

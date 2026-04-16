@@ -41,13 +41,13 @@ export class CReportGerenciaComponent implements OnInit {
     blockedDocument = signal<boolean>(false);
     mensajeSpinner: string = '';
     frmDatos!: FormGroup;
-    totalCloWon = signal<number>(0);
-    totalCloLos = signal<number>(0);
-    totalCloLed = signal<number>(0);
-    totalCloPip = signal<number>(0);
-    totalCloUps = signal<number>(0);
-    totalCloStr = signal<number>(0);
-    totalCloCom = signal<number>(0);
+    totalCloCon= signal<number>(0);
+    totalCloCal= signal<number>(0);
+    totalCloInv= signal<number>(0);
+    totalCloPre= signal<number>(0);
+    totalCloCie= signal<number>(0);
+    totalCloCer= signal<number>(0);
+    totalCloPer= signal<number>(0);
     totales = signal<number>(0);
     lstOportunidades: any[] = [];
     lstNroOpor: any[] = [];
@@ -110,7 +110,7 @@ export class CReportGerenciaComponent implements OnInit {
 
         this.listaVendedor();
 
-        this.consultarData();
+        //this.consultarData();
         //this.monthlyChartInit2();
     }
 
@@ -154,7 +154,7 @@ export class CReportGerenciaComponent implements OnInit {
             next: (rpta: any) => {
                 console.info('listaVendedor : ', rpta);
                 this.Vendedor = rpta;
-                ///this.frmDatos.get('idusuario')?.setValue(constantesLocalStorage.idusuario);
+                this.frmDatos.get('idvendedor')?.setValue(rpta[0].idusuario);
             },
             error: (err) => {
                 console.info('error : ', err);
@@ -165,7 +165,9 @@ export class CReportGerenciaComponent implements OnInit {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {
+                this.consultarData();
+            }
         });
     }
 
@@ -337,7 +339,7 @@ export class CReportGerenciaComponent implements OnInit {
             datasets: [
                 {
                     type: 'bar',
-                    label: 'Lead',
+                    label: 'Contacto',
                     data: this.lstMontoOporLead,
                     backgroundColor: LeadColor,
                     borderWidth: 1,
@@ -345,7 +347,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Pipeline',
+                    label: 'Calificación',
                     data: this.lstMontoOporPipe,
                     backgroundColor: PipeColor,
                     borderWidth: 1,
@@ -353,7 +355,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Upside',
+                    label: 'Investigación',
                     data: this.lstMontoOporUpsi,
                     backgroundColor: UpsiColor,
                     borderWidth: 1,
@@ -361,7 +363,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Strong',
+                    label: 'Presentación',
                     data: this.lstMontoOporStro,
                     backgroundColor: StroColor,
                     borderWidth: 1,
@@ -369,7 +371,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Commit',
+                    label: 'Cierre',
                     data: this.lstMontoOporComm,
                     backgroundColor: CommColor,
                     borderWidth: 1,
@@ -377,7 +379,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Won',
+                    label: 'Cerrado',
                     data: this.lstMontoOporWon,
                     backgroundColor: WonColor,
                     borderWidth: 1,
@@ -385,7 +387,7 @@ export class CReportGerenciaComponent implements OnInit {
                 },
                 {
                     type: 'bar',
-                    label: 'Lost',
+                    label: 'Perdido',
                     data: this.lstMontoOporLost,
                     backgroundColor: LostColor,
                     borderWidth: 1,
@@ -579,34 +581,34 @@ export class CReportGerenciaComponent implements OnInit {
 
     cargarDataChart(data: any) {
         //console.log('cargarDataChart', data);
-        this.totalCloWon.set(0);
-        this.totalCloLos.set(0);
-        this.totalCloLed.set(0);
-        this.totalCloPip.set(0);
-        this.totalCloUps.set(0);
-        this.totalCloStr.set(0);
-        this.totalCloCom.set(0);
+        this.totalCloCon.set(0);
+        this.totalCloCal.set(0);
+        this.totalCloInv.set(0);
+        this.totalCloPre.set(0);
+        this.totalCloCie.set(0);
+        this.totalCloCer.set(0);
+        this.totalCloPer.set(0);
         data.forEach((item: any) => {
-            if (item.name === 'LEAD ') {
-                this.totalCloLed.set(item.y);
+            if (item.name === 'CONTACTO') {
+                this.totalCloCon.set(item.y);
             }
-            if (item.name === 'PIPELINE') {
-                this.totalCloPip.set(item.y);
+            if (item.name === 'CALIFICACION') {
+                this.totalCloCal.set(item.y);
             }
-            if (item.name === 'UPSIDE') {
-                this.totalCloUps.set(item.y);
+            if (item.name === 'INVESTIGACION') {
+                this.totalCloInv.set(item.y);
             }
-            if (item.name === 'STRONG') {
-                this.totalCloStr.set(item.y);
+            if (item.name === 'PRESENTACION') {
+                this.totalCloPre.set(item.y);
             }
-            if (item.name === 'COMMIT') {
-                this.totalCloCom.set(item.y);
+            if (item.name === 'CIERRE') {
+                this.totalCloCie.set(item.y);
             }
-            if (item.name === 'LOST') {
-                this.totalCloLos.set(item.y);
+            if (item.name === 'PERDIDO') {
+                this.totalCloPer.set(item.y);
             }
-            if (item.name === 'WON') {
-                this.totalCloWon.set(item.y);
+            if (item.name === 'CERRADO') {
+                this.totalCloCer.set(item.y);
             }
         });
         //this.monthlyChartInit();

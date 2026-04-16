@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, map, tap } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
 import { KanbanCard, KanbanList } from '../../model/interfaces';
 import { constantesApiWeb } from '../../model/apiVariables';
 import { constantesLocalStorage } from '../../model/constantes';
@@ -18,15 +18,7 @@ export class KanbanService {
     selectedListId$ = this.selectedListId.asObservable();
     listNames$ = this.listNames.asObservable();
 
-    constructor(private http: HttpClient) {
-
-        // this.http.get<any>('assets/demo/data/kanban.json')
-        // .toPromise()
-        // .then(res => res.data as KanbanList[])
-        // .then(data => {
-        //     this.updateLists(data);
-        // });
-    }
+    constructor(private http: HttpClient) {}
 
     isMobileDevice() {
         return (/iPad|iPhone|iPod/.test(navigator.userAgent)) || (/(android)/i.test(navigator.userAgent));
@@ -34,57 +26,46 @@ export class KanbanService {
 
     private updateLists(data: any[]) {
         this._lists = data;
-        let small = data.map(l => ({listId:l.listId, title: l.title, cards: l.cards}));
-        this.listNames.next(small)
+        let small = data.map(l => ({ listId: l.listId, title: l.title, cards: l.cards }));
+        this.listNames.next(small);
         this.lists.next(data);
     }
 
-    kanbanList(objeto:any) {
+    kanbanList(objeto: any) {
         const url = `${constantesApiWeb.kanbanList}`;
-          return  this.http
-          .post<KanbanList>(url, objeto)
-          .pipe(
-            tap((data: any) => {
-                this.updateLists(data.listas);
-              }),
+        return this.http
+            .post<KanbanList>(url, objeto)
+            .pipe(
+                tap((data: any) => {
+                    this.updateLists(data.listas);
+                }),
             );
     }
 
     addCard(listId: string) {
         const cardId = "0";
-        const newCard = {id: cardId, idlista:1,  idcliente: 0, description: '', monto: 0,tipocambio: 0, progress: 0, assignees: [], attachments: 0, comments: [], contactos:[], regoportunidadesext:[], preventas: [], startDate: '', dueDate: '', fecampliacion: '', codigoproyecto:'', completed: false, taskList: {title:'Untitled Task List', tasks: []}};
-
-        let lists = [];
-        lists = this._lists.map(l => l.listId === listId ? ({...l, cards: [...l.cards || [], newCard]}) : l);
-        //this.updateLists(lists);
+        const newCard = { id: cardId, idlista: 1, idcliente: 0, description: '', monto: 0, tipocambio: 0, progress: 0, assignees: [], attachments: 0, comments: [], contactos: [], regoportunidadesext: [], preventas: [], startDate: '', dueDate: '', fecampliacion: '', codigoproyecto: '', completed: false, taskList: { title: 'Untitled Task List', tasks: [] } };
         this.onCardSelect(newCard, listId);
     }
 
     prcCard(objeto: any, listId: string) {
-
-        let objectParam ={
-            oportunidad : objeto,
-            idusuario : constantesLocalStorage.idusuario,
-            idlista : listId
-        }
+        let objectParam = {
+            oportunidad: objeto,
+            idusuario: constantesLocalStorage.idusuario,
+            idlista: listId
+        };
         const url = `${constantesApiWeb.kanbanCard}`;
-        return this.http.post<any>(url, objectParam)
+        return this.http.post<any>(url, objectParam);
     }
 
     updateCardLista(idoportunidad: string, listId: string) {
-
-        const objectParam ={
-            idoportunidad : idoportunidad,
-            idusuario : constantesLocalStorage.idusuario,
-            idlista : listId
-        }
-
+        const objectParam = {
+            idoportunidad: idoportunidad,
+            idusuario: constantesLocalStorage.idusuario,
+            idlista: listId
+        };
         const url = `${constantesApiWeb.kanbanCardLista}`;
-        return this.http.post<any>(url, objectParam)
-        .pipe(
-            tap((data: any) => {
-              }),
-            );
+        return this.http.post<any>(url, objectParam);
     }
 
     deleteList(id: string) {
@@ -93,24 +74,19 @@ export class KanbanService {
     }
 
     deleteCard(cardId: string, listId: string) {
-        console.log(cardId, listId);
-        let objectParam ={
-            idoportunidad : cardId,
+        let objectParam = {
+            idoportunidad: cardId,
             idlista: listId,
-            idusuario : constantesLocalStorage.idusuario
-        }
-        //console.log('Eliminando Oportunidad...', objectParam);
+            idusuario: constantesLocalStorage.idusuario
+        };
         const url = `${constantesApiWeb.kanbanCardDelete}`;
-        //console.log("kanbanCardDelete : ", url);
-        return this.http.post<any>(url, objectParam)
+        return this.http.post<any>(url, objectParam);
     }
 
     deleteCardLista(cardId: string, listId: string) {
         let lists = [];
-        /*Eliminando de la lista*/
         for (let i = 0; i < this._lists.length; i++) {
             let list = this._lists[i];
-
             if (list.listId === listId && list.cards) {
                 list.cards = list.cards.filter(c => c.id !== cardId);
             }
@@ -121,48 +97,35 @@ export class KanbanService {
 
     copyCard(card: KanbanCard, listId: string) {
         let lists = [];
-
         for (let i = 0; i < this._lists.length; i++) {
             let list = this._lists[i];
-
             if (list.listId === listId && list.cards) {
                 let cardIndex = list.cards.indexOf(card) + 1;
                 let newId = '0';
-                let newCard = {...card, id: newId, title:'Copia de Oportunidad'};
+                let newCard = { ...card, id: newId, title: 'Copia de Oportunidad' };
                 list.cards.splice(cardIndex, 0, newCard);
             }
-
             lists.push(list);
         }
-
         this.updateLists(lists);
     }
 
     moveCard(card: KanbanCard, targetListId: string, sourceListId: string) {
-        console.log('mover card...',card);
         if (card.id) {
             this.deleteCard(card.id, sourceListId);
-            let lists = this._lists.map(l => l.listId === targetListId ? ({...l, cards: [...l.cards || [], card]}) : l);
+            let lists = this._lists.map(l => l.listId === targetListId ? ({ ...l, cards: [...l.cards || [], card] }) : l);
             this.updateLists(lists);
         }
     }
 
-    // onCardSelect(card: KanbanCard, listId: string) {
-    //     console.log('ver card...',card);
-    //     this.selectedCard.next(card);
-    //     this.selectedListId.next(listId);
-    // }
-
-    onCardSeleccionar(idportunidad:string, listId: string) {
+    onCardSeleccionar(idportunidad: string, listId: string) {
         const url = `${constantesApiWeb.kanbanOportunidadUno}${idportunidad}`;
         return this.http.get<any>(url)
-        .pipe(
-            tap((data: any) => {
-                //console.log("ver card... : ", data);
-                //console.log("kanbanList : ", data.listas);
+            .pipe(
+                tap((data: any) => {
                     this.selectedCard.next(data);
                     this.selectedListId.next(listId);
-              }),
+                }),
             );
     }
 
@@ -174,20 +137,18 @@ export class KanbanService {
     generateId() {
         let text = "";
         let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
         for (var i = 0; i < 5; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-
         return text;
     }
 
-    oportunidadTraeruno(idportunidad:string) {
+    oportunidadTraeruno(idportunidad: string) {
         const url = `${constantesApiWeb.kanbanOportunidadUno}${idportunidad}`;
         return this.http.get<any>(url);
     }
 
-    obtenerClientes(tipoRol:string) {
+    obtenerClientes(tipoRol: string) {
         const url = `${constantesApiWeb.kanbanListaClientes}${tipoRol}`;
         return this.http.get<any>(url);
     }
@@ -202,26 +163,14 @@ export class KanbanService {
         return this.http.get<any>(url);
     }
 
-    obtenerContactos(idCliente:string) {
+    obtenerContactos(idCliente: string) {
         const url = `${constantesApiWeb.kanbanListaContactosOpor}${idCliente}`;
         return this.http.get<any>(url);
     }
 
-    // ListaKanban(objeto: any, listId: string) {
-
-    //     let objectParam ={
-    //         oportunidad : objeto,
-    //         idusuario : constantesLocalStorage.idusuario,
-    //         idlista : listId
-    //     }
-        
-    //     const url = `${constantesApiWeb.Listakanban}`;
-    //     return this.http.post<any>(url, objectParam)
-    // }
-
     prcClientes(objeto: any) {
         const url = `${constantesApiWeb.prcClientes}`;
-        return this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
     listarUsuarios() {
@@ -229,7 +178,7 @@ export class KanbanService {
         return this.http.get<any>(url);
     }
 
-    listarUsuariosxPerfil(idperfil:any) {
+    listarUsuariosxPerfil(idperfil: any) {
         const url = `${constantesApiWeb.kanbanListaUsuarioxPerfil}${idperfil}`;
         return this.http.get<any>(url);
     }
@@ -239,14 +188,14 @@ export class KanbanService {
         return this.http.get<any>(url);
     }
 
-    enviarCorreoAsignacion(idportunidad:string) {
+    enviarCorreoAsignacion(idportunidad: string) {
         const url = `${constantesApiWeb.enviarCorreoAsignacion}${idportunidad}`;
         return this.http.get<any>(url);
     }
 
-    gettipocambiodia(objeto:any) {
+    gettipocambiodia(objeto: any) {
         const url = `${constantesApiWeb.gettipocambiodia}`;
-            return  this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
     listarTipoProducto() {
@@ -254,23 +203,23 @@ export class KanbanService {
         return this.http.get<any>(url);
     }
 
-    getUserSession(objeto:any) {
+    getUserSession(objeto: any) {
         const url = `${constantesApiWeb.getUserSession}`;
-            return  this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
     ListaKanban() {
         const url = `${constantesApiWeb.Listakanban}`;
-        return this.http.get<any>(url)
+        return this.http.get<any>(url);
     }
 
     lstCantTareas(objeto: any) {
         const url = `${constantesApiWeb.lstCantTareas}`;
-        return this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
-     ListarNotificacion(codigo:number) {
+    ListarNotificacion(codigo: number) {
         const url = `${constantesApiWeb.ListarNotificacion}${codigo}`;
-        return  this.http.get<any>(url)
+        return this.http.get<any>(url);
     }
 }

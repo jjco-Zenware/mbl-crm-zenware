@@ -10,6 +10,7 @@ import { IPublicClientApplication, PublicClientApplication, InteractionType, Log
 import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
 import { MessageService } from 'primeng/api';
+import { provideEchartsCore } from 'ngx-echarts';
 
 registerLocaleData(localeEsPe, 'es-PE');
 
@@ -76,6 +77,9 @@ const MyPreset = definePreset(Material, {
 export const appConfig: ApplicationConfig = {
     
     providers: [
+        provideEchartsCore({
+      echarts: () => import('echarts')
+    }),
         MessageService,
         provideRouter(
             appRoutes,
@@ -112,6 +116,7 @@ export const appConfig: ApplicationConfig = {
             provide: MSAL_INTERCEPTOR_CONFIG,
             useFactory: MSALInterceptorConfigFactory
         },
+        
         // {
         //     provide: MSAL_INSTANCE,
         //     useFactory: MSALInstanceFactory

@@ -1,0 +1,217 @@
+@if(vistaLista()) {
+<div class="card gap-2">
+    <div class="flex col-12 gap-2 mb-3">
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">OPORTUNIDADES</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-12 flex justify-between m-2">
+        <div class="col-span-12">
+            <p-timeline [value]="events()" layout="horizontal" align="top">
+                <ng-template pTemplate="marker" let-event>
+                    <div class="justify-start align-items-center flex">
+                        <span class="custom-marker shadow-2" [style.backgroundColor]="event.bgcolor">
+                            <i [ngClass]="event.bgicon"></i>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="opposite" let-event> {{event.title}} </ng-template>
+            </p-timeline>
+        </div>
+    </div> 
+    
+
+    <form [formGroup]="frmDatos" class="p-fluid grid mt-2">
+        <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold">Desde</label>
+                <p-datepicker formControlName="fechaini" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold">Hasta</label>
+                <p-datepicker formControlName="fechafin" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+            </div>
+            <!-- <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Vendedor</label>
+                    <p-select [options]="Vendedor" formControlName="idvendedor" placeholder="Seleccionar Vendedor..." optionLabel="name"
+                     optionValue="idusuario" size="small" [filter]="true" ></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Cliente</label>
+                    <p-select [options]="lstProveedores" formControlName="idcliente" id="idcliente" placeholder="Seleccionar Cliente..." optionLabel="nomcomercial"
+                     optionValue="idcliente" size="small" [filter]="true" (onChange)="listarOportunidades()"></p-select>
+                </div>
+                <div class="flex flex-col grow gap-1">
+                    <label class="font-semibold">Oportunidad</label>
+                    <p-select [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad..." optionLabel="nomcomercial"
+                    optionLabel="titulo" appendTo="body" [filter]="true" optionValue="id" size="small"></p-select>
+                </div> -->
+            <div class="flex flex-col grow basis-0 gap-1">
+                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="actualizarLista()"></button>
+            </div>
+        </div>
+    </form>
+
+    
+
+    <!-- <div class="mb-2 py-3 h-3rem flex border-round p-2 fonthead w-full text-base">
+                <span class="font-semibold">OPORTUNIDADES</span>
+            </div> -->
+
+    <p-table
+        #dt1
+        [value]="cardList()"
+        [rows]="25"
+        [rowHover]="true"
+        [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [resizableColumns]="true"
+        [rowsPerPageOptions]="[25,50]"
+        selectionMode="single"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        dataKey="id"
+        stateStorage="session"
+        size="small"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">N°</div>
+                </th>
+                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        N°<br />
+                        OPOR
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        TITULO<br />
+                        OPORTUNIDAD
+                    </div>
+                </th>
+                <th style="width: 250px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">VENDEDOR</div>
+                </th>
+                <th style="width: 250px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">PREVENTA</div>
+                </th>
+                <th style="width: 250px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">CLIENTE</div>
+                </th>
+                <!-- <th style="width: 250px;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            PROVEEDOR
+                        </div>
+                    </th> -->
+                <th style="width: 250px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">MONTO</div>
+                </th>
+                <th style="width: 100px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">ESTADO</div>
+                </th>
+                <th style="width: 100px" class="bg-teal-50 border-1">FECHA</th>
+                <th class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">DETALLE</div>
+                </th>
+                <th style="width: 80px" class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">ACCIONES</div>
+                </th>
+            </tr>
+            <tr>
+                <th></th>
+                <th *ngFor="let col of cols">
+                    <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, 'contains')" class="w-full h-2rem" />
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <!-- [pSelectableRow]="data" -->
+            <tr>
+                <td>{{rowIndex + 1}}</td>
+                <td>{{data.id}}</td>
+                <td>
+                    <div pTooltip="{{data.title | uppercase}}">{{(data.title.length > 40) ? ((data.title).slice(0, 40) + '...' | uppercase) : data.title | uppercase}}</div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">{{data.nomcreador | uppercase}}</div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">{{data.nompreventa | uppercase}}</div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">{{data.nomcomercial | uppercase}}</div>
+                </td>
+                <!-- <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.nomproveedor | uppercase}}
+                        </div>
+                    </td> -->
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">{{data.simbmoneda + ' '}} {{ data.monto | number: '3.2'}}</div>
+                </td>
+                <td>
+                    <div class="flex">
+                        <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
+                            <i [ngClass]="data.bgicon"></i>
+                        </span>
+                        <span class="mt-1">{{ data.nomlista | uppercase}}</span>
+                    </div>
+                </td>
+                <td>{{data.startDate }}</td>
+                <td>
+                    <div class="flex align-items-center">
+                        <span *ngIf="data.nrotareas" pTooltip="Tareas" class="flex align-items-center font-semibold mr-3 text-blue-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>
+                        <span *ngIf="data.nroadjuntos" pTooltip="Adjuntos" class="flex align-items-center font-semibold mr-3 text-orange-600"><i class="pi pi-paperclip mr-2"></i>{{data.nroadjuntos}}</span>
+                        <span *ngIf="data.nroasignados" pTooltip="Asignados" class="flex align-items-center font-semibold mr-3 text-green-600"><i class="pi pi-users mr-2"></i>{{data.nroasignados}}</span>
+                        <!-- <span pTooltip="Fecha Final" class="flex align-items-center font-semibold white-space-nowrap" *ngIf="data.startDate"><i class="pi pi-clock mr-2"></i>{{data.fechafinal }}</span>-->
+                    </div>
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
+                        <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button>
+
+                        <button
+                            *ngIf="data.acciones"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-ellipsis-v"
+                            class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"
+                            (click)="toggleMenu($event, data)"
+                            pTooltip="Transacciones Disponibles"
+                            tooltipPosition="left"
+                        ></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="8">Cargando datos. Espere por favor.</td>
+                8
+            </tr>
+        </ng-template>
+    </p-table>
+    <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
+</div>
+} @else{}
+
+<!--
+<ng-template #visSecciones>
+    <app-c-business-case  *ngIf="visBussines" [IS_codigo]="codigoBC" (OB_back)="getOportunidad($event)"/>
+    <app-c-cotizacion *ngIf="visQuote" [IA_data]="dataCT" (OB_back)="getOportunidad($event)"/>
+</ng-template>-->
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-confirmDialog [style]="{width: '30vw'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>

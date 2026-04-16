@@ -1,4 +1,5 @@
-import { environment } from "src/environments/environment";
+import { environment } from "@/environments/environment.development";
+
 
 
 const webApi = environment.webAPI;
@@ -75,6 +76,7 @@ export const constantesApiWeb = {
     obtenerDataDasboard: controllerCRM + '/oportunidadlist02',
     getDataFunnel1: controllerCRM + '/oportunidadfunnnel3',
     getDataFunnel2: controllerCRM + '/oportunidadfunnnel4',
+    getDataFunnel5: controllerCRM + '/oportunidadfunnnel5',
 
     kanbanListaUsuarioxPerfil: controllerCRM + '/listarusuariosperfil/',
 
@@ -97,6 +99,7 @@ export const constantesApiWeb = {
     obtenerClientes: controllerCRM + '/personalist/',
     listaGestionTareas: controllerCRM + '/tareaslist',
     tareaPrc: controllerCRM + '/tareaprc',
+    completarTarea: controllerCRM + '/tareacompletar',
     listarSubTareas: controllerCRM + '/listarsubtareas/',
     comentarioTareaPrc: controllerCRM + '/comentariotareaprc',
     listarComentariosTareas: controllerCRM + '/listarcomentariotareas/',
@@ -150,6 +153,9 @@ export const constantesApiWeb = {
     listTareaOport: controllerCRM + '/tareaslist09',
 
     tareaTraeruno: controllerCRM + '/tareastraeruno',
+    listaGestionTareas10: controllerCRM + '/tareaslist10',
+    listaOportunidad: controllerCRM + '/oportunidadlist09',
+    listaOportunidadAccion: controllerCRM + '/oportunidadlist10'
 }
 
 

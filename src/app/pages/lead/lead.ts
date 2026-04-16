@@ -10,7 +10,6 @@ import { CProgressSpinnerComponent } from '../shared/c-progress-spinner/c-progre
 import { PRIMENG_MODULES } from '../shared/primeng_modules';
 import { CLeadReg } from './lead-reg/lead-reg';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SwalService } from '../model/swal.service';
 
 @Component({
     selector: 'app-lead',
@@ -24,8 +23,8 @@ import { SwalService } from '../model/swal.service';
 export class Lead {
     $listSubcription: Subscription[] = [];
     ///lstOportunidades: any[] = [];
-    vistaLista: boolean = true;
-    visDetalle: boolean = false;
+    vistaLista = signal<boolean>(true);
+    visDetalle = signal<boolean>(false);
     tituloDetalle!: string;
     dataPrc: any;
     mensajeSpinner: string = 'Cargando...!';
@@ -36,7 +35,6 @@ export class Lead {
     lstOportunidades = signal<any[]>([]);
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly serviceSwal = inject(SwalService);
 
     constructor(
         private leadService: LeadService,
@@ -49,6 +47,7 @@ export class Lead {
 
     ngOnInit() {
         this.createFrm();
+        this.getBuscar();
         //this.Usuario = JSON.parse(localStorage.getItem('ZENWARE_OPOR')!);
     }
 
@@ -59,8 +58,8 @@ export class Lead {
             paramReg: 'E'
         };
         this.tituloDetalle = 'EDITAR LEAD ';
-        this.vistaLista = false;
-        this.visDetalle = true;
+        this.vistaLista.set(false);
+        this.visDetalle.set(true);
     }
 
     setSpinner(valor: boolean) {
@@ -109,8 +108,8 @@ export class Lead {
     }
 
     getBack() {
-        this.vistaLista = true;
-        this.visDetalle = false;
+        this.vistaLista.set(true);
+        this.visDetalle.set(false);
         this.getBuscar();
     }
 
@@ -120,8 +119,8 @@ export class Lead {
             id: '0',
             paramReg: 'N'
         };
-        this.vistaLista = false;
-        this.visDetalle = true;
+        this.vistaLista.set(false);
+        this.visDetalle.set(true);
     }
 
     getBuscar() {

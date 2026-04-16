@@ -6,32 +6,31 @@ import { I_RespuestaProceso } from '../model/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class LeadService {
-
-    constructor(@Inject(HttpClient) private http: HttpClient) { }
+    constructor(@Inject(HttpClient) private http: HttpClient) {}
 
     $emitter = new EventEmitter();
 
-    obtenerClientes(tipoRol:string) {
+    obtenerClientes(tipoRol: string) {
         const url = `${constantesApiWeb.kanbanListaClientes}${tipoRol}`;
         return this.http.get<any>(url);
     }
 
-    OportunidadesLista(objeto:any) {
+    OportunidadesLista(objeto: any) {
         const url = `${constantesApiWeb.OportunidadListar}`;
-          return  this.http.post<any>(url, objeto);
+        return this.http.post<any>(url, objeto);
     }
 
-    obtenerItemsTabla(id:number) {
+    obtenerItemsTabla(id: number) {
         const url = `${constantesApiWeb.lstItemsTabla}${id}`;
         return this.http.get<any>(url);
     }
 
-    newProyecto(objeto:any) {
+    newProyecto(objeto: any) {
         const url = `${constantesApiWeb.newProyecto}`;
-        return  this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
-     oportunidadTraeruno(idportunidad:string) {
+    oportunidadTraeruno(idportunidad: string) {
         const url = `${constantesApiWeb.kanbanOportunidadUno}${idportunidad}`;
         return this.http.get<any>(url);
     }
@@ -41,12 +40,12 @@ export class LeadService {
         return this.http.get<any>(url);
     }
 
-     obtenerMonedas() {
+    obtenerMonedas() {
         const url = `${constantesApiWeb.kanbanListaMonedas}`;
         return this.http.get<any>(url);
     }
 
-     listarPreventa() {
+    listarPreventa() {
         const url = `${constantesApiWeb.kanbanListaPreVenta}`;
         return this.http.get<any>(url);
     }
@@ -61,47 +60,46 @@ export class LeadService {
         return this.http.get<any>(url);
     }
 
-    obtenerContactos(idCliente:string) {
+    obtenerContactos(idCliente: string) {
         const url = `${constantesApiWeb.kanbanListaContactosOpor}${idCliente}`;
         return this.http.get<any>(url);
     }
 
     prcClientes(objeto: any) {
-        console.log("prcClientes : ", objeto);
+        console.log('prcClientes : ', objeto);
         const url = `${constantesApiWeb.prcClientes}`;
-        return this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
     prcCard(objeto: any, listId: string) {
-
-        let objectParam ={
-            oportunidad : objeto,
-            idusuario : constantesLocalStorage.idusuario,
-            idlista : listId
-        }
+        let objectParam = {
+            oportunidad: objeto,
+            idusuario: constantesLocalStorage.idusuario,
+            idlista: listId
+        };
         console.log('Registrando...', objectParam, 'IdLista', listId);
         const url = `${constantesApiWeb.kanbanCard}`;
-        console.log("updateCard : ", url);
-        return this.http.post<any>(url, objectParam)
+        console.log('updateCard : ', url);
+        return this.http.post<any>(url, objectParam);
     }
 
-    enviarCorreoAsignacion(idportunidad:string) {
+    enviarCorreoAsignacion(idportunidad: string) {
         const url = `${constantesApiWeb.enviarCorreoAsignacion}${idportunidad}`;
         return this.http.get<any>(url);
     }
 
-    listarArchivos(idOportunidad:string) {
+    listarArchivos(idOportunidad: string) {
         const url = `${constantesApiWeb.listaArchivos}${idOportunidad}`;
         return this.http.get<any>(url);
     }
 
     subirArchivo(objeto: any) {
-        console.log('subirArchivo...',objeto);
+        console.log('subirArchivo...', objeto);
         const url = `${constantesApiWeb.uploadfile}`;
         return this.http.post<any>(url, objeto);
     }
 
-     ListarAdjuntoProc(objeto: any) {
+    ListarAdjuntoProc(objeto: any) {
         const url = `${constantesApiWeb.listarAdjuntoProc}`;
         return this.http.post<any>(url, objeto);
     }
@@ -113,16 +111,16 @@ export class LeadService {
 
     downloadArchivo(objeto: any) {
         const headers = new HttpHeaders({
-            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Type': 'application/json; charset=utf-8'
             //Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          });
+        });
 
-          const url = `${constantesApiWeb.descargaradjunto}`;
-          return this.http.post(url,objeto, {
+        const url = `${constantesApiWeb.descargaradjunto}`;
+        return this.http.post(url, objeto, {
             headers: headers,
             observe: 'response',
             responseType: 'blob'
-          })
+        });
     }
 
     obtenerTipoDocumento(idtabla: number) {
@@ -135,33 +133,43 @@ export class LeadService {
         return this.http.post<any>(url, objeto);
     }
 
-    OportunidadesPlanAccion(objeto:any) {
+    OportunidadesPlanAccion(objeto: any) {
         const url = `${constantesApiWeb.OportunidadesPlanAccion}`;
-          return  this.http.post<any>(url, objeto);
+        return this.http.post<any>(url, objeto);
     }
 
-    prcPlanAccion(objeto:any) {
+    prcPlanAccion(objeto: any) {
         const url = `${constantesApiWeb.prcPlanAccion}`;
-          return  this.http.post<any>(url, objeto);
+        return this.http.post<any>(url, objeto);
     }
 
-     gettipocambiodia(objeto:any) {
+    gettipocambiodia(objeto: any) {
         const url = `${constantesApiWeb.gettipocambiodia}`;
-            return  this.http.post<any>(url, objeto)
+        return this.http.post<any>(url, objeto);
     }
 
-    calificaroport(id:number) {
+    calificaroport(id: number) {
         const url = `${constantesApiWeb.calificaroport}${id}`;
         return this.http.get<any>(url);
     }
 
-    listLeadPreventa(objeto:any) {
+    listLeadPreventa(objeto: any) {
         const url = `${constantesApiWeb.listLeadPreventa}`;
-          return  this.http.post<any>(url, objeto);
+        return this.http.post<any>(url, objeto);
     }
 
-    listTareaOport(objeto:any) {
+    listTareaOport(objeto: any) {
         const url = `${constantesApiWeb.listTareaOport}`;
-          return  this.http.post<any>(url, objeto);
+        return this.http.post<any>(url, objeto);
+    }
+
+    tareaPrc(objeto: any) {
+        const url = `${constantesApiWeb.tareaPrc}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    completarTarea(objeto: any) {
+        const url = `${constantesApiWeb.completarTarea}`;
+        return this.http.post<any>(url, objeto);
     }
 }

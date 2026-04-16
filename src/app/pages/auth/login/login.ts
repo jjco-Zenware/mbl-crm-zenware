@@ -268,7 +268,7 @@ export class Login {
                 rpta.nombreUsuario = this.email;
                 this.localStorage.setearLocalStorage(rpta);
                 this.isLoading.set(false);
-                this.router.navigate(['/pages/oportunidad']);
+                this.router.navigate(['/pages/dashboard']);
             },
             error: (err) => {
                 this.logoutAzure();

@@ -23,8 +23,8 @@ export class OportunidadService {
         return this.http.get<any>(url);
     }
 
-    OportunidadesLista(objeto: any) {
-        const url = `${constantesApiWeb.OportunidadListar}`;
+    listaOportunidad(objeto: any) {
+        const url = `${constantesApiWeb.listaOportunidad}`;
         return this.http.post<any>(url, objeto);
     }
 
@@ -191,5 +191,20 @@ export class OportunidadService {
      oportunidadextList(codigo:number, usuario:number) {
         const url = `${constantesApiWeb.oportunidadextList}${codigo}/${usuario}`;
         return this.http.get<any>(url)
+    }
+
+    listaTareas10(objeto: any) {
+        const url = `${constantesApiWeb.listaGestionTareas10}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    obtenerFunnel5(objeto:any) {
+        const url = `${constantesApiWeb.getDataFunnel5}`;
+        return  this.http.post<any>(url, objeto)
+    }
+
+    listaOportunidadAccion(objeto: any) {
+        const url = `${constantesApiWeb.listaOportunidadAccion}`;
+        return this.http.post<any>(url, objeto);
     }
 }

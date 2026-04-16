@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { I_rptaDataLogin } from '../model/interfaces';
+import { constantesLocalStorage } from '../model/constantes';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,19 @@ export class LocalStorageService {
     console.log('setearLocalStorage', respuestaData );
 
     localStorage.setItem('ZENWARE_OPOR', JSON.stringify(respuestaData));
+
+    // Sincronizar el singleton en memoria para que todos los componentes
+    // que usen constantesLocalStorage reflejen los datos del login actual
+    constantesLocalStorage.nombreUsuario = respuestaData.nombreUsuario ?? '';
+    constantesLocalStorage.login         = respuestaData.login ?? '';
+    constantesLocalStorage.token         = respuestaData.token ?? '';
+    constantesLocalStorage.idusuario     = respuestaData.idusuario ?? 0;
+    constantesLocalStorage.estado        = respuestaData.estado ?? 0;
+    constantesLocalStorage.mensaje       = respuestaData.mensaje ?? '';
+    constantesLocalStorage.tipoacceso    = respuestaData.tipoacceso ?? '';
+    constantesLocalStorage.imagen        = respuestaData.imagen ?? '';
+    constantesLocalStorage.idperfil      = respuestaData.idperfil ?? 0;
+    constantesLocalStorage.nomperfil     = respuestaData.nomperfil ?? '';
   }
 
   limpiar() {
@@ -29,8 +43,7 @@ export class LocalStorageService {
   }
 
   obtenerLogin(): string {
-    //return this.obtenerDataGeneral().login??'';
-    return 'ZenWare';
+    return this.obtenerDataGeneral().login ?? '';
   }
 
   obtenerToken():string {

@@ -28,14 +28,16 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     $listSubcription: Subscription[] = [];
     doughnutData: any;
     doughnutOptions: any
-    totalCloWon= signal<number>(0);
-    totalCloLos= signal<number>(0);
-    totalCloLed= signal<number>(0);
-    totalCloPip= signal<number>(0);
-    totalCloUps= signal<number>(0);
-    totalCloStr= signal<number>(0);
-    totalCloCom= signal<number>(0);
-    totalCloWon2= signal<number>(0);
+    totalCloLea= signal<number>(0);
+    totalCloCon= signal<number>(0);
+    totalCloCal= signal<number>(0);
+    totalCloInv= signal<number>(0);
+    totalCloPre= signal<number>(0);
+    totalCloCie= signal<number>(0);
+    totalCloCer= signal<number>(0);
+    totalCloPer= signal<number>(0);
+    totales: number = 0;
+    //totalCloWon2= signal<number>(0);
     chartOptionsData= signal<number[]>([]);
     chartOptionsLabel= signal<string[]>([]);
     customers!: Customer[];
@@ -46,7 +48,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     verCliente = signal<boolean>(false);
     verProducto = signal<boolean>(false);
     verSemiFull = signal<boolean>(false);
-    tipoChart: string = '';
+    tipoChart: 'bar' | 'line' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar' = 'bar';
     chartOptionscolor= signal<string[]>([]);
     blockedDocument = signal<boolean>(false);
     mensajeSpinner: string = 'Cargando...!';
@@ -61,6 +63,8 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.listaUsuarios();
         this.verCodigo();
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Cargando...';
     }
 
     setSpinner(valor: boolean) {
@@ -136,14 +140,15 @@ export class CDistOportunidad implements OnInit, OnDestroy {
 
     cargarDataChart(data: any) {
         //console.log('cargarDataChart', data);
-        this.totalCloWon.set(0);
-        this.totalCloWon2.set(0);
-        this.totalCloLos.set(0);
-        this.totalCloLed.set(0);
-        this.totalCloPip.set(0);
-        this.totalCloUps.set(0);
-        this.totalCloStr.set(0);
-        this.totalCloCom.set(0);
+        this.totalCloLea.set(0);
+        this.totalCloCon.set(0);
+        this.totalCloCal.set(0);
+        this.totalCloInv.set(0);
+        this.totalCloPre.set(0);
+        this.totalCloCie.set(0);
+        this.totalCloCer.set(0);
+        this.totalCloPer.set(0);
+        this.totales = data.reduce((acc: any, item: any) => acc + item.y, 0);
         this.chartOptionsLabel.set([]);
         this.chartOptionsData.set([]);
         this.chartOptionscolor.set([]);
@@ -152,26 +157,29 @@ export class CDistOportunidad implements OnInit, OnDestroy {
             this.chartOptionsData().push(item.y);
             this.chartOptionscolor().push(item.name);
             if (this.IS_codigo === 0) {
-                if (item.name === 'Lead ') {
-                    this.totalCloLed.set(item.y);
+                if (item.name === 'LEAD') {
+                    this.totalCloLea.set(item.y);
                 }
-                if (item.name === 'PIPELINE') {
-                    this.totalCloPip.set(item.y);
+                if (item.name === 'CONTACTO') {
+                    this.totalCloCon.set(item.y);
                 }
-                if (item.name === 'UPSIDE') {
-                    this.totalCloUps.set(item.y);
+                if (item.name === 'CALIFICACION') {
+                    this.totalCloCal.set(item.y);
                 }
-                if (item.name === 'STRONG') {
-                    this.totalCloStr.set(item.y);
+                if (item.name === 'INVESTIGACION') {
+                    this.totalCloInv.set(item.y);
                 }
-                if (item.name === 'COMMIT') {
-                    this.totalCloCom.set(item.y);
+                if (item.name === 'PRESENTACION') {
+                    this.totalCloPre.set(item.y);
                 }
-                if (item.name === 'LOST') {
-                    this.totalCloLos.set(item.y);
+                if (item.name === 'CIERRE') {
+                    this.totalCloCie.set(item.y);
                 }
-                if (item.name === 'WON') {
-                    this.totalCloWon.set(item.y);
+                if (item.name === 'PERDIDO') {
+                    this.totalCloPer.set(item.y);
+                }
+                if (item.name === 'CERRADO') {
+                    this.totalCloCer.set(item.y);
                 }
             }
         });
@@ -184,7 +192,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     }
 
     getDoughnutData() {
-        const { lead, pipeline, upside, strong, commit, won, lost } = this.getColors();
+        const { lead, contacto, calificacion, investigacion, presentacion, cierre, cerrado, perdido } = this.getColors();
         const borderColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
 
         //this.chartOptionscolor = this.getColors();
@@ -196,7 +204,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
                 {
                     data: this.chartOptionsData(),
                     //label:'Lead',
-                    backgroundColor: [lead, pipeline, upside, strong, commit, won, lost ],
+                    backgroundColor: [lead, contacto, calificacion, investigacion, presentacion, cierre, cerrado, perdido],
                     borderWidth: 1,
                     fill: true
                 },
@@ -247,13 +255,14 @@ export class CDistOportunidad implements OnInit, OnDestroy {
 
     getColors() {
         return {
-            lead: '#B39DDB',
-            pipeline: '#673AB7',
-            upside: '#27ECCB',
-            strong: '#607D8B',
-            commit: '#FF9800',
-            won: '#1BA436',
-            lost: '#F32905'
+            lead: '#DEBBF2',
+            contacto: '#B39DDB',
+            calificacion: '#673AB7',
+            investigacion: '#27ECCB',
+            presentacion: '#607D8B',
+            cierre: '#FF9800',
+            cerrado: '#1BA436',
+            perdido: '#F32905'
         };
     }
 
@@ -287,11 +296,13 @@ export class CDistOportunidad implements OnInit, OnDestroy {
         console.log('getDataFunnel', datos);
         const obtenerFunnel = this.oportunidadService.obtenerFunnel(datos).subscribe({
             next: (rpta: any) => {
+                this.setSpinner(false);
                 console.log('getDataFunnel', rpta[0].data[0]);
                 this.cargarDataChart(rpta[0].data[0].dataPoints);
             },
             error: (err) => {
                 console.error('error : ', err);
+                this.setSpinner(false);
                 this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',
@@ -299,7 +310,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {this.setSpinner(false);}
         });
     }
 
@@ -307,10 +318,12 @@ export class CDistOportunidad implements OnInit, OnDestroy {
         datos.tipo = 2;
         const obtenerFunnel = this.oportunidadService.obtenerFunnel1(datos).subscribe({
             next: (rpta: any) => {
+                this.setSpinner(false);
                 //console.log('getDataFunnel1', rpta[0].data[0]);
                 this.cargarDataChart(rpta[0].data[0].dataPoints);
             },
             error: (err) => {
+                this.setSpinner(false);
                 console.error('error : ', err);
                 this.messageService.clear();
                 this.messageService.add({
@@ -319,7 +332,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {this.setSpinner(false);}
         });
     }
 
@@ -327,10 +340,12 @@ export class CDistOportunidad implements OnInit, OnDestroy {
         datos.tipo = 2;
         const obtenerFunnel = this.oportunidadService.obtenerFunnel2(datos).subscribe({
             next: (rpta: any) => {
+                this.setSpinner(false);
                 //console.log('getDataFunnel2', rpta[0]);
                 this.cargarDataChart(rpta[0].data[0].dataPoints);
             },
             error: (err) => {
+                this.setSpinner(false);
                 console.error('error : ', err);
                 this.messageService.clear();
                 this.messageService.add({
@@ -339,7 +354,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {this.setSpinner(false);}
         });
     }
 

@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, signal} from '@angular/core';
-import { FormBuilder, FormGroup} from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { I_rptaDataLogin, Users } from '../model/interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from '../service/utilitarios.service';
@@ -16,18 +16,17 @@ import { LeadService } from '../lead/lead.services';
     imports: [CProgressSpinnerComponent, PRIMENG_MODULES],
     templateUrl: './accion.html',
     standalone: true,
-    providers: [MessageService],
+    providers: [MessageService]
 })
 export class Accion {
-
     $listSubcription: Subscription[] = [];
     lstOportunidad = signal<any[]>([]);
-    Usuario!:I_rptaDataLogin;
+    Usuario!: I_rptaDataLogin;
     lstProveedores = signal<any[]>([]);
     idoportunidad: any = 0;
     frmDatos!: FormGroup;
-    Vendedor= signal<any[]>([]);
-    mensajeSpinner: string = "Cargando...!";
+    Vendedor = signal<any[]>([]);
+    mensajeSpinner: string = 'Cargando...!';
     blockedDocument = signal(false);
     listaAcciones = signal<any[]>([]);
 
@@ -37,10 +36,8 @@ export class Accion {
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         private messageService: MessageService,
-        private leadService: LeadService,
-    ) {
-        
-    }
+        private leadService: LeadService
+    ) {}
 
     ngOnInit() {
         this.createFrm();
@@ -50,7 +47,7 @@ export class Accion {
     }
 
     setSpinner(valor: boolean) {
-            this.blockedDocument.set(valor);
+        this.blockedDocument.set(valor);
     }
 
     createFrm() {
@@ -58,92 +55,90 @@ export class Accion {
             fechaini: [
                 {
                     value: this.utilitariosService.obtenerFechaInicioMes(),
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             fechafin: [
                 {
                     value: this.utilitariosService.obtenerFechaFinMes(),
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idusuario: [
                 {
                     value: constantesLocalStorage.idusuario,
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idcliente: [
                 {
                     value: 0,
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idoportunidad: [
                 {
                     value: 0,
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idvendedor: [
                 {
                     value: constantesLocalStorage.idusuario,
-                    disabled: false,
-                },
-            ],
+                    disabled: false
+                }
+            ]
         });
     }
 
     listaClientes() {
-
         const $getClientes = this.leadService.obtenerClientes('CLI').subscribe({
-                next: (rpta: any) => {
-                    this.lstProveedores.set(rpta);
-                    const objet = {
-                        idcliente: 0,
-                        nomcomercial: 'TODOS',
-                    };
-                    
-                },
-                error: (err) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error...',
-                        detail: '',
-                    });
-                },
-                complete: () => { },
-            });
+            next: (rpta: any) => {
+                this.lstProveedores.set(rpta);
+                const objet = {
+                    idcliente: 0,
+                    nomcomercial: 'TODOS'
+                };
+            },
+            error: (err) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error...',
+                    detail: ''
+                });
+            },
+            complete: () => {}
+        });
         this.$listSubcription.push($getClientes);
     }
 
     listarOportunidades() {
-this.lstOportunidad.set([]);
+        this.lstOportunidad.set([]);
         if (this.frmDatos.value.idcliente > 0) {
-             
             const objeto = {
-                idcliente: this.frmDatos.value.idcliente,
+                idcliente: this.frmDatos.value.idcliente
             };
 
             const $getClientes = this.oportunidadService
-                .listarOportxCliente(objeto).pipe(takeUntilDestroyed(this.destroyRef))
+                .listarOportxCliente(objeto)
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
                     next: (rpta: any) => {
                         this.lstOportunidad.set(rpta);
                         const objet = {
                             id: 0,
-                            titulo: 'TODOS',
+                            titulo: 'TODOS'
                         };
                         //this.lstOportunidad.update((lst) => [objet, ...lst]);
                     },
                     error: (err) => {
                         this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error...',
-                        detail: '',
-                    });
+                            severity: 'error',
+                            summary: 'Error...',
+                            detail: ''
+                        });
                     },
-                    complete: () => { },
+                    complete: () => {}
                 });
             this.$listSubcription.push($getClientes);
         }
@@ -158,7 +153,7 @@ this.lstOportunidad.set([]);
                     ...lst,
                     {
                         idusuario: 0,
-                        name: "TODOS",
+                        name: 'TODOS'
                     } as Users
                 ]);
             },
@@ -168,29 +163,28 @@ this.lstOportunidad.set([]);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error...',
-                    detail: '',
+                    detail: ''
                 });
             },
-            complete: () => { },
+            complete: () => {}
         });
     }
 
-     getBuscar() {
+    getBuscar() {
         this.setSpinner(true);
         const objeto = {
-            ...this.frmDatos.getRawValue(),
+            ...this.frmDatos.getRawValue()
             //idusuario: 0,
         };
 
         const $listaAcciones = this.oportunidadService
-            .listaAcciones(objeto)
+            .listaTareas10(objeto)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
-                    console.log('rpta listaAcciones', rpta);
+                    console.log('rpta listaTareas10', rpta);
                     this.listaAcciones.set(rpta);
-
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -199,21 +193,19 @@ this.lstOportunidad.set([]);
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: err,
+                        detail: err
                     });
                 },
-                complete: () => {
-                },
+                complete: () => {}
             });
         this.$listSubcription.push($listaAcciones);
     }
 
-    getSeverity(data:any) {
-      if (data.completo) {
-        return 'success';
-      }else{
-        return 'warning';
-      }
+    getSeverity(data: any) {
+        if (data.completo) {
+            return 'success';
+        } else {
+            return 'warning';
+        }
     }
-
 }

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { CProgressSpinnerComponent } from '../shared/c-progress-spinner/c-progress-spinner.component';
 import { PRIMENG_MODULES } from '../shared/primeng_modules';
 import { UtilitariosService } from '../service/utilitarios.service';
-import { mensajesQuestion, mensajesSpinner } from '../model/constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '../model/constantes';
 import { Subscription } from 'rxjs';
 import { OportunidadService } from '../oportunidad/oportunidad.service';
 import { MessageService } from 'primeng/api';
@@ -33,6 +33,7 @@ export class Balance {
     options: any;
     platformId = inject(PLATFORM_ID);
     periodo: any;
+    tot_acciones: number = 0;
 
     constructor(
         private cd: ChangeDetectorRef,
@@ -58,7 +59,8 @@ export class Balance {
 
         const objeto = {
             annio: this.periodo.getFullYear(),
-            mes: this.periodo.getMonth() + 1
+            mes: this.periodo.getMonth() + 1,
+            idusuario: constantesLocalStorage.idusuario
         };
 
         const $listaTareas = this.oportunidadService.listaAccionesxMes(objeto).subscribe({
@@ -68,8 +70,10 @@ export class Balance {
                 this.lstCan = rpta.map((item: any) => item.CantidadAcciones);
                 this.lstMes = rpta.map((item: any) => item.Dia);
 
+                this.tot_acciones = rpta.reduce((acc: number, x: any) => acc + x.CantidadAcciones, 0)
+
                 console.log('this.lstMes', this.lstMes);
-                console.log('this.lstCan', this.lstCan);
+                console.log('rpta', rpta.reduce((acc: number, x: any) => acc + x.CantidadAcciones, 0));
 
                 this.initChart();
             },
@@ -113,7 +117,7 @@ export class Balance {
 
             this.options = {
                 maintainAspectRatio: false,
-                aspectRatio: 0.8,
+                aspectRatio: 0.9,
                 plugins: {
                     legend: {
                         labels: {
@@ -146,7 +150,7 @@ export class Balance {
                     },
                     y: {
                         min: 0,
-                        max: 5,
+                        //max: 20,
                         ticks: {
                             color: textColorSecondary,
                             stepSize: 1
