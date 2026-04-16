@@ -207,4 +207,9 @@ export class OportunidadService {
         const url = `${constantesApiWeb.listaOportunidadAccion}`;
         return this.http.post<any>(url, objeto);
     }
+
+    listaTareas11(objeto: any) {
+        const url = `${constantesApiWeb.listaGestionTareas11}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

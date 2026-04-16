@@ -17,13 +17,13 @@ export class AppComponent {
   constructor(
     private localStorageService: LocalStorageService,
   ){
-    console.log('localStorageService...', localStorageService.obtenerUsuario());
-        constantesLocalStorage.nombreUsuario = localStorageService.obtenerUsuario();
-        constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
-        constantesLocalStorage.idusuario = localStorageService.obtenerDataGeneral().idusuario;
-        constantesLocalStorage.imagen = localStorageService.obtenerDataGeneral().imagen;
-        constantesLocalStorage.idperfil = localStorageService.obtenerDataGeneral().idperfil;
-        constantesLocalStorage.nomperfil = localStorageService.obtenerDataGeneral().nomperfil;
+    console.log('localStorageService...', localStorageService);
+        // constantesLocalStorage.nombreUsuario = localStorageService.obtenerUsuario();
+        // constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
+        // constantesLocalStorage.idusuario = localStorageService.obtenerDataGeneral().idusuario;
+        // constantesLocalStorage.imagen = localStorageService.obtenerDataGeneral().imagen;
+        // constantesLocalStorage.idperfil = localStorageService.obtenerDataGeneral().idperfil;
+        // constantesLocalStorage.nomperfil = localStorageService.obtenerDataGeneral().nomperfil;
   }
 
   ngOnInit() {

@@ -33,7 +33,7 @@ export class AppMenu {
         if (this.idperfil === 4) {
             this.verComercial.set(true);
         }
-        
+
         this.model = [
             {
                 label: 'OPORTUNIDAD',
@@ -44,8 +44,8 @@ export class AppMenu {
                     { label: 'Registro Lead', icon: 'pi pi-fw pi-table', routerLink: ['/lead/lead'], visible: this.idperfil === 4 },
                     { label: 'Oportunidades', icon: 'pi pi-fw pi-list', routerLink: ['/listaopor/listaopor'] },
                     { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: ['/agenda/agenda'] },
-                    { label: 'Plan de Acción', icon: 'pi pi-fw pi-list', routerLink: ['/accion/accion'], visible: this.idperfil === 4  },
-                    { label: 'Tareas', icon: 'pi pi-fw pi-list', routerLink: ['/listatarea/listatarea'], visible: this.idperfil === 3 },
+                    { label: 'Plan de Acción', icon: 'pi pi-fw pi-list', routerLink: ['/accion/accion'], visible: this.idperfil === 4 },
+                    //{ label: 'Tareas', icon: 'pi pi-fw pi-list', routerLink: ['/listatarea/listatarea'], visible: this.idperfil === 3 },
                     {
                         label: 'Reportes',
                         icon: 'pi pi-fw pi-chart-pie',
@@ -83,15 +83,16 @@ export class AppMenu {
                             //     icon: 'pi pi-fw pi-phone',
                             //     routerLink: ['/llamada/llamada']
                             // },
-                            // {
-                            //     label: 'Tareas',
-                            //     icon: 'pi pi-fw pi-check-square',
-                            //     routerLink: ['/listatarea/listatarea']
-                            // },
+                            {
+                                label: 'Tareas',
+                                icon: 'pi pi-fw pi-check-square',
+                                routerLink: ['/listatarea/listatarea'],
+                                visible: this.idperfil === 3
+                            },
                             {
                                 label: 'Iniciativas PreVenta',
                                 icon: 'pi pi-fw pi-check-square',
-                                routerLink: ['/tareaspre/tareaspre'], 
+                                routerLink: ['/tareaspre/tareaspre'],
                                 visible: this.idperfil === 3
                             }
                         ]

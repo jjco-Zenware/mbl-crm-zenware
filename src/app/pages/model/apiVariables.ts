@@ -155,7 +155,8 @@ export const constantesApiWeb = {
     tareaTraeruno: controllerCRM + '/tareastraeruno',
     listaGestionTareas10: controllerCRM + '/tareaslist10',
     listaOportunidad: controllerCRM + '/oportunidadlist09',
-    listaOportunidadAccion: controllerCRM + '/oportunidadlist10'
+    listaOportunidadAccion: controllerCRM + '/oportunidadlist10',
+    listaGestionTareas11: controllerCRM + '/tareaslist11',
 }
 
 

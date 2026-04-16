@@ -112,12 +112,10 @@ export class Agenda {
         const objeto = {
             fechaini: this.desde,
             fechafin: this.hasta,
-            idusuario: constantesLocalStorage.idusuario,
-            idcliente: 0,
-            idoportunidad: 0
+            idusuario: constantesLocalStorage.idusuario
         };
 
-        const $listaTareas = this.oportunidadService.listaTareas10(objeto).subscribe({
+        const $listaTareas = this.oportunidadService.listaTareas11(objeto).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
                 console.log('rpta listaAgenda', rpta);
