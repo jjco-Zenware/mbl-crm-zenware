@@ -49,6 +49,7 @@ export class Grafico implements OnDestroy {
     idvendedor: number = 0;
     chartOption!: EChartsOption;
     chartOption2!: EChartsOption;
+    
 
     constructor(
         private cd: ChangeDetectorRef,
