@@ -293,19 +293,20 @@ export class AppTopbar {
             ]
         }
     ];
-    nomUsuario: string;
-    nomImagen: string;
-    logoUsuario: string;
+    nomUsuario!: string;
+    nomImagen!: string;
+    logoUsuario!: string;
 
     constructor(
         private confirmationService: ConfirmationService,
         private localStorageService: LocalStorageService,
         protected router: Router,
-    ) {
-        this.nomUsuario = constantesLocalStorage.nombreUsuario;
+    ) {}
+
+    ngOnInit() {
+    this.nomUsuario = constantesLocalStorage.nombreUsuario;
         this.nomImagen = constantesLocalStorage.imagen;
-        this.logoUsuario = constantesLocalStorage.imagen; 
-        
+        this.logoUsuario = constantesLocalStorage.imagen;
     }
 
     onMenuButtonClick() {
