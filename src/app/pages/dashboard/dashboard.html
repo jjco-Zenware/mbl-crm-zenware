@@ -44,14 +44,18 @@
                 <label>Año</label>
                 <p-datepicker [(ngModel)]="annio" view="year" dateFormat="yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
             </div>
+            @if(this.idperfil === 4){
             <div class="flex flex-col grow basis-0 gap-1">
                 <label>Vendedor</label>
                 <p-select [options]="Vendedor()" [(ngModel)]="idvendedor" id="idvendedor" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
             </div>
+        }
+        @if(this.idperfil === 2){
             <div class="flex flex-col grow basis-0 gap-1">
                 <label>PreVenta</label>
                 <p-select [options]="Preventa()" [(ngModel)]="idpreventa" id="idpreventa" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
             </div>
+        }
             <div class="flex flex-col mt-2">
                 <button pButton type="button" (click)="consultarData2()" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-3 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search"></button>
             </div>

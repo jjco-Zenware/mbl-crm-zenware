@@ -30,7 +30,7 @@ export class AppMenu {
         if (this.idperfil === 3) {
             this.verPreventa.set(true);
         }
-        if (this.idperfil === 4) {
+        if (this.idperfil === 2) {
             this.verComercial.set(true);
         }
 
@@ -41,10 +41,10 @@ export class AppMenu {
                     { label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/dashboard/dashboard'] },
                     { label: 'Kanban', icon: 'pi pi-fw pi-objects-column', routerLink: ['/kanban/kanban'] },
                     { label: 'Acciones Pendientes', icon: 'pi pi-fw pi-list', routerLink: ['/oportunidad/oportunidad'] },
-                    { label: 'Registro Lead', icon: 'pi pi-fw pi-table', routerLink: ['/lead/lead'], visible: this.idperfil === 4 },
+                    { label: 'Registro Lead', icon: 'pi pi-fw pi-table', routerLink: ['/lead/lead'], visible: this.idperfil === 2 },
                     { label: 'Oportunidades', icon: 'pi pi-fw pi-list', routerLink: ['/listaopor/listaopor'] },
                     { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: ['/agenda/agenda'] },
-                    { label: 'Plan de Acción', icon: 'pi pi-fw pi-list', routerLink: ['/accion/accion'], visible: this.idperfil === 4 },
+                    { label: 'Plan de Acción', icon: 'pi pi-fw pi-list', routerLink: ['/accion/accion'], visible: this.idperfil === 2 },
                     //{ label: 'Tareas', icon: 'pi pi-fw pi-list', routerLink: ['/listatarea/listatarea'], visible: this.idperfil === 3 },
                     {
                         label: 'Reportes',

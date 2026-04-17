@@ -101,15 +101,34 @@ export class Balance {
             const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
             const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-            let nommes = this.periodo.toLocaleString('default', { month: 'long' }).charAt(0).toUpperCase() + this.periodo.toLocaleString('default', { month: 'long' }).slice(1) + ' ' + this.periodo.getFullYear();
+            const nommes =
+                this.periodo.toLocaleString('es-PE', { month: 'long' }).replace(/^\w/, (c: string) => c.toUpperCase()) +
+                ' ' +
+                this.periodo.getFullYear();
+
+            const maxVal = Math.max(...this.lstCan, 1);
+            const bgColors = this.lstCan.map((val: number) => {
+                const ratio = val / maxVal;
+                const h = Math.round(210 + ratio * 90); // azul → violeta → púrpura
+                return `hsla(${h}, 72%, 58%, 0.88)`;
+            });
+            const borderColors = this.lstCan.map((val: number) => {
+                const ratio = val / maxVal;
+                const h = Math.round(210 + ratio * 90);
+                return `hsl(${h}, 72%, 42%)`;
+            });
 
             this.data = {
                 labels: this.lstMes,
                 datasets: [
                     {
                         label: `Acciones de ${nommes}`,
-                        backgroundColor: documentStyle.getPropertyValue('--p-primary-color'),
-                        borderColor: documentStyle.getPropertyValue('--p-primary-color'),
+                        backgroundColor: bgColors,
+                        borderColor: borderColors,
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        hoverBackgroundColor: bgColors.map((c: string) => c.replace('0.88', '1')),
                         data: this.lstCan
                     }
                 ]
@@ -118,30 +137,42 @@ export class Balance {
             this.options = {
                 maintainAspectRatio: false,
                 aspectRatio: 0.9,
+                animation: {
+                    duration: 700,
+                    easing: 'easeInOutQuart'
+                },
                 plugins: {
                     legend: {
                         labels: {
-                            color: textColor
+                            color: textColor,
+                            font: { size: 13, weight: '600' },
+                            usePointStyle: true,
+                            pointStyle: 'rectRounded'
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: textColorSecondary,
+                        formatter: (value: number) => (value > 0 ? value : ''),
+                        font: { weight: 'bold', size: 11 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.88)',
+                        titleColor: '#f8fafc',
+                        bodyColor: '#cbd5e1',
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: (ctx: any) => ` ${ctx.parsed.y} acción${ctx.parsed.y !== 1 ? 'es' : ''}`
                         }
                     }
-                    // datalabels: {
-                    //     anchor: 'end',
-                    //     align: 'top',
-                    //     formatter: (value: number) => {
-                    //         return value // proporción del p-chart
-                    //     },
-                    //     font: {
-                    //         weight: 'bold'
-                    //     }
-                    // }
                 },
                 scales: {
                     x: {
                         ticks: {
                             color: textColorSecondary,
-                            font: {
-                                weight: 500
-                            }
+                            font: { weight: 500 }
                         },
                         grid: {
                             color: surfaceBorder,
@@ -150,7 +181,6 @@ export class Balance {
                     },
                     y: {
                         min: 0,
-                        //max: 20,
                         ticks: {
                             color: textColorSecondary,
                             stepSize: 1

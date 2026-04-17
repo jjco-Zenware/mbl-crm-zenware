@@ -22,6 +22,7 @@ export class CAuth implements OnInit {
   }
 
   getUsuario(usuario:string){
+    console.log('getUsuario', usuario);
     this.nombreUsuario = usuario
   }
 }

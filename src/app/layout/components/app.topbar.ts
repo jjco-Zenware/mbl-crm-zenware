@@ -294,7 +294,6 @@ export class AppTopbar {
         }
     ];
     nomUsuario!: string;
-    nomImagen!: string;
     logoUsuario!: string;
 
     constructor(
@@ -304,9 +303,8 @@ export class AppTopbar {
     ) {}
 
     ngOnInit() {
-    this.nomUsuario = constantesLocalStorage.nombreUsuario;
-        this.nomImagen = constantesLocalStorage.imagen;
-        this.logoUsuario = constantesLocalStorage.imagen;
+        this.nomUsuario = '@zenware-la.com';//constantesLocalStorage.nombreUsuario;
+        this.logoUsuario = 'https://res.cloudinary.com/walla-pe/image/upload/v1756909674/zenware/avatar/svzx3hxqtdfmkdpdhmtx.jpg'; //constantesLocalStorage.imagen;
     }
 
     onMenuButtonClick() {
@@ -348,8 +346,8 @@ export class AppTopbar {
             message: '¿Estás seguro de Cerrar sesión?',
             acceptLabel: 'Si',
             rejectLabel: 'No',
-            rejectButtonStyleClass:'modalBtnRed',
-            acceptButtonStyleClass:'modalBtnGreen',
+            rejectButtonStyleClass:'p-button p-button-danger',
+            acceptButtonStyleClass:'p-button p-button-info surface-border',
             accept: () => {
                 this.localStorageService.limpiar();
                 this.router.navigate(['/']);

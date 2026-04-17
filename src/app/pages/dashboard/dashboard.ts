@@ -92,6 +92,7 @@ export class Dashboard implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        console.log('dashboard...', constantesLocalStorage.nombreUsuario);
         this.nomUsuario = constantesLocalStorage.nombreUsuario;
         this.nomPerfil = '@' + constantesLocalStorage.nomperfil;
         this.idperfil = constantesLocalStorage.idperfil;

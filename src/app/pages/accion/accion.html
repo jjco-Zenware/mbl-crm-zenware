@@ -92,17 +92,17 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-            <tr>
-                <td>{{rowIndex + 1}}</td>
-                <td>{{data.cliente }}</td>
-                <td>{{data.oportunidad}}</td>
-                <td>{{data.s_fechaini}}</td>
-                <td>{{ data.desprioridad}}</td>
-                <td>{{ data.descripcion | uppercase}}</td>
-                <td>
+            <tr style="line-height: 1">
+                <td style="padding: 3px 8px">{{rowIndex + 1}}</td>
+                <td style="padding: 3px 8px">{{data.cliente }}</td>
+                <td style="padding: 3px 8px">{{data.oportunidad}}</td>
+                <td style="padding: 3px 8px">{{data.s_fechaini}}</td>
+                <td style="padding: 3px 8px">{{ data.desprioridad}}</td>
+                <td style="padding: 3px 8px">{{ data.descripcion | uppercase}}</td>
+                <td style="padding: 3px 8px">
                     <p-tag [value]="data.nomestado" [severity]="data.completo ? 'success' : 'info'"></p-tag>
                 </td>
-                <td>
+                <td style="padding: 3px 4px">
                     <div class="flex align-items-center m:justify-end">
                         <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Plan de Acción" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
                     </div>

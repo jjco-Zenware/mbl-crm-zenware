@@ -19,7 +19,7 @@ export class SharedAppService {
       this.serviceConfirmation.confirm({
         message: objeto.message??'¿Desea guardar el registro?',
         header: objeto.header??'Aviso',
-        rejectButtonStyleClass: objeto.rejectButtonStyleClass??'p-button p-button-outlined surface-border text-900',  //'modalBtnRed',
+        rejectButtonStyleClass: objeto.rejectButtonStyleClass??'p-button p-button-danger',
         acceptButtonStyleClass: objeto.acceptButtonStyleClass??'p-button p-button-info surface-border', //'modalBtnGreen',
         acceptLabel: objeto.acceptLabel??'Si',
         acceptIcon: objeto.acceptIcon??"pi pi-check-circle",

@@ -265,7 +265,7 @@ export class Login {
                     this.logoutAzure();
                     return;
                 }
-                rpta.nombreUsuario = this.email;
+                //rpta.nombreUsuario = this.email;
                 this.localStorage.setearLocalStorage(rpta);
                 this.isLoading.set(false);
                 this.router.navigate(['/pages/dashboard']);

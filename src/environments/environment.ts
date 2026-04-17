@@ -15,8 +15,14 @@ export const environment = {
         // }
         
         /*DESARROLLO*/
+        // auth: {
+        //     clientId: 'ffe8b473-e4f7-4107-9f29-6ae05838f1e2',
+        //     authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72'
+        // }
+
+        /*DESARROLLO staging*/
         auth: {
-            clientId: 'ffe8b473-e4f7-4107-9f29-6ae05838f1e2',
+            clientId: '3700b010-a770-421c-9d44-8802b00eb041',
             authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72'
         }
        

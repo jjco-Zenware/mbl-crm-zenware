@@ -31,10 +31,10 @@ export class Agenda {
     blockedDocument = signal(false);
     lstAcciones = signal<any[]>([]);
     events: any;
-    desde: any;
-    hasta: any;
+    desde!: Date;
+    hasta!: Date;
     @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
-    periodo: any;
+    periodo!: Date;
 
     constructor(
         private utilitariosService: UtilitariosService,
@@ -110,8 +110,8 @@ export class Agenda {
         this.lstAcciones.set([]);
 
         const objeto = {
-            fechaini: this.desde,
-            fechafin: this.hasta,
+            annio: this.desde.getFullYear(),
+            mes: this.desde.getMonth() + 1,
             idusuario: constantesLocalStorage.idusuario
         };
 

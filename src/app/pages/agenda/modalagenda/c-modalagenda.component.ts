@@ -20,6 +20,7 @@ export class CModalAgendaComponent implements OnInit, OnDestroy {
     submitted?: boolean;
     mensajeSpinner: string = 'Cargando...!';
     blockedDocument = signal(false);
+    mostrarOportunidad = signal(true);
 
     constructor(
         public refDatoItem: DynamicDialogRef,
@@ -72,6 +73,7 @@ export class CModalAgendaComponent implements OnInit, OnDestroy {
               this.setSpinner(false);
                 console.log('rpta listaAgenda', rpta[0]);
                 this.registerFormRegistro.patchValue(rpta[0]);
+                this.mostrarOportunidad.set(!!rpta[0]?.idoportunidad);
             },
             error: (err) => {
                this.setSpinner(false);
