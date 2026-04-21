@@ -157,6 +157,8 @@ export const constantesApiWeb = {
     listaOportunidad: controllerCRM + '/oportunidadlist09',
     listaOportunidadAccion: controllerCRM + '/oportunidadlist10',
     listaGestionTareas11: controllerCRM + '/tareaslist11',
+
+    tareaPrcAsignado: controllerCRM + '/tareaprcasignado',
 }
 
 

@@ -21,7 +21,7 @@ import { CListadoFile } from '../../lead/c-listado-file/c-listado-file';
   templateUrl: './c-dato-cotizacion.html',
   imports: [PRIMENG_MODULES, CProgressSpinnerComponent, CListadoFile],
       standalone: true,
-      providers: [MessageService, UtilitariosService, ConfirmationService, DialogService, SharedAppService]
+      providers: [MessageService, UtilitariosService, ConfirmationService, DialogService, SharedAppService, KanbanService]
 })
 export class CDatoCotizacion implements OnInit, OnDestroy {
 

@@ -172,4 +172,9 @@ export class LeadService {
         const url = `${constantesApiWeb.completarTarea}`;
         return this.http.post<any>(url, objeto);
     }
+
+    tareaPrcAsignado(objeto: any) {
+        const url = `${constantesApiWeb.tareaPrcAsignado}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

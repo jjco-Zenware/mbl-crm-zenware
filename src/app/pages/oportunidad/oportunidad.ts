@@ -15,6 +15,7 @@ import { CLeadReg } from '../lead/lead-reg/lead-reg';
     selector: 'app-oportunidad',
     imports: [PRIMENG_MODULES, CProgressSpinnerComponent, CLeadReg],
     templateUrl: './oportunidad.html',
+    styleUrls: ['./oportunidad.scss'],
     standalone: true,
     providers: [MessageService, UtilitariosService, DialogService, ConfirmationService]
 })
@@ -95,6 +96,8 @@ export class Oportunidad {
     }
 
     onAccion(data: any) {
+        data.tipopro = 1
+        data.idtarea = 0
         const ref = this.dialogService.open(mAccion, {
             data: data,
             header: 'Configurar Acción',

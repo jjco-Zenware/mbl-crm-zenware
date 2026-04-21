@@ -144,7 +144,7 @@ export class Lead {
                     //   }
                     this.setSpinner(false);
                     console.log('cargarOportunidades...', rpta);
-                    this.lstOportunidades.set(rpta);
+                    this.lstOportunidades.set(rpta.filter((item: any) => item.idlistafiltro === 0));
                     // this.lstOportunidades = rpta.map((item: any) => ({
                     //     startDate: item.startDate,
                     //     id: item.id,

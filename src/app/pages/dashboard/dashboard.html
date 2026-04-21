@@ -80,8 +80,11 @@
     </div>
 </div>
 
-} @if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)" />} @if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)" />}
-@if(blockedDocumentk()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>} @if (visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)" />}
+} 
+@if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)" />} 
+@if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)" />}
+@if(blockedDocumentk()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>} 
+@if (visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)" />}
 <p-toast />
 
 <p-confirmdialog />

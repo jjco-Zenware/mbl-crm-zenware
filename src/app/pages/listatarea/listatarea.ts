@@ -13,6 +13,7 @@ import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '../mo
 import { Tarea } from './tarea/tarea';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CListadoFile } from '../lead/c-listado-file/c-listado-file';
+import { mTarea } from './m-tarea/mtarea';
 
 @Component({
     selector: 'app-listatareas',
@@ -32,17 +33,17 @@ export class Listatareas implements OnInit, OnDestroy {
     blockedDocument = signal<boolean>(false);
     mensajeSpinner: string = '';
     lstProveedores = signal<any[]>([]);
-    vistaLista= signal<boolean>(true);
-    visDetalle= signal<boolean>(false);
+    vistaLista = signal<boolean>(true);
+    visDetalle = signal<boolean>(false);
     tituloDetalle!: string;
     dataPrc: any;
     lstOportunidad = signal<any[]>([]);
     idperfil: number = 0;
-    Vendedor= signal<Users[]>([]);
+    Vendedor = signal<Users[]>([]);
     idvendedor: number = 0;
     Usuario!: Users;
-    verPreventa= signal<boolean>(false);
-    verComercial= signal<boolean>(false);
+    verPreventa = signal<boolean>(false);
+    verComercial = signal<boolean>(false);
     promedio: number = 0;
 
     private readonly destroyRef = inject(DestroyRef);
@@ -54,42 +55,31 @@ export class Listatareas implements OnInit, OnDestroy {
         private serviceSharedApp: SharedAppService,
         public dialogService: DialogService
     ) {
-        
         this.idperfil = constantesLocalStorage.idperfil;
     }
 
     setSpinner(valor: boolean) {
-
-        console.log('constantesLocalStorage.idperfil...', constantesLocalStorage.idperfil);
         this.blockedDocument.set(valor);
     }
 
     ngOnInit(): void {
         if (this.idperfil === 3) {
-          this.verPreventa.set(true);
+            this.verPreventa.set(true);
         }
-         if (this.idperfil === 2 || this.idperfil === 4) {
-          this.verComercial.set(true);
+        if (this.idperfil === 2 || this.idperfil === 4) {
+            this.verComercial.set(true);
         }
         console.log('ngOnInit : ', this.IA_data);
 
         this.createFrm();
         this.listaClientes();
         this.listaVendedor();
-        //this.getBuscar()
-        this.cols = [
-            { field: 'cliente', header: 'Cliente' },
-            { field: 'idoportunidad', header: 'idOportunidad' },
-            { field: 'oportunidad', header: 'Oportunidad' },
-            { field: 'text', header: 'Tareas' },
-            { field: 'fechaini', header: 'Fecha' },
-            { field: 'fechafin', header: 'Fecha' },
-        ];
+        this.getBuscar();
 
         if (this.IA_data !== undefined) {
             this.dataPrc = {
                 data: this.IA_data,
-                paramReg: 'E',
+                paramReg: 'E'
             };
             this.tituloDetalle = 'Seguimiento de Tarea';
             this.vistaLista.set(false);
@@ -108,33 +98,33 @@ export class Listatareas implements OnInit, OnDestroy {
             fechaini: [
                 {
                     value: this.utilitariosService.obtenerFechaInicioMes(),
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             fechafin: [
                 {
                     value: this.utilitariosService.obtenerFechaFinMes(),
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idusuario: [
                 {
                     value: constantesLocalStorage.idusuario,
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idcliente: [
                 {
                     value: 0,
-                    disabled: false,
-                },
+                    disabled: false
+                }
             ],
             idoportunidad: [
                 {
                     value: 0,
-                    disabled: false,
-                },
-            ],
+                    disabled: false
+                }
+            ]
         });
     }
 
@@ -157,7 +147,7 @@ export class Listatareas implements OnInit, OnDestroy {
         }
         const objeto = {
             ...this.frmDatos.getRawValue(),
-            idusuario: usuario,
+            idusuario: usuario
         };
 
         this.btnBuscar = true;
@@ -169,8 +159,7 @@ export class Listatareas implements OnInit, OnDestroy {
                     this.setSpinner(false);
                     console.log('rpta listaTareas', rpta);
                     this.listaTareas.set(rpta);
-                    this.promedio = Number((this.listaTareas().reduce((acc:any, item:any) => acc + item.progreso, 0) / this.listaTareas.length).toFixed(2));
-
+                    this.promedio = Number((this.listaTareas().reduce((acc: any, item: any) => acc + item.progreso, 0) / this.listaTareas.length).toFixed(2));
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -179,13 +168,13 @@ export class Listatareas implements OnInit, OnDestroy {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: mensajesQuestion.msgErrorGenerico,
+                        detail: mensajesQuestion.msgErrorGenerico
                     });
                 },
                 complete: () => {
                     this.btnBuscar = false;
                     this.setSpinner(false);
-                },
+                }
             });
         this.$listSubcription.push($listaTareas);
     }
@@ -193,29 +182,27 @@ export class Listatareas implements OnInit, OnDestroy {
     listaClientes() {
         const objeto = {
             idrolpersona: 'CLI',
-            idusuario: constantesLocalStorage.idusuario,
+            idusuario: constantesLocalStorage.idusuario
         };
 
-        const $getClientes = this.listatareasService
-            .ListaProveedores(objeto)
-            .subscribe({
-                next: (rpta: any) => {
-                    this.lstProveedores.set(rpta);
-                    const objet = {
-                        idcliente: 0,
-                        nomcomercial: 'TODOS',
-                    };
-                    this.lstProveedores.set([objet, ...rpta]);
-                },
-                error: (err) => {
-                    this.serviceSharedApp.messageToast();
-                },
-                complete: () => { },
-            });
+        const $getClientes = this.listatareasService.ListaProveedores(objeto).subscribe({
+            next: (rpta: any) => {
+                this.lstProveedores.set(rpta);
+                const objet = {
+                    idcliente: 0,
+                    nomcomercial: 'TODOS'
+                };
+                this.lstProveedores.set([objet, ...rpta]);
+            },
+            error: (err) => {
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {}
+        });
         this.$listSubcription.push($getClientes);
     }
 
-       onVer(data: any) {
+    onVer(data: any) {
         // this.dataPrc = {
         //   idordencompra: data.idordencompra,
         //   paramReg:'V'
@@ -269,10 +256,10 @@ export class Listatareas implements OnInit, OnDestroy {
         // this.$listSubcription.push($cargarOrdenC)
     }
 
-    onEditar(data: any) {
+    onGestionar(data: any) {
         this.dataPrc = {
             data: data,
-            paramReg: 'E',
+            paramReg: 'E'
         };
         this.tituloDetalle = 'Seguimiento de Tarea';
         this.vistaLista.set(false);
@@ -297,12 +284,12 @@ export class Listatareas implements OnInit, OnDestroy {
                 idoportunidad: dato.id,
                 codtipoproc: 1,
                 idnroproceso: 0,
-                parametro: param,
+                parametro: param
             },
             header: dato.title,
             styleClass: 'testDialog',
             closeOnEscape: false,
-            closable: true,
+            closable: true
         });
         ref?.onClose.subscribe(() => {
             //this.actualizarLista();
@@ -312,25 +299,23 @@ export class Listatareas implements OnInit, OnDestroy {
     listarOportunidades() {
         if (this.frmDatos.value.idcliente > 0) {
             const objeto = {
-                idcliente: this.frmDatos.value.idcliente,
+                idcliente: this.frmDatos.value.idcliente
             };
 
-            const $getClientes = this.listatareasService
-                .listarOportxCliente(objeto)
-                .subscribe({
-                    next: (rpta: any) => {
-                        this.lstOportunidad = rpta;
-                        const objet = {
-                            id: 0,
-                            titulo: 'TODOS',
-                        };
-                        this.lstOportunidad.set([objet, ...rpta]);
-                    },
-                    error: (err) => {
-                        this.serviceSharedApp.messageToast();
-                    },
-                    complete: () => { },
-                });
+            const $getClientes = this.listatareasService.listarOportxCliente(objeto).subscribe({
+                next: (rpta: any) => {
+                    this.lstOportunidad = rpta;
+                    const objet = {
+                        id: 0,
+                        titulo: 'TODOS'
+                    };
+                    this.lstOportunidad.set([objet, ...rpta]);
+                },
+                error: (err) => {
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {}
+            });
             this.$listSubcription.push($getClientes);
         }
     }
@@ -344,7 +329,7 @@ export class Listatareas implements OnInit, OnDestroy {
                     ...vendedor,
                     (this.Usuario = {
                         idusuario: 0,
-                        name: 'TODOS',
+                        name: 'TODOS'
                     })
                 ]);
             },
@@ -354,10 +339,46 @@ export class Listatareas implements OnInit, OnDestroy {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: mensajesQuestion.msgErrorGenerico,
+                    detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => { },
+            complete: () => {}
         });
+    }
+
+    onNuevo() {
+        const objeto = {
+            idtarea: 0
+        };
+        const refMensaje = this.dialogService.open(mTarea, {
+            data: objeto,
+            header: 'Registrar Tarea',
+            styleClass: 'testDialog',
+            closeOnEscape: false,
+            closable: false,
+            width: '35%'
+        });
+        if (refMensaje) {
+            refMensaje.onClose.subscribe((rpta: any) => {
+                this.getBuscar();
+            });
+        }
+    }
+
+    onEditar(data: any) {
+        
+        const refMensaje = this.dialogService.open(mTarea, {
+            data: data,
+            header: 'Editar Tarea',
+            styleClass: 'testDialog',
+            closeOnEscape: false,
+            closable: false,
+            width: '35%'
+        });
+        if (refMensaje) {
+            refMensaje.onClose.subscribe((rpta: any) => {
+                this.getBuscar();
+            });
+        }
     }
 }

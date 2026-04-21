@@ -49,7 +49,10 @@
                     ></p-select>
                 </div> -->
             <div class="field grow basis-0 mt-5">
-                <button pButton type="button" (click)="getBuscar()" pTooltip="Buscar Registros" tooltipPosition="bottom" class="font-semibold justify-content-center h-3rem w-3rem" icon="pi pi-search"></button>
+               
+                <button pButton type="button" (click)="getBuscar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                class="font-semibold justify-content-center h-3rem w-3rem" icon="pi pi-search"></button>
+                
             </div>
         </div>
     </form>
@@ -99,8 +102,14 @@
                 
                   <td>
                         <div class="flex align-items-center m:justify-content-end">
+                             @if(this.idperfil === 3){
                             <button pButton pRipple type="button" icon="pi pi-sign-in" tooltipPosition="left" pTooltip="Registrar Actividades"
-                             class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="nuevaTarea(data)" ></button>                           
+                             class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="nuevaTarea(data)" ></button> 
+                             }   
+                             @if(this.idperfil === 2){
+                            <button pButton pRipple type="button" icon="pi pi-check" tooltipPosition="left" pTooltip="Tomar Oportunidad"
+                             class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"  ></button> 
+                             }                        
                         </div>
                     </td> 
             </tr>

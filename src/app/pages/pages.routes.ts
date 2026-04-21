@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Oportunidad } from './oportunidad/oportunidad';
+import { Dashboard } from './dashboard/dashboard';
 
 
 export default [
-    { path: 'oportunidad', component: Oportunidad },
+    { path: 'dashboard', component: Dashboard },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

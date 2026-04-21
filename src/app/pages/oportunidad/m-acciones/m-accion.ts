@@ -27,13 +27,13 @@ export class mAccion implements OnInit, OnDestroy {
         { iditem: 3, valoritem: '3. Baja' }
     ]);
     frmAccion!: FormGroup;
-    //disabled = signal<boolean>(true);
+    tipopro = signal<number>(1);
 
-    //   blockedDocument: boolean = false;
-    //   mensajeSpinner: string = "Cargando...";
     private readonly destroyRef = inject(DestroyRef);
     errorMensaje: string = '';
     idtareaanterior: number = 0;
+    nomoportunidad!: string;
+    nomcliente!: string;
 
     constructor(
         public ref: DynamicDialogRef,
@@ -52,20 +52,27 @@ export class mAccion implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('this.config...', this.config.data);
+        this.tipopro.set(this.config.data.tipopro ?? 1);
+        this.nomoportunidad = this.config.data.title || this.config.data.oportunidad;
+        this.nomcliente = this.config.data.nomcomercial || this.config.data.cliente;
         this.createFrm();
         this.cargarPlanAccion();
     }
 
     createFrm() {
+        const editMode = this.tipopro() === 2;
         this.frmAccion = this.fb.group({
             nomoportunidad: [{ value: null, disabled: true }],
-            fecplan_ant: [{ value: null, disabled: true }],
-            desplan_ant: [{ value: null, disabled: true }],
-            idprioridad_ant: [{ value: null, disabled: true }],
+            fecplan_ant: [{ value: null, disabled: !editMode }],
+            desplan_ant: [{ value: null, disabled: !editMode }],
+            idprioridad_ant: [{ value: null, disabled: !editMode }],
             fecplan: [{ value: this.utilitariosService.obtenerFechaActual(), disabled: false }, [Validators.required]],
             desplan: [{ value: null, disabled: false }, [Validators.required]],
             idprioridad: [{ value: null, disabled: false }, [Validators.required]],
-            fecplan_ant2: [{ value: null, disabled: false }]
+            fecplan_ant2: [{ value: null, disabled: false }],
+            tipopro: [{ value: null, disabled: false }],
+            idoportunidad: [{ value: 0, disabled: false }],
+            idtarea: [{ value: 0, disabled: false }]
         });
     }
 
@@ -79,7 +86,7 @@ export class mAccion implements OnInit, OnDestroy {
         this.data = this.config.data;
 
         const objeto = {
-            idoportunidad: this.data.id
+            idoportunidad: this.data.id || this.data.idoportunidad
         };
         const $OportunidadesLista = this.leadService
             .OportunidadesPlanAccion(objeto)
@@ -99,8 +106,13 @@ export class mAccion implements OnInit, OnDestroy {
                         fecplan_ant: maxItem.fecha,
                         fecplan_ant2: maxItem.fecha,
                         desplan_ant: maxItem.descripcion,
-                        idprioridad_ant: maxItem.idprioridad
+                        idprioridad_ant: maxItem.idprioridad,
+                        idtarea: maxItem.idtarea,
+                        idoportunidad:maxItem.idoportunidad,
+                        tipopro:this.data.tipopro
                     });
+
+                    console.log('this.frmAccion...', this.frmAccion.value);
                     }
                   
                 },
@@ -168,27 +180,36 @@ export class mAccion implements OnInit, OnDestroy {
     validarDatos(): boolean {
         let _error = false;
         this.errorMensaje = '';
-        console.log('this.frmAccion...', this.frmAccion.value);
-        //console.log('this.fecplan_ant2...',new Date(this.utilitariosService.formatFecha(this.frmAccion.get('fecplan_ant2')?.value)));
-        console.log('this.frmAccion...', this.frmAccion.get('fecplan')?.value);
 
-        if (this.frmAccion.get('fecplan_ant2')?.value != null) {
-            let fecplan_ant2 = new Date(this.utilitariosService.formatFecha(this.frmAccion.get('fecplan_ant2')?.value));
-
-            if (this.frmAccion.get('fecplan')?.value <= fecplan_ant2) {
-                this.errorMensaje = 'La Fecha de Planificación debe ser mayor a la Fecha Anterior...!';
+        if (this.tipopro() === 2) {
+            if (!_error && (this.frmAccion.get('idprioridad_ant')?.value === 0 || this.frmAccion.get('idprioridad_ant')?.value === null)) {
+                this.errorMensaje = 'Seleccionar Prioridad...!';
                 _error = true;
             }
-        }
 
-        if (!_error && (this.frmAccion.get('idprioridad')?.value === 0 || this.frmAccion.get('idprioridad')?.value === null)) {
-            this.errorMensaje = 'Seleccionar Prioridad...!';
-            _error = true;
-        }
+            if (!_error && (this.frmAccion.get('desplan_ant')?.value === null || this.frmAccion.get('desplan_ant')?.value === '')) {
+                this.errorMensaje = 'Ingresar Descripción de la Acción...';
+                _error = true;
+            }
+        } else {
+            if (this.frmAccion.get('fecplan_ant2')?.value != null) {
+                const fecplan_ant2 = new Date(this.utilitariosService.formatFecha(this.frmAccion.get('fecplan_ant2')?.value));
 
-        if (!_error && (this.frmAccion.get('desplan')?.value === null || this.frmAccion.get('desplan')?.value === '')) {
-            this.errorMensaje = 'Ingresar Descripción de Planificación...';
-            _error = true;
+                if (this.frmAccion.get('fecplan')?.value <= fecplan_ant2) {
+                    this.errorMensaje = 'La Fecha de Planificación debe ser mayor a la Fecha Anterior...!';
+                    _error = true;
+                }
+            }
+
+            if (!_error && (this.frmAccion.get('idprioridad')?.value === 0 || this.frmAccion.get('idprioridad')?.value === null)) {
+                this.errorMensaje = 'Seleccionar Prioridad...!';
+                _error = true;
+            }
+
+            if (!_error && (this.frmAccion.get('desplan')?.value === null || this.frmAccion.get('desplan')?.value === '')) {
+                this.errorMensaje = 'Ingresar Descripción de Planificación...';
+                _error = true;
+            }
         }
 
         return _error;
@@ -201,14 +222,28 @@ export class mAccion implements OnInit, OnDestroy {
             this.messageService.add({ severity: 'info', summary: 'Validación', detail: this.errorMensaje });
             return;
         }
+
+        console.log('prcPlanAccion', this.frmAccion.value);
+        let fechaant = this.frmAccion.get('fecplan_ant')?.value
+        console.log('fechaant...', fechaant);
+        let fechaant2 = this.frmAccion.get('fecplan_ant2')?.value
+        console.log('fechaant2...', fechaant2);
+
+        if (fechaant.length === 10) {
+            fechaant = new Date(this.utilitariosService.formatFecha(fechaant))
+        }
+
+        if (fechaant2.length === 10) {
+            fechaant2 = new Date(this.utilitariosService.formatFecha(fechaant2))
+        }
          
         const objeto = {
-            idtarea: 0,
-            idoportunidad: this.data.id,
+            idtarea: this.frmAccion.get('idtarea')?.value,
+            idoportunidad: this.frmAccion.get('idoportunidad')?.value,
             idtarea_origen: 0,
-            descripcion: this.frmAccion.get('desplan')?.value,
-            fechaini: this.frmAccion.get('fecplan')?.value,
-            fechafin: this.frmAccion.get('fecplan')?.value,
+            descripcion: this.tipopro() === 1 ? this.frmAccion.get('desplan')?.value : this.frmAccion.get('desplan_ant')?.value,
+            fechaini: this.tipopro() === 1 ? this.frmAccion.get('fecplan')?.value : fechaant,
+            fechafin: this.tipopro() === 1 ? this.frmAccion.get('fecplan')?.value : fechaant,
             progreso: 0,
             completo: false,
             indvig: true,
@@ -216,7 +251,7 @@ export class mAccion implements OnInit, OnDestroy {
             horafin: '00:00',
             idtarea_acti: 0,
             idetapa: 0,
-            idprioridad: this.frmAccion.get('idprioridad')?.value,
+            idprioridad: this.tipopro() === 1 ? this.frmAccion.get('idprioridad')?.value : this.frmAccion.get('idprioridad_ant')?.value,
             idusuario: constantesLocalStorage.idusuario
         };
         console.log('agregarEtapa', objeto);
@@ -225,7 +260,10 @@ export class mAccion implements OnInit, OnDestroy {
             next: (rpta: any) => {
                 this.setSpinner(false);
                 console.log('tareaPrc', rpta);
-                this.completarTarea(this.idtareaanterior);
+                if (this.tipopro() === 1 ) {
+                    this.completarTarea(this.idtareaanterior);
+                }
+                
                 this.cerrar(objeto);
             },
             error: (err) => {

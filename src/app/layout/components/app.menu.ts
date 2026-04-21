@@ -40,7 +40,7 @@ export class AppMenu {
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/dashboard/dashboard'] },
                     { label: 'Kanban', icon: 'pi pi-fw pi-objects-column', routerLink: ['/kanban/kanban'] },
-                    { label: 'Acciones Pendientes', icon: 'pi pi-fw pi-list', routerLink: ['/oportunidad/oportunidad'] },
+                    { label: 'Acciones Pendientes', icon: 'pi pi-fw pi-list', routerLink: ['/oportunidad/oportunidad'], visible: this.idperfil === 2  },
                     { label: 'Registro Lead', icon: 'pi pi-fw pi-table', routerLink: ['/lead/lead'], visible: this.idperfil === 2 },
                     { label: 'Oportunidades', icon: 'pi pi-fw pi-list', routerLink: ['/listaopor/listaopor'] },
                     { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: ['/agenda/agenda'] },
@@ -54,7 +54,8 @@ export class AppMenu {
                             {
                                 label: 'Reportes Gerencia',
                                 icon: 'pi pi-fw pi-chart-pie',
-                                routerLink: ['/reportgerencia/reportgerencia']
+                                routerLink: ['/reportgerencia/reportgerencia'],
+                                visible: this.idperfil === 4
                             },
                             {
                                 label: 'Graficos',
@@ -92,8 +93,7 @@ export class AppMenu {
                             {
                                 label: 'Iniciativas PreVenta',
                                 icon: 'pi pi-fw pi-check-square',
-                                routerLink: ['/tareaspre/tareaspre'],
-                                visible: this.idperfil === 3
+                                routerLink: ['/tareaspre/tareaspre']
                             }
                         ]
                     }

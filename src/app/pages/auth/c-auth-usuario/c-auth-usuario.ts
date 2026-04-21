@@ -228,7 +228,7 @@ export class CAuthUsuario implements OnInit, OnDestroy {
                     //rpta.nombreUsuario = this.loginUser.value;
                     this.localStorage.setearLocalStorage(rpta);
                     this.isLoading.set(false);
-                    this.router.navigate(['/pages/oportunidad']);
+                    this.router.navigate(['/pages/dashboard']);
                 },
                 error: (err) => {
                     this.logoutAzure();

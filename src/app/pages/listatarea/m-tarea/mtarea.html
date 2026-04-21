@@ -1,0 +1,56 @@
+<form [formGroup]="frmAccion" class="w-full">
+    <div class="card flex flex-col gap-3 p-fluid">
+        <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Cliente</label>
+                    <p-select
+                        [options]="lstProveedores()"
+                        formControlName="idcliente"
+                        id="idcliente"
+                        placeholder="Seleccionar Cliente..."
+                        optionLabel="nomcomercial"
+                        optionValue="idcliente"
+                        size="small"
+                        appendTo="body"
+                        [filter]="true"
+                        (onChange)="listarOportunidades()"
+                    ></p-select>
+                </div>
+                <div class="flex flex-col grow gap-1">
+                    <label class="font-semibold">Oportunidad</label>
+                    <p-select
+                        [options]="lstOportunidad()"
+                        formControlName="idoportunidad"
+                        placeholder="Seleccionar Oportunidad..."
+                        optionLabel="titulo"
+                        appendTo="body"
+                        [filter]="true"
+                        optionValue="id"
+                        size="small"
+                    ></p-select>
+                </div>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <div class="flex">
+                    <label class="block text-900 font-semibold">Descripción Tarea</label>
+                </div>
+                <textarea rows="3" cols="30" formControlName="descripcion" pTextarea pSize="small"></textarea>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Fecha Inicio</label>
+                <p-datepicker dateFormat="dd/mm/yy" formControlName="fechaini" inputId="fechaini" [showIcon]="true" size="small" appendTo="body"></p-datepicker>
+            </div>
+            <div class="flex flex-col grow basis-0 gap-1">
+                <label class="block text-900 font-semibold">Fecha Final </label>
+                <p-datepicker dateFormat="dd/mm/yy" formControlName="fechafin" inputId="fechafin" [showIcon]="true" size="small" appendTo="body"></p-datepicker>
+            </div>
+        </div>
+        
+    </div>
+    <div class="flex justify-end gap-2 mt-2">
+            <button pButton icon="pi pi-save" label="Guardar" class="button-primary w-auto" (click)="onSave()"></button>
+            <button pButton icon="pi pi-times" label="Cerrar" severity="danger" class="w-auto" (click)="cerrar(null)"></button>
+        </div>
+</form>
+<p-toast />

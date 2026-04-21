@@ -13,6 +13,7 @@ const BREAKPOINT = 992;
     imports: [ AppMenu, CommonModule, RouterModule],
     template: `<div class="layout-sidebar" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="layout-sidebar-top">
+            <span>demo</span>
             <a href="/">
                 <svg width="167" height="32" viewBox="0 0 167 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="layout-sidebar-logo">
                     <path

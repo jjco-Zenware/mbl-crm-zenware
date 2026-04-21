@@ -23,7 +23,7 @@ import { PRIMENG_MODULES } from '@/app/pages/shared/primeng_modules';
     //imports: [RouterModule, CommonModule, StyleClassModule, FormsModule, Ripple, ButtonModule, MegaMenuModule, BadgeModule, OverlayBadge, ImageModule],
     template: `
         <div class="layout-topbar-start">
-             <p-image src="/demo/images/logo/logo_sin_fondo_principal.png" class="w-30 h-30 "/>
+             <p-image src="/assets/demo/images/logo/logo_sin_fondo_principal.png" class="w-30 h-30 "/>
 
             
             <!-- <span class="layout-sidebar-logo align-items-center text-xl ml-2 font-light">
@@ -303,8 +303,11 @@ export class AppTopbar {
     ) {}
 
     ngOnInit() {
-        this.nomUsuario = '@zenware-la.com';//constantesLocalStorage.nombreUsuario;
-        this.logoUsuario = 'https://res.cloudinary.com/walla-pe/image/upload/v1756909674/zenware/avatar/svzx3hxqtdfmkdpdhmtx.jpg'; //constantesLocalStorage.imagen;
+        this.nomUsuario = constantesLocalStorage.nombreUsuario;
+        this.logoUsuario = constantesLocalStorage.imagen;
+
+        //this.nomUsuario = '@zenware-la.com';;
+       // this.logoUsuario = 'https://res.cloudinary.com/walla-pe/image/upload/v1756909674/zenware/avatar/svzx3hxqtdfmkdpdhmtx.jpg';
     }
 
     onMenuButtonClick() {

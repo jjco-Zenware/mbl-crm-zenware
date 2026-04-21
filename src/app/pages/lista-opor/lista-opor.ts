@@ -13,12 +13,15 @@ import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '../mo
 import { CListadoFile } from '../lead/c-listado-file/c-listado-file';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UtilitariosService } from '../service/utilitarios.service';
+import { CBusinessCase } from '../shared/c-business-case/c-business-case';
+import { CCotizacion } from '../shared/c-cotizacion/c-cotizacion';
+import { CLeadReg } from '../lead/lead-reg/lead-reg';
 
 @Component({
     selector: 'app-lista-opor',
     templateUrl: './lista-opor.html',
     styleUrls: ['./lista-opor.scss'],
-    imports: [PRIMENG_MODULES, CProgressSpinnerComponent],
+    imports: [PRIMENG_MODULES, CProgressSpinnerComponent, CBusinessCase, CCotizacion, CLeadReg],
     standalone: true,
     providers: [MessageService, DialogService, SharedAppService, KanbanService, ConfirmationService, UtilitariosService]
 })
@@ -36,9 +39,8 @@ export class ClistaOpor implements OnInit, OnDestroy {
 
     modalvisible: boolean = false;
     errorMensaje: string = "";
-    visOportunidad: boolean = true;
-    visBussines: boolean = false;
-    visQuote: boolean = false;
+    visQuote = signal<boolean>(false);
+    visBussines = signal<boolean>(false);
     dataCT:any;
     dataBC:any;
     events= signal<any[]>([]);
@@ -49,6 +51,8 @@ export class ClistaOpor implements OnInit, OnDestroy {
     mensajeSpinner: string = "";
     vistaLista = signal<boolean>(true);
     frmDatos!: FormGroup;
+    dataOportunidad: any;
+    visMntOportunidad = signal<boolean>(false);
 
     constructor(
         private serviceSharedApp: SharedAppService,
@@ -75,6 +79,7 @@ export class ClistaOpor implements OnInit, OnDestroy {
             { field: 'nomlista', header: 'ESTADO' },
             { field: 'startDate', header: 'FECHA' },
         ];
+        this.actualizarLista();
      }
 
     ngOnDestroy() {
@@ -163,18 +168,20 @@ export class ClistaOpor implements OnInit, OnDestroy {
     }*/
 
     businessCase(data: KanbanCard) {
-        this.visOportunidad = false;
-        this.visQuote =  false;
-        this.visBussines = true;
+        this.vistaLista.set(false);
+        this.visQuote.set(false);
+        this.visBussines.set(true);
+        this.visMntOportunidad.set(false);
 
         this.codigoBC = data.id;
     }
 
     quote(data: KanbanCard) {
         console.log("data : ", data);
-        this.visOportunidad = false;
-        this.visBussines = false;
-        this.visQuote =  true;
+        this.vistaLista.set(false);
+        this.visBussines.set(false);
+        this.visQuote.set(true);
+        this.visMntOportunidad.set(false);
 
         const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio} = data;
         this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio};
@@ -197,8 +204,12 @@ export class ClistaOpor implements OnInit, OnDestroy {
     }
 
     getOportunidad(dato:boolean){
-        this.visOportunidad = true;
-        this.visBussines = false;
+        this.vistaLista.set(true);
+        this.visBussines.set(false);
+        this.visQuote.set(false);
+        this.visMntOportunidad.set(false);
+
+        this.actualizarLista();
     }
 
     getListakanban(){
@@ -247,5 +258,13 @@ export class ClistaOpor implements OnInit, OnDestroy {
             complete: () => { }
         });
     this.$listSubcription.push($OportunidadesLista)
+    }
+
+    verMntOportunidad(dato: any) {
+        this.visMntOportunidad.set(true);
+        this.vistaLista.set(false);
+        this.visBussines.set(false);
+        this.visQuote.set(false);
+        this.dataOportunidad = { id: dato.id, paramReg: 'k' };
     }
 }

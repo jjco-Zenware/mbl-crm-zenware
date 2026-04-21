@@ -100,11 +100,12 @@
                 <td style="padding: 3px 8px">{{ data.desprioridad}}</td>
                 <td style="padding: 3px 8px">{{ data.descripcion | uppercase}}</td>
                 <td style="padding: 3px 8px">
-                    <p-tag [value]="data.nomestado" [severity]="data.completo ? 'success' : 'info'"></p-tag>
+                    <p-tag [value]="data.nomestado" [severity]="getSeverity(data.nomestado)"></p-tag>
                 </td>
                 <td style="padding: 3px 4px">
                     <div class="flex align-items-center m:justify-end">
-                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Plan de Acción" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
+                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Plan de Acción" 
+                        class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="onAccion(data)"></button>
                     </div>
                 </td>
             </tr>

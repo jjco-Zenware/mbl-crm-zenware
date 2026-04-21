@@ -43,6 +43,8 @@ export class TareaPre implements OnInit, OnDestroy {
     visOportunidad = signal<boolean>(true);
     dataPrc: any;
     tituloDetalle: string = 'Gestión de Actividades';
+    idperfil: number = 0;
+    
 
     constructor(
         private fb: FormBuilder,
@@ -61,7 +63,10 @@ export class TareaPre implements OnInit, OnDestroy {
         this.createFrm();
         this.listaClientes();
         this.listaVendedor();
+        this.idperfil = constantesLocalStorage.idperfil;
     }
+
+    
 
     createFrm() {
         this.frmDatos = this.fb.group({

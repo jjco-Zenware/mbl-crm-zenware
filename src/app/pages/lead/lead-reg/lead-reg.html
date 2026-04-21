@@ -13,19 +13,26 @@
 </div>
 }
 <div class="flex gap-2">
+    @if(!soloLectura()){
     <button pButton type="submit" [loading]="isLoading()" icon="pi pi-save" label="Grabar" (click)="onSave()" [raised]="true"></button>
-    @if(frmDatos.id !== '1' && frmDatos.idlista !== 1 && frmDatos.codigoproyecto === ''){
+    }
+    @if(frmDatos.id !== '1' && frmDatos.idlista !== 0 && frmDatos.codigoproyecto === '' && !soloLectura()){
     <button pButton pRipple type="button" icon="pi pi-cog" tooltipPosition="bottom" pTooltip="Generar Código Proyecto" severity="secondary" (click)="crearProyecto(frmDatos)" label="Generar Proyecto" [raised]="true"></button>
-    } @if (frmDatos.id !== '1' && frmDatos.idlista !== 1 ) {
+    } @if (frmDatos.id !== '1' && frmDatos.idlista !== 0 && !soloLectura()) {
     <button pButton pRipple icon="pi pi-percentage" pTooltip="Ir a Business Case" tooltipPosition="bottom" severity="secondary" (click)="businessCase()" [raised]="true"></button>
-    } @if (frmDatos.id !== '1' && frmDatos.idlista !== 1) {
-
+    } @if (frmDatos.id !== '1' && frmDatos.idlista !== 0) {
     <button pButton pRipple icon="pi pi-money-bill" pTooltip="Ir a Quote" tooltipPosition="bottom" severity="secondary" (click)="Quote(frmDatos)" [raised]="true"></button>
-    } @if (frmDatos.id !== '0') {
+    } @if (frmDatos.id !== '0' && !soloLectura()) {
     <button pButton pRipple icon="pi pi-paperclip" pTooltip="Adjuntar Archivos" tooltipPosition="bottom" severity="secondary" (click)="anexosK(frmDatos, 'K')" [raised]="true"></button>
     <button pButton pRipple icon="pi pi-spin pi-cog" pTooltip="Calificar Oportunidad" tooltipPosition="bottom" severity="warn" [raised]="true" class="p-button-outlined" (click)="calificarOport(frmDatos)"></button>
     }
 </div>
+@if(soloLectura()){
+<div class="flex items-center gap-2 mt-2 p-3 border border-yellow-400 bg-yellow-50 rounded text-yellow-800 font-semibold w-full">
+    <i class="pi pi-lock text-lg"></i>
+    <span>Modo Solo Lectura: Solo puede visualizar la información. No puede realizar cambios.</span>
+</div>
+}
 
 <p-divider align="left" type="solid"> </p-divider>
 
@@ -43,7 +50,7 @@
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <div class="flex">
                                     <label class="block text-900 font-semibold">Empresa/Prospecto </label>
-                                    @if(disabledCli()){
+                                    @if(disabledCli() && !soloLectura()){
                                     <i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Cliente" tooltipPosition="right" (click)="NuevoCliente()"></i>
 
                                     }
@@ -59,13 +66,14 @@
                                     [panelStyle]="{ width: '260px' }"
                                     [ngModelOptions]="{standalone: true}"
                                     (onChange)="getContactos($event.value)"
+                                    [disabled]="soloLectura()"
                                 ></p-select>
                             </div>
                         </div>
                         <div class="flex flex-wrap mt-4">
                             <div class="flex flex-col grow gap-1">
                                 <label class="block text-900 font-semibold">Nombre del Lead</label>
-                                <input pInputText type="text" [(ngModel)]="frmDatos.title" pSize="small" class="w-auto" [ngModelOptions]="{standalone: true}" [pAutoFocus]="true" />
+                                <input pInputText type="text" [(ngModel)]="frmDatos.title" pSize="small" class="w-auto" [ngModelOptions]="{standalone: true}" [pAutoFocus]="true" [disabled]="soloLectura()" />
                             </div>
                         </div>
 
@@ -80,15 +88,16 @@
                                     optionValue="idtipoprod"
                                     size="small"
                                     [ngModelOptions]="{standalone: true}"
+                                    [disabled]="soloLectura()"
                                 ></p-select>
                             </div>
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <label class="block text-900 font-semibold">Sector</label>
-                                <p-select [options]="lstSectorInd()" [(ngModel)]="frmDatos.idsectorind" placeholder="Seleccionar..." optionLabel="valoritem" optionValue="iditem" size="small" [ngModelOptions]="{standalone: true}"></p-select>
+                                <p-select [options]="lstSectorInd()" [(ngModel)]="frmDatos.idsectorind" placeholder="Seleccionar..." optionLabel="valoritem" optionValue="iditem" size="small" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-select>
                             </div>
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <label class="block text-900 font-semibold">Origen</label>
-                                <p-select [options]="lstOrigenOportunidad()" [(ngModel)]="frmDatos.idorigenopor" placeholder="Seleccionar..." optionLabel="valoritem" optionValue="iditem" size="small" [ngModelOptions]="{standalone: true}"></p-select>
+                                <p-select [options]="lstOrigenOportunidad()" [(ngModel)]="frmDatos.idorigenopor" placeholder="Seleccionar..." optionLabel="valoritem" optionValue="iditem" size="small" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-select>
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2">
@@ -97,7 +106,7 @@
                                     <label class="block text-900 font-semibold">Descripción/Problema</label>
                                     <i class="pi pi-info-circle text-2xl text-green-500 font-bold" style="margin-left: 10px" pTooltip="¿Situación Actual?, ¿Consecuencia?, ¿Riesgos?" tooltipPosition="right" tooltipStyleClass="tooltip-pro"></i>
                                 </div>
-                                <textarea rows="3" cols="30" [(ngModel)]="frmDatos.description" pTextarea pSize="small" [ngModelOptions]="{standalone: true}"></textarea>
+                                <textarea rows="3" cols="30" [(ngModel)]="frmDatos.description" pTextarea pSize="small" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></textarea>
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-1">
@@ -111,6 +120,7 @@
                                     (onChange)="cambioDolares($event.value)"
                                     [readonly]="isMoneda()"
                                     [ngModelOptions]="{standalone: true}"
+                                    [disabled]="soloLectura()"
                                 ></p-select>
                             </div>
                             <div class="flex flex-col gap-1 grow basis-0"></div>
@@ -119,7 +129,7 @@
                         <div class="flex flex-wrap gap-1">
                             <div class="flex flex-col gap-1 grow basis-0">
                                 <label class="text-900 font-semibold">Monto Negocio sin IGV</label>
-                                <p-inputNumber [(ngModel)]="frmDatos.monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" (onInput)="calcularDolaresM($event.value)" [min]="0" [ngModelOptions]="{standalone: true}"></p-inputNumber>
+                                <p-inputNumber [(ngModel)]="frmDatos.monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" (onInput)="calcularDolaresM($event.value)" [min]="0" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-inputNumber>
                             </div>
                             <div class="flex flex-col gap-1 grow basis-0">
                                 <label class="text-900 font-semibold">TC </label>
@@ -133,6 +143,7 @@
                                     [min]="0"
                                     [max]="9"
                                     [ngModelOptions]="{standalone: true}"
+                                    [disabled]="soloLectura()"
                                 ></p-inputNumber>
                             </div>
                             <div class="flex flex-col gap-1 grow basis-0">
@@ -147,14 +158,14 @@
                             </div>
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <label class="block text-900 font-semibold">Pre-Venta</label>
-                                <p-select [options]="Usuarios()" [(ngModel)]="frmDatos.idpreventa" placeholder="Seleccionar Pre-Venta" optionLabel="name" optionValue="idusuario" [ngModelOptions]="{standalone: true}"></p-select>
+                                <p-select [options]="Usuarios()" [(ngModel)]="frmDatos.idpreventa" placeholder="Seleccionar Pre-Venta" optionLabel="name" optionValue="idusuario" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-select>
                             </div>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <label class="block text-900 font-semibold">Fecha Registro</label>
-                                <p-datepicker [(ngModel)]="frmDatos.startDate" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small" [readonlyInput]="true" [ngModelOptions]="{standalone: true}"></p-datepicker>
+                                <p-datepicker [(ngModel)]="frmDatos.startDate" dateFormat="dd/mm/yy" inputId="yearpicker" [showIcon]="true" size="small" [readonlyInput]="true" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-datepicker>
                             </div>
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <label for="due" class="block text-900 font-semibold">Fecha Cierre</label>
@@ -169,6 +180,7 @@
                                     [(ngModel)]="frmDatos.dueDate"
                                     size="small"
                                     [ngModelOptions]="{standalone: true}"
+                                    [disabled]="soloLectura()"
                                 ></p-datepicker>
                             </div>
 
@@ -184,6 +196,7 @@
                                     [(ngModel)]="frmDatos.fecampliacion"
                                     size="small"
                                     [ngModelOptions]="{standalone: true}"
+                                    [disabled]="soloLectura()"
                                 ></p-datepicker>
                             </div>
                             <!-- (onSelect)="changeFecha($event)" -->
@@ -207,6 +220,7 @@
                                     placeholder="Elegir Vinculados"
                                     [inputStyle]="{ height: '2.5rem' }"
                                     [dropdown]="true"
+                                    [disabled]="soloLectura()"
                                 >
                                     <ng-template let-assignee pTemplate="selectedItem">
                                         <div class="flex align-items-center gap-3 border-round">
@@ -250,7 +264,7 @@
                         <div class="col-12 flex flex-col field gap-2">
                             <div class="flex">
                                 <label for="contac" class="block text-900 font-semibold">Personas/Contactos</label>
-                                <i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event)"></i>
+                                @if(!soloLectura()){<i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event)"></i>}
                             </div>
                             <p-autoComplete
                                 appendTo="body"
@@ -264,6 +278,7 @@
                                 placeholder="Elegir Contactos"
                                 [inputStyle]="{ height: '2.5rem' }"
                                 [dropdown]="true"
+                                [disabled]="soloLectura()"
                             >
                                 <ng-template let-contac pTemplate="selectedItem">
                                     <div class="flex align-items-center gap-3 border-round">
@@ -333,12 +348,12 @@
                                     tooltipStyleClass="tooltip-pro"
                                 ></i>
                             </div>
-                            <textarea id="justificacion" name="justificacion" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.justificacion" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}"></textarea>
+                            <textarea id="justificacion" name="justificacion" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.justificacion" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></textarea>
                         </div>
                         <div class="flex flex-wrap gap-1">
                             <div class="flex flex-col gap-1 grow basis-0">
                                 <label class="text-900 font-semibold">Prioridad</label>
-                                <p-select [options]="lstPrioridad()" [(ngModel)]="frmDatos.idprioridad" optionLabel="valoritem" optionValue="iditem" [ngModelOptions]="{standalone: true}"></p-select>
+                                <p-select [options]="lstPrioridad()" [(ngModel)]="frmDatos.idprioridad" optionLabel="valoritem" optionValue="iditem" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></p-select>
                             </div>
                             <div class="flex flex-col gap-1 grow basis-0"></div>
                             <div class="flex flex-col gap-1 grow basis-0"></div>
@@ -347,18 +362,18 @@
                             <div class="flex">
                                 <label class="block text-900 font-semibold">Impacto en el negocio del cliente SI/NO Implementa la solución?</label>
                             </div>
-                            <textarea id="prioridad" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.desprioridad" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}"></textarea>
+                            <textarea id="prioridad" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.desprioridad" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></textarea>
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <div class="flex">
                                 <label for="contac" class="block text-900 font-semibold">Describir brevemente Proceso Decisorio del Proyecto(Compra)</label>
                             </div>
-                            <textarea id="proceso" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.desproceso" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}"></textarea>
+                            <textarea id="proceso" type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.desproceso" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></textarea>
                         </div>
                         <div class="col-12 flex flex-col field gap-2">
                             <div class="flex">
                                 <label for="contac" class="block text-900 font-semibold">Organigrama/Roles</label>
-                                <i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Registro" tooltipPosition="right" (click)="changeHeaderTitle(3, $event)"></i>
+                                @if(!soloLectura()){<i class="pi pi-user-plus cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Decisor" tooltipPosition="right" (click)="changeHeaderTitle(3, $event)"></i>}
                                 @if(!disabledCli()){
                                 <i class="pi pi-list cursor-pointer text-lg text-blue-500 font-bold" style="margin-left: 10px" pTooltip="ver Proceso Decisorio" tooltipPosition="right" (click)="verProcesoDecisorio()"></i>
                                 }
@@ -375,6 +390,7 @@
                                 placeholder="Registrar Decisores"
                                 [inputStyle]="{ height: '2.5rem' }"
                                 [dropdown]="true"
+                                [disabled]="soloLectura()"
                             >
                                 <ng-template let-contac pTemplate="selectedItem">
                                     <div class="flex align-items-center gap-3 border-round">
@@ -441,8 +457,8 @@
                          <div class="flex flex-wrap gap-1">
                             <div class="flex flex-col gap-1 grow basis-0">
                                 <label class="text-900 font-semibold">Competencia</label>
-                                <p-select [options]="lstExiste" [(ngModel)]="frmDatos.idcompetencia" optionLabel="name" optionValue="id" 
-                                [ngModelOptions]="{standalone: true}" (onChange)="changeCompetencia($event.value)"></p-select>
+                                <p-select [options]="lstExiste" [(ngModel)]="frmDatos.idcompetencia" optionLabel="name" optionValue="id"
+                                [ngModelOptions]="{standalone: true}" (onChange)="changeCompetencia($event.value)" [disabled]="soloLectura()"></p-select>
                             </div>
                             <div class="flex flex-col gap-1 grow basis-0"></div>
                             <div class="flex flex-col gap-1 grow basis-0"></div>
@@ -468,13 +484,13 @@
                                     tooltipStyleClass="tooltip-pro"
                                 ></i>
                             </div>
-                            <textarea type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.descompetencia" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}"></textarea>
+                            <textarea type="text" pInputTextarea [rows]="3" [(ngModel)]="frmDatos.descompetencia" style="resize: none text-500" class="w-full" [ngModelOptions]="{standalone: true}" [disabled]="soloLectura()"></textarea>
                         </div>
                     }
                         <div class="col-12 flex flex-col field gap-2">
                             <div class="flex">
                                 <label for="contac" class="block text-900 font-semibold">Registro de Oportunidad en Proveedor</label>
-                                <i class="pi pi-plus cursor-pointer text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Registro" tooltipPosition="right" (click)="crearRegistro()"></i>
+                                @if(!soloLectura()){<i class="pi pi-plus cursor-pointer text-blue-500 font-bold" style="margin-left: 10px" pTooltip="Nuevo Registro" tooltipPosition="right" (click)="crearRegistro()"></i>}
                             </div>
                             @for (register of frmDatos.regoportunidadesext; track $index) {
                             <div class="flex field gap-2 border border-slate-200 p-4 mt-2 justify-content-between">
@@ -499,10 +515,12 @@
                                     </div>
                                 </div>
 
+                                @if(!soloLectura()){
                                 <div class="flex">
                                     <button rounded text pButton type="button" icon="pi pi-pencil text-700" (click)="editarRegistro(register, $index)" pTooltip="Editar" tooltipPosition="left" class="button-rounded button-text -mt-2"></button>
                                     <button rounded text pButton type="button" icon="pi pi-trash text-red-700" (click)="eliminarRegistro(register, $index)" pTooltip="Eliminar" tooltipPosition="left" class="button-rounded button-text -mt-2"></button>
                                 </div>
+                                }
                             </div>
                             }
                         </div>

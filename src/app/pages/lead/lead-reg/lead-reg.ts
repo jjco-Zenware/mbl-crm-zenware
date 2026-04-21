@@ -31,9 +31,9 @@ export class CLeadReg {
     @Output() OB_back = new EventEmitter<boolean>();
     
     $listSubcription: Subscription[] = [];
-    card: KanbanCard = { id: '0', idlista: 0, monto: 0, tipocambio: 0, dueDate: '', taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '' };
+    card: KanbanCard = { id: '0', idlista: 0, title:'',description:'',monto: 0, tipocambio: 0, dueDate: '', idmoneda:0, idtipoprod:0, idpreventa:0, taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '' };
 
-    frmDatos: KanbanCard = { id: '0', idlista: 1, monto: 0, tipocambio: 0, dueDate: '', taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '', regoportunidadesext: [] };
+    frmDatos: KanbanCard = { id: '0', idlista: 0, title:'', description:'',monto: 0, tipocambio: 0, dueDate: '', idmoneda:0, idtipoprod:0,idpreventa:0,taskList: { title: 'Lista de tareas sin título', tasks: [] }, fecampliacion: '', regoportunidadesext: [] };
     mensajeSpinner: string = 'Cargando...!';
     blockedDocument = signal<boolean>(false);
     lstOrigenOportunidad = signal<any[]>([]);
@@ -136,7 +136,7 @@ export class CLeadReg {
     errorMensaje: string = '';
     lstAcciones: Plan[] = [];
     lstAccionfilter: Plan[] = [];
-    listId: string = '1';
+    listId: string = '0';
     IdOportunidad: string = '0';
     tc: number = 0;
     visBussines = signal<boolean>(false);
@@ -148,6 +148,7 @@ export class CLeadReg {
 tituloDetalle: any;
     dataCT: { id: any; razonsocial: any; description: any; nommoneda: any; startDate: any; nomcreador: any; tipocambio: any; idlista: any; } | undefined;
     verCompetencia = signal<boolean>(false);
+    soloLectura = signal<boolean>(false);
 
     constructor(
         private leadService: LeadService,
@@ -205,6 +206,18 @@ tituloDetalle: any;
             }
             this.frmDatos.idcompetencia = 2;
             this.changeCompetencia(2);
+        }
+
+        this.soloLectura.set(constantesLocalStorage.idperfil === 3);
+        if (this.soloLectura()) {
+            setTimeout(() => {
+                this.messageService.add({
+                    severity: 'warn',
+                    summary: 'Modo Solo Lectura',
+                    detail: 'Su perfil solo tiene permisos de visualización. No puede realizar cambios en este formulario.',
+                    life: 10000
+                });
+            }, 500);
         }
     }
 
@@ -308,6 +321,8 @@ tituloDetalle: any;
             }
         }
 
+        if(prcannio === 0){ prcannio = new Date().getFullYear()}
+
         this.card = { ...this.frmDatos, fecampliacion, dueDate, prcannio };
         this.card.priority = objectPriority;
         this.card.idlista = parseInt(this.listId);
@@ -396,18 +411,30 @@ tituloDetalle: any;
         this.errorMensaje = '';
         console.log('this.frmDatos...', this.frmDatos);
 
-        if (this.frmDatos.title === '' || this.frmDatos.title === ' ' || this.frmDatos.title === undefined) {
-            this.errorMensaje = 'Ingresar Titulo...!';
-            _error = true;
-        }
-
-        if (!_error && this.frmDatos.idcliente === 0) {
+         if ( this.frmDatos.idcliente === 0) {
             this.errorMensaje = 'Ingresar Cliente...!';
             _error = true;
         }
 
-        if (!_error && (this.frmDatos.idtipoprod === 0 || this.frmDatos.idtipoprod === null)) {
-            this.errorMensaje = 'Seleccionat Producto/Servicio...';
+        if (!_error &&(this.frmDatos.title === '' || this.frmDatos.title === ' ' || this.frmDatos.title === undefined)) {
+            this.errorMensaje = 'Ingresar Nombre de Lead...!';
+            _error = true;
+        }
+
+       
+
+        if (!_error && (this.frmDatos.idtipoprod === 0 || this.frmDatos.idtipoprod === null )) {
+            this.errorMensaje = 'Seleccionar Producto/Servicio...';
+            _error = true;
+        }
+
+        if (!_error && (this.frmDatos.description === '' || this.frmDatos.description === ' ' || this.frmDatos.description === null)) {
+            this.errorMensaje = 'Ingresar Descripción...!';
+            _error = true;
+        }
+
+        if (!_error && (this.frmDatos.idmoneda === 0 || this.frmDatos.idmoneda === null )) {
+            this.errorMensaje = 'Seleccionar Moneda...';
             _error = true;
         }
 
@@ -421,20 +448,17 @@ tituloDetalle: any;
             _error = true;
         }
 
-        if (!_error && (this.frmDatos.description === '' || this.frmDatos.description === ' ')) {
-            this.errorMensaje = 'Ingresar Descripción...!';
-            _error = true;
-        }
+        
 
         if (!_error && (this.frmDatos.startDate === '' || this.frmDatos.startDate === ' ')) {
             this.errorMensaje = 'Ingresar Fecha de Inicio...!';
             _error = true;
         }
 
-        if (!_error && (this.frmDatos.dueDate === '' || this.frmDatos.dueDate === ' ')) {
-            this.errorMensaje = 'Ingresar Fecha de Vencimiento...!';
-            _error = true;
-        }
+        // if (!_error && (this.frmDatos.dueDate === '' || this.frmDatos.dueDate === ' ')) {
+        //     this.errorMensaje = 'Ingresar Fecha de Cierre...!';
+        //     _error = true;
+        // }
 
         //    if ( !_error && (this.frmDatos.taskList?.tasks.length === 0 ))
         //    {

@@ -108,7 +108,15 @@
                 <td>{{data.simbmoneda }} </td>
                 <td>{{ data.monto }}</td>
                 <td>{{data.dueDate}}</td>
-                <td>{{ data.nomlista}}</td>
+                <td>
+                        <div [ngStyle]="{'width':'100px'}" class="justify-start align-items-center flex">
+                            <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
+                                <i [ngClass]="data.bgicon"></i>
+                            </span>
+                            <span class="mt-1">{{ data.nomlista | uppercase}}</span>
+
+                        </div>
+                    </td>
                 <!-- <td>
                         <div class="flex align-items-center">
                             <span *ngIf="data.nrotareas" pTooltip="Tareas" class="flex align-items-center font-semibold mr-3 text-blue-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>

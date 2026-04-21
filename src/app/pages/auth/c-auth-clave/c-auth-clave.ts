@@ -56,8 +56,8 @@ export class CAuthClave implements OnInit, OnDestroy {
                 console.log('validaLogin');
                 this.localStorage.setearLocalStorage(rpta);
                 this.isLoading = false;
-                //this.router.navigate(['/pages/oportunidades/dashboard']);
-                this.router.navigate(['/pages/oportunidad']);
+                this.router.navigate(['/pages/dashboard']);
+                //this.router.navigate(['/dashboard']);
             },
             error: (err) => {
                 this.messageService.clear();

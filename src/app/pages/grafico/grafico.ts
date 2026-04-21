@@ -30,14 +30,7 @@ export class Grafico implements OnDestroy {
     options: any;
     platformId = inject(PLATFORM_ID);
     periodo: any;
-    tot_acciones: number = 0;
-    closingRatioCantidad: number = 0;
-    closingRatioMonto: number = 0;
-    cerradoCantidad: number = 0;
-    cerradoMonto: number = 0;
-    forecastCantidad: number = 0;
-    forecastMonto: number = 0;
-    resumenEtapas: any[] = [];
+    resumenEtapas = signal<any[]>([]);
     selectedQ = signal<any[]>([]);
     lstQ = [
         { id: 1, desQ: 'Q1' },
@@ -49,6 +42,9 @@ export class Grafico implements OnDestroy {
     idvendedor: number = 0;
     chartOption!: EChartsOption;
     chartOption2!: EChartsOption;
+tot_cantidad: number = 0;
+tot_monto: number = 0;
+tot_ponderado: number = 0;
     
 
     constructor(
@@ -70,43 +66,6 @@ export class Grafico implements OnDestroy {
 
     setSpinner(valor: boolean) {
         this.blockedDocument.set(valor);
-    }
-
-    getBuscar() {
-        this.setSpinner(true);
-        this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
-        this.lstCan = [];
-        this.lstMes = [];
-
-        const objeto = {
-            annio: this.periodo.getFullYear(),
-            mes: this.periodo.getMonth() + 1,
-            idusuario: constantesLocalStorage.idusuario
-        };
-
-        const $listaTareas = this.oportunidadService.listaAccionesxMes(objeto).subscribe({
-            next: (rpta: any) => {
-                this.setSpinner(false);
-                this.lstCan = rpta.map((item: any) => item.CantidadAcciones);
-                this.lstMes = rpta.map((item: any) => item.Dia);
-                this.tot_acciones = rpta.reduce((acc: number, x: any) => acc + x.CantidadAcciones, 0);
-                this.initChart();
-            },
-            error: (err) => {
-                this.setSpinner(false);
-                console.error('error : ', err);
-                this.messageService.clear();
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: mensajesQuestion.msgErrorGenerico
-                });
-            },
-            complete: () => {
-                this.setSpinner(false);
-            }
-        });
-        this.$listSubcription.push($listaTareas);
     }
 
     initChart() {
@@ -221,6 +180,7 @@ export class Grafico implements OnDestroy {
             next: (rpta: any) => {
                 this.setSpinner(false);
                 let data = rpta[0].data[0].dataPoints;
+                console.log('obtenerFunnel5...', data);
 
                 const totalSteps = rpta[0].data[0].dataPoints.length;
                 const dataTransformada = data.map((x: { name: any; value: any; cantidad: any; bgcolor: any  }, index: number) => {
@@ -235,7 +195,7 @@ export class Grafico implements OnDestroy {
                 const dataTransformada2 = data.map((x: { name: any; value: any; cantidad: any; bgcolor: any  }, index: number) => {
                     return {
                         name: x.name,
-                        value: x.cantidad, // ancho progresivo (20,40,60...)
+                        value: (index + 1) * 20, //x.cantidad, // ancho progresivo (20,40,60...)
                         realValue: x.cantidad, // valor real del SP
                         cantidad: x.cantidad,
                         itemStyle: { color: x.bgcolor  }
@@ -264,7 +224,7 @@ export class Grafico implements OnDestroy {
                             min: 0,
                             max: totalSteps * 20, // 👈 importante
                             sort: 'descending', // 👈 evita que reordene por value
-                            left: '10%',
+                            
                             width: '60%',
                             label: {
                                 formatter: (params: any) => {
@@ -292,10 +252,12 @@ export class Grafico implements OnDestroy {
                     },
                     series: [
                         {
-                            type: 'pie',
-                            width: '100%',
-                            label: {
-                                formatter: '{b}: {c}'
+                            type: 'funnel',
+                            width: '60%',
+                             label: {
+                                formatter: (params: any) => {
+                                    return `${params.name}: ${params.data.realValue}`;
+                                  }
                             },
                             data: dataTransformada2
                         }
@@ -312,7 +274,9 @@ export class Grafico implements OnDestroy {
                     detail: mensajesQuestion.msgErrorGenerico
                 });
             },
-            complete: () => {}
+            complete: () => {
+                this.getDataFunnel2(objeto);
+            }
         });
         this.$listSubcription.push(obtenerFunnel);
     }
@@ -339,5 +303,28 @@ export class Grafico implements OnDestroy {
 
     ngOnDestroy() {
         this.$listSubcription.forEach((s) => s.unsubscribe());
+    }
+
+    getDataFunnel2(objeto:any) {
+
+       
+        const obtenerFunnel = this.oportunidadService.obtenerFunnel(objeto).subscribe({
+            next: (rpta: any) => {
+                this.setSpinner(false);
+                console.log('getDataFunnel2', rpta[0].data[0]);
+                this.resumenEtapas.set(rpta[0].data[0].dataPoints)
+            },
+            error: (err) => {
+                this.setSpinner(false);
+                console.error('error : ', err);
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico
+                });
+            },
+            complete: () => {this.setSpinner(false);}
+        });
     }
 }

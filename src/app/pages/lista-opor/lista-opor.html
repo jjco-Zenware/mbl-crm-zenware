@@ -48,7 +48,8 @@
                     optionLabel="titulo" appendTo="body" [filter]="true" optionValue="id" size="small"></p-select>
                 </div> -->
             <div class="flex flex-col grow basis-0 gap-1">
-                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="actualizarLista()"></button>
+                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom"
+                 class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="actualizarLista()"></button>
             </div>
         </div>
     </form>
@@ -171,7 +172,7 @@
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
+                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Oportunidad" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="verMntOportunidad(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button>
@@ -205,13 +206,12 @@
     </p-table>
     <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
 </div>
-} @else{}
+} 
 
-<!--
-<ng-template #visSecciones>
-    <app-c-business-case  *ngIf="visBussines" [IS_codigo]="codigoBC" (OB_back)="getOportunidad($event)"/>
-    <app-c-cotizacion *ngIf="visQuote" [IA_data]="dataCT" (OB_back)="getOportunidad($event)"/>
-</ng-template>-->
+@if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidad($event)" />} 
+@if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidad($event)" />}
+@if(visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidad($event)" />}
+
 
 @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
 <p-confirmDialog [style]="{width: '30vw'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>

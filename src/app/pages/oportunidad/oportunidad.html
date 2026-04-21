@@ -85,7 +85,14 @@
                 <td>{{data.simbmoneda + ' '}} {{ data.monto | number: "0.2-2"}}</td>
                 <td>{{data.dueDate}}</td>
                 <td>{{data.fechafinal}}</td>
-                <td>{{ data.nomlista | uppercase }}</td>
+                <td>
+                    <div class="flex">
+                        <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
+                            <i [ngClass]="data.bgicon"></i>
+                        </span>
+                        <span class="mt-1">{{ data.nomlista | uppercase}}</span>
+                    </div>
+                </td>
                 <td>{{data.porcentaje }}</td>
                 <td>
                     <div style="width: 30px">{{data.fecplan}}</div>
@@ -97,7 +104,7 @@
                     <div style="width: 100px">{{data.desplan | uppercase }}</div>
                 </td>
                 <td>
-                    <div class="flex align-items-center m:justify-content-end">
+                    <div class="flex align-items-center m:justify-end">
                         <button pButton text type="button" icon="pi pi-cog text-red-500" tooltipPosition="left" pTooltip="Configurar Siguiente Acción" (click)="onAccion(data)"></button>
                         <button pButton text type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Oportunidad" (click)="verOportunidadMnt(data)"></button>
                     </div>

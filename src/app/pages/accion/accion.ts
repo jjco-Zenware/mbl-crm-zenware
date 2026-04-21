@@ -10,13 +10,15 @@ import { CProgressSpinnerComponent } from '../shared/c-progress-spinner/c-progre
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PRIMENG_MODULES } from '../shared/primeng_modules';
 import { LeadService } from '../lead/lead.services';
+import { mAccion } from '../oportunidad/m-acciones/m-accion';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
     selector: 'app-accion',
     imports: [CProgressSpinnerComponent, PRIMENG_MODULES],
     templateUrl: './accion.html',
     standalone: true,
-    providers: [MessageService]
+    providers: [MessageService, DialogService, OportunidadService, UtilitariosService, LeadService]
 })
 export class Accion {
     $listSubcription: Subscription[] = [];
@@ -36,7 +38,8 @@ export class Accion {
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         private messageService: MessageService,
-        private leadService: LeadService
+        private leadService: LeadService,
+        public dialogService: DialogService
     ) {}
 
     ngOnInit() {
@@ -44,6 +47,7 @@ export class Accion {
         //this.Usuario = JSON.parse(localStorage.getItem('ZENWARE_OPOR')!);
         this.listaClientes();
         this.listaVendedor();
+        this.getBuscar();
     }
 
     setSpinner(valor: boolean) {
@@ -201,11 +205,31 @@ export class Accion {
         this.$listSubcription.push($listaAcciones);
     }
 
-    getSeverity(data: any) {
-        if (data.completo) {
-            return 'success';
-        } else {
-            return 'warning';
+    getSeverity(nomestado: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
+        switch (nomestado) {
+            case 'COMPLETADO': return 'success';
+            case 'HOY': return 'warn';
+            case 'PENDIENTE': return 'info';
+            case 'VENCIDO': return 'danger';
+            default: return 'info';
         }
     }
+
+     onAccion(data: any) {
+        data.tipopro = 2
+            const ref = this.dialogService.open(mAccion, {
+                data: data,
+                header: 'Editar Acción',
+                styleClass: 'testDialog',
+                closeOnEscape: false,
+                closable: true,
+                width: '35%'
+            });
+    
+            if (ref) {
+                ref.onClose.subscribe(() => {
+                    this.getBuscar();
+                });
+            }
+        }
 }
