@@ -1,9 +1,10 @@
-<div class="grid grid-cols-12 gap-2">
+<div class="grid grid-cols-12 gap-3">
 
     <!-- Header -->
-    <div class="col-span-12 flex align-items-center gap-3">
-        <div class="flex border-round fonthead w-full align-items-center">
-            <span class="text-base font-bold m-2">OPORTUNIDADES</span>
+    <div class="col-span-12 flex align-items-center gap-3 fonthead">        
+        <div class="m-2">
+            <div class="text-xl font-bold">Oportunidades</div>
+            <div class="text-sm text-color-secondary">Pipeline y funnel de ventas</div>
         </div>
     </div>
 
@@ -33,6 +34,7 @@
                     class="w-32"
                 />
             </div>
+            @if(idperfil === 4) {
             <div class="flex flex-col gap-1" style="min-width: 300px">
                 <label class="font-semibold text-sm">Vendedor</label>
                 <p-select
@@ -47,6 +49,7 @@
                     size="small"
                 />
             </div>
+            }
             <button
                 pButton
                 type="button"
@@ -59,28 +62,85 @@
         </div>
     </div>
 
-    <!-- Gráficos -->
-     <div class="col-span-12 md:col-span-5 card flex flex-col gap-2 ">
-        <!-- <div class="flex align-items-center gap-2">
-            <i class="pi pi-chart-pie text-primary"></i>
-            <span class="font-semibold">Distribución por Cantidad</span>
+    <!-- KPI Cards -->
+    @if(resumenEtapas().length > 0) {
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1"
+         style="border-left: 4px solid #3b82f6">
+        <div class="text-xs font-semibold text-color-secondary"
+             style="letter-spacing:.06em;text-transform:uppercase">Pipeline</div>
+        <div class="text-2xl font-bold">$ {{ tot_monto | number: '1.2-2' }}</div>
+        <div class="text-sm text-color-secondary">
+            {{ tot_cantidad }} oport. &middot; $ {{ tot_ponderado | number: '1.2-2' }} pond.
         </div>
-        <p-divider class="my-1" /> -->
+    </div>
+
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1"
+         style="border-left: 4px solid #22c55e">
+        <div class="text-xs font-semibold text-color-secondary"
+             style="letter-spacing:.06em;text-transform:uppercase">Cerrado</div>
+        <div class="text-2xl font-bold" style="color:#16a34a">
+            $ {{ (cerradoRow()?.y ?? 0) | number: '1.2-2' }}
+        </div>
+        <div class="text-sm text-color-secondary">
+            {{ cerradoRow()?.cantidad ?? 0 }} operaciones ganadas
+        </div>
+    </div>
+
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1"
+         style="border-left: 4px solid #f97316">
+        <div class="text-xs font-semibold text-color-secondary"
+             style="letter-spacing:.06em;text-transform:uppercase">Forecast</div>
+        <div class="text-2xl font-bold" style="color:#ea580c">
+            $ {{ forecastMonto() | number: '1.2-2' }}
+        </div>
+        <div class="text-sm text-color-secondary">
+            {{ forecastCnt() }} oport. (Presentación + Cierre)
+        </div>
+    </div>
+
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1"
+         style="border-left: 4px solid #a855f7">
+        <div class="text-xs font-semibold text-color-secondary"
+             style="letter-spacing:.06em;text-transform:uppercase">Closing Ratio</div>
+        <div class="text-2xl font-bold" style="color:#9333ea">
+            {{ closingRatioMonto() | number: '1.2-2' }}%
+        </div>
+        <div class="text-sm text-color-secondary">
+            Por cantidad: {{ closingRatioCnt() | number: '1.2-2' }}%
+        </div>
+    </div>
+    }
+
+    <!-- Gráficos -->
+    <div class="col-span-12 md:col-span-6 card flex flex-col gap-2">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-users text-primary"></i>
+            <span class="font-semibold">Funnel por Cantidad</span>
+        </div>
+        <p-divider class="my-1" />
         <div echarts [options]="chartOption2" style="height: 360px; width: 100%"></div>
     </div>
 
-    <!-- Tabla resumen -->
-    <div class="col-span-7 card">
-        <div class="flex align-items-center gap-2 mb-2">
-            <i class="pi pi-table text-primary"></i>
-            <span class="font-semibold">Resumen por Etapa</span>
+    <div class="col-span-12 md:col-span-6 card flex flex-col gap-2">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-dollar text-primary"></i>
+            <span class="font-semibold">Funnel por Monto</span>
         </div>
         <p-divider class="my-1" />
-        <p-table [value]="resumenEtapas()" size="small" [tableStyle]="{ 'min-width': '36rem' }">
+        <div echarts [options]="chartOption" style="height: 360px; width: 100%"></div>
+    </div>
+
+    <!-- Tabla resumen -->
+    <div class="col-span-12 card">
+        <div class="flex align-items-center gap-2 mb-3">
+            <i class="pi pi-table text-primary text-xl"></i>
+            <span class="font-semibold text-xl">Resumen por Etapa</span>
+        </div>
+        <p-divider class="my-1" />
+        <p-table [value]="resumenEtapas()" size="small">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Estado</th>
-                    <th class="text-center">Avance</th>
                     <th class="text-right">Cantidad</th>
                     <th class="text-right">Monto</th>
                     <th class="text-right">Ponderado</th>
@@ -88,52 +148,34 @@
             </ng-template>
             <ng-template pTemplate="body" let-row>
                 <tr>
-                    <td >{{ row.name }}</td>
-                    <td class="text-center">{{ row.avance }}</td>
+                    <td>{{ row.name }}</td>
                     <td class="text-right">{{ row.cantidad }}</td>
-                    <td class="text-right">$ {{ row.y | number: '1.0-0' }}</td>
-                    <td class="text-right">$ {{ row.ponderado | number: '1.0-0' }}</td>
+                    <td class="text-right">$ {{ row.y | number: '0.2-2' }}</td>
+                    <td class="text-right">$ {{ row.ponderado | number: '0.2-2' }}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="footer">
-                            <tr>
-                                <td colspan="2" >
-                                    <div class="font-medium" [ngStyle]="{ 'text-align': 'right' }">
-                                        Pipeline :
-                                    </div>                                    
-                                </td>
-                                <td>
-                                    <div class="font-medium">
-                                        {{ tot_cantidad  }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="font-medium">
-                                        $ {{ tot_monto | number: "0.2-2" }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="font-medium">
-                                        $ {{ tot_ponderado | number: "0.2-2" }}
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
+                <tr>
+                    <td><div class="font-medium text-right">Pipeline :</div></td>
+                    <td><div class="font-medium">{{ tot_cantidad }}</div></td>
+                    <td><div class="font-medium">$ {{ tot_monto | number: "0.2-2" }}</div></td>
+                    <td><div class="font-medium">$ {{ tot_ponderado | number: "0.2-2" }}</div></td>
+                </tr>
+                @if(perdidoRow()) {
+                <tr>
+                    <td>{{ perdidoRow().name }}</td>
+                    <td class="text-right">{{ perdidoRow().cantidad }}</td>
+                    <td class="text-right">$ {{ perdidoRow().y | number: '1.0-0' }}</td>
+                    <td class="text-right">$ {{ perdidoRow().ponderado | number: '1.0-0' }}</td>
+                </tr>
+                }
+            </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-4">Sin datos para mostrar.</td>
+                    <td colspan="4" class="text-center text-color-secondary py-4">Sin datos para mostrar.</td>
                 </tr>
             </ng-template>
         </p-table>
-    </div>
-
-    <div class="col-span-12 md:col-span-7 card flex flex-col gap-2">
-        <!-- <div class="flex align-items-center gap-2">
-            <i class="pi pi-filter text-primary"></i>
-            <span class="font-semibold">Funnel por Monto</span>
-        </div>
-        <p-divider class="my-1" /> -->
-        <div echarts [options]="chartOption" style="height: 360px; width: 100%"></div>
     </div>
 
 </div>

@@ -1,4 +1,3 @@
-
 @if(verDashboard()){
 <div class="grid grid-cols-12 gap-1">
     <div class="flex align-items-center col-span-12 md:col-span-8 p-3">
@@ -8,83 +7,117 @@
             <span class="font-bold text-primary">{{nomPerfil}}</span>
         </div>
     </div>
-    <div class="card m-4 flex flex-col gap-4 lg:col-span-12">
-        <div class="flex flex-wrap gap-2 col-span-12 md:col-span-12">
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>Estado</label>
-                <p-multiSelect [options]="events()" size="small" [(ngModel)]="selectedEstados" optionLabel="title" placeholder="Seleccionar..." />
+
+    <!-- Filtros -->
+    <div class="card m-4 col-span-12">
+        <!-- Header del panel de filtros -->
+        <div class="flex align-items-center justify-content-between pb-3 mb-3" style="border-bottom: 1px solid var(--surface-border)">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-sliders-h text-primary" style="font-size: 1.1rem"></i>
+                <span class="font-semibold text-base">Filtros de búsqueda</span>
+                @if(activeFilterCount() > 0){
+                <p-badge [value]="activeFilterCount().toString()" severity="info" />
+                }
             </div>
-            <div class="flex flex-col gap-1">
-                <label>Quarter</label>
-                <p-multiSelect [options]="lstQ" size="small" [(ngModel)]="selectedQ" placeholder="Seleccionar..." optionLabel="desQ" />
-            </div>
-            <div class="flex flex-col gap-1">
-                <label>Prob. Cierre %</label>
-                <p-inputNumber [(ngModel)]="porcierre" locale="es-PE" mode="decimal" name="por_cierre" [min]="0" [max]="100" size="small"></p-inputNumber>
-            </div>
-            <div class="flex flex-col gap-1">
-                <label>Monto</label>
-                <p-select [options]="lstDesMontos" [(ngModel)]="idmonto" id="idmonto" placeholder="Seleccionar..." optionLabel="desmonto" optionValue="id" size="small"></p-select>
-            </div>
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>Producto/Servicio</label>
-                <p-select [options]="lstTipoProducto()" [(ngModel)]="idtipoprod" size="small" placeholder="Seleccionar..." optionLabel="nomtipoproducto" filter="true" [ngModelOptions]="{ standalone: true }" optionValue="idtipoprod"></p-select>
-            </div>
+            <!-- <div class="flex gap-2">
+                <button pButton type="button" icon="pi pi-filter-slash" label="Limpiar" severity="secondary" size="small" [text]="true" (click)="limpiarFiltros()"></button>
+            </div> -->
         </div>
-        <div class="flex flex-wrap gap-2 col-span-12 md:col-span-12 mt-3">
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>Cliente</label>
-                <p-select [options]="Clientes()" [(ngModel)]="idcliente" id="idcliente" placeholder="Seleccionar..." optionLabel="nomcomercial" [ngModelOptions]="{ standalone: true }" optionValue="idcliente" size="small" [filter]="true"></p-select>
+
+        <!-- Grid de filtros -->
+        <div class="grid grid-cols-12 gap-x-3 gap-y-3">
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-tag" style="font-size: 0.7rem"></i> Estado </label>
+                <p-multiSelect [options]="events()" size="small" [(ngModel)]="selectedEstados" optionLabel="title" placeholder="Todos los estados..." [showClear]="true" />
             </div>
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>Sector</label>
-                <p-select [options]="lstEnti()" [(ngModel)]="tipoentidad" id="tipoentidad" optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="id" placeholder="Seleccionar..." size="small"></p-select>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-calendar" style="font-size: 0.7rem"></i> Quarter </label>
+                <p-multiSelect [options]="lstQ" size="small" [(ngModel)]="selectedQ" placeholder="Todos..." optionLabel="desQ" [showClear]="true" />
             </div>
-            <div class="flex flex-col gap-1">
-                <label>Año</label>
-                <p-datepicker [(ngModel)]="annio" view="year" dateFormat="yy" inputId="yearpicker" [showIcon]="true" size="small"></p-datepicker>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-percentage" style="font-size: 0.7rem"></i> Prob. Cierre % </label>
+                <p-inputNumber [(ngModel)]="porcierre" locale="es-PE" mode="decimal" [min]="0" [max]="100" size="small" [showButtons]="true" />
             </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-dollar" style="font-size: 0.7rem"></i> Rango de monto </label>
+                <p-select [options]="lstDesMontos" [(ngModel)]="idmonto" placeholder="Todos..." optionLabel="desmonto" optionValue="id" size="small" [showClear]="true" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-box" style="font-size: 0.7rem"></i> Producto / Servicio </label>
+                <p-select [options]="lstTipoProducto()" [(ngModel)]="idtipoprod" size="small" placeholder="Todos..." optionLabel="nomtipoproducto" [filter]="true" [ngModelOptions]="{ standalone: true }" optionValue="idtipoprod" [showClear]="true" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-building" style="font-size: 0.7rem"></i> Cliente </label>
+                <p-select [options]="Clientes()" [(ngModel)]="idcliente" placeholder="Todos los clientes..." optionLabel="nomcomercial" [ngModelOptions]="{ standalone: true }" optionValue="idcliente" size="small" [filter]="true" [showClear]="true" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-sitemap" style="font-size: 0.7rem"></i> Sector </label>
+                <p-select [options]="lstEnti()" [(ngModel)]="tipoentidad" optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="id" placeholder="Todos..." size="small" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-calendar-clock" style="font-size: 0.7rem"></i> Año </label>
+                <p-datepicker [(ngModel)]="annio" view="year" dateFormat="yy" [showIcon]="true" size="small" />
+            </div>
+
             @if(this.idperfil === 4){
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>Vendedor</label>
-                <p-select [options]="Vendedor()" [(ngModel)]="idvendedor" id="idvendedor" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-user" style="font-size: 0.7rem"></i> Vendedor </label>
+                <p-select [options]="Vendedor()" [(ngModel)]="idvendedor" placeholder="Todos..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small" [showClear]="true" />
             </div>
-        }
-        @if(this.idperfil === 2){
-            <div class="flex flex-col grow basis-0 gap-1">
-                <label>PreVenta</label>
-                <p-select [options]="Preventa()" [(ngModel)]="idpreventa" id="idpreventa" placeholder="Seleccionar..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small"></p-select>
+            } @if(this.idperfil === 2){
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-1">
+                <label class="text-xs font-semibold text-color-secondary flex align-items-center gap-1"> <i class="pi pi-users" style="font-size: 0.7rem"></i> PreVenta </label>
+                <p-select [options]="Preventa()" [(ngModel)]="idpreventa" placeholder="Todos..." optionLabel="name" [ngModelOptions]="{ standalone: true }" optionValue="idusuario" [filter]="true" size="small" [showClear]="true" />
             </div>
-        }
-            <div class="flex flex-col mt-2">
-                <button pButton type="button" (click)="consultarData2()" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-3 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search"></button>
+            }
+            <div class="flex gap-2">
+                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-5 h-3rem w-auto bg-blue-500" icon="pi pi-search" (click)="consultarData2()"></button>
             </div>
         </div>
     </div>
 
-   
+    @if(this.idperfil === 2){
+    <!-- KPI Cards -->
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1" style="border-left: 4px solid #3b82f6">
+        <div class="text-xs font-semibold text-color-secondary" style="letter-spacing: 0.06em; text-transform: uppercase">Oportunidades</div>
+        <div class="text-2xl font-bold">{{ totalOportunidades() | number:'1.0-0' }}</div>
+        <div class="text-sm text-color-secondary">Total en pipeline</div>
+    </div>
 
-    <div class="flex flex-wrap gap-4 col-span-12 lg:col-span-12">
-        <div class="grid grid-cols-12 flex flex-col justify-between m-2">
-            <div class="col-span-12">
-                <app-c-dist-oportunidad [IS_codigo]="0" [IA_data]="dataCT" />
-            </div>
-            <div class="col-span-12">
-                <p-divider />
-            </div>
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1" style="border-left: 4px solid #06b6d4">
+        <div class="text-xs font-semibold text-color-secondary" style="letter-spacing: 0.06em; text-transform: uppercase">Monto Total</div>
+        <div class="text-2xl font-bold" style="color: #0891b2">$ {{ montoTotalOportunidades() | number:'1.2-2' }}</div>
+        <div class="text-sm text-color-secondary">Suma de oportunidades</div>
+    </div>
 
-            <div class="col-span-12">
-                <app-c-lst-oportunidad (verBussines)="verBussines($event)" (verQuote)="verQuote($event)" (verMntOportunidad)="verMntOportunidad($event)" [IA_data]="dataCT" />
-            </div>
-        </div>
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1" style="border-left: 4px solid #22c55e">
+        <div class="text-xs font-semibold text-color-secondary" style="letter-spacing: 0.06em; text-transform: uppercase">Acciones Completadas</div>
+        <div class="text-2xl font-bold" style="color: #16a34a">{{ completos() | number:'1.0-0' }}</div>
+        <div class="text-sm text-color-secondary">Acciones cerradas</div>
+    </div>
+
+    <div class="col-span-12 sm:col-span-6 lg:col-span-3 card flex flex-col gap-1" style="border-left: 4px solid #f97316">
+        <div class="text-xs font-semibold text-color-secondary" style="letter-spacing: 0.06em; text-transform: uppercase">Acciones Pendientes</div>
+        <div class="text-2xl font-bold" style="color: #ea580c">{{ pendientes() | number:'1.0-0' }}</div>
+        <div class="text-sm text-color-secondary">Acciones por completar</div>
+    </div>
+    }
+    <div class="col-span-12 flex flex-col gap-4 m-2">
+        <app-c-dist-oportunidad [IS_codigo]="0" [IA_data]="dataCT" (kpiData)="onKpiDataMto($event)" />
+        <p-divider />
+        <app-c-lst-oportunidad (verBussines)="verBussines($event)" (verQuote)="verQuote($event)" (verMntOportunidad)="verMntOportunidad($event)" (kpiData)="onKpiData($event)" [IA_data]="dataCT" />
     </div>
 </div>
 
-} 
-@if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)" />} 
-@if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)" />}
-@if(blockedDocumentk()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>} 
-@if (visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)" />}
+} @if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidadKanban($event)" />} @if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidadKanban($event)" />}
+@if(blockedDocumentk()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>} @if (visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)" />}
 <p-toast />
 
 <p-confirmdialog />

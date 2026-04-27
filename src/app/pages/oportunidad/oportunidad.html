@@ -1,6 +1,9 @@
 @if (visOportunidad) {
 <div class="card">
     <div class="flex justify-content-between col-12 gap-2 mb-3">
+        <!-- <div>
+            <button pButton class="font-semibold p-button-outlined" icon="pi pi-file" label="Nuevo" (click)="onNuevo()"></button>
+        </div> -->
         <div class="flex border-round fonthead w-full align-items-center">
             <span class="text-base font-bold m-2">ACCIONES PENDIENTES</span>
         </div>
@@ -20,7 +23,7 @@
                 <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="cargarOportunidades()"></button>
             </div>
             <div class="flex gap-3 p-3">
-                <div class="col-span-3 lg:col-span-6 xl:col-span-3 flex">
+                <div class="col-span-3 lg:col-span-6 xl:col-span-3 flex m-2">
                     <div class="flex justify-between gap-3">
                         <span class="block text-muted-color font-bold text-lg">Pendientes de Resolver: </span>
                         <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border ml-2" style="width: 2.5rem; height: 2rem">
@@ -58,30 +61,33 @@
                 <th rowspan="2">N° OPOR.</th>
                 <th rowspan="2">OPORTUNIDAD</th>
                 <th rowspan="2">CLIENTE</th>
+                <th rowspan="2">FORECAST</th>
                 <th rowspan="2">MONTO</th>
                 <th rowspan="2">F. CIERRE</th>
                 <th rowspan="2">F. ENTREGA</th>
                 <th rowspan="2">ETAPA</th>
                 <th rowspan="2">%</th>
                 <th colspan="4">ACCIONES</th>
+                <th rowspan="2"></th>
             </tr>
             <tr>
                 <th>SIG. ACCIÓN</th>
                 <th>PRIORIDAD</th>
                 <th>DESCRIPCIÓN</th>
-                <th></th>
+                <th>TIPO ACCIÓN</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-            <tr>
+            <tr [class.bg-yellow-100]="isHoy(data.fecplan)">
                 <td>{{rowIndex + 1}}</td>
                 <td>{{data.id}}</td>
                 <td>
-                    <div style="width: 100px">{{data.title | uppercase }}</div>
+                    {{data.title | uppercase }}
                 </td>
                 <td>
                     <div style="width: 150px">{{data.razonsocial | uppercase }}</div>
                 </td>
+                <td [style.color]="data.forecast === 'SI' ? 'green' : 'red'" style="font-weight: bold">{{data.forecast}}</td>
                 <td>{{data.simbmoneda + ' '}} {{ data.monto | number: "0.2-2"}}</td>
                 <td>{{data.dueDate}}</td>
                 <td>{{data.fechafinal}}</td>
@@ -95,17 +101,22 @@
                 </td>
                 <td>{{data.porcentaje }}</td>
                 <td>
-                    <div style="width: 30px">{{data.fecplan}}</div>
+                    <div style="width: 30px" [class.font-bold]="isHoy(data.fecplan)" [class.text-orange-600]="isHoy(data.fecplan)">{{data.fecplan}} @if(isHoy(data.fecplan)){ <i class="pi pi-bell ml-1 text-orange-600"></i> }</div>
                 </td>
                 <td>
                     <div style="width: 40px">{{data.desprioridad | uppercase }}</div>
                 </td>
                 <td>
-                    <div style="width: 100px">{{data.desplan | uppercase }}</div>
+                    <div>{{data.desplan | uppercase }}</div>
+                </td>
+                <td>
+                    <div style="width: 40px">{{data.destipotarea | uppercase }}</div>
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-end">
-                        <button pButton text type="button" icon="pi pi-cog text-red-500" tooltipPosition="left" pTooltip="Configurar Siguiente Acción" (click)="onAccion(data)"></button>
+                        <button pButton text type="button" icon="pi pi-cog text-red-500" tooltipPosition="left" pTooltip="Gestionar Acción" (click)="onAccion(data, 1)"></button>
+                        <button pButton text type="button" icon="pi pi-list" tooltipPosition="left" pTooltip="Acciones de la Oportunidad" (click)="verAcciones(data)"></button>
+                        <button pButton text type="button" icon="pi pi-check-circle text-green-500" tooltipPosition="left" pTooltip="Culminar Acción" (click)="onAccion(data, 3)"></button>
                         <button pButton text type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Oportunidad" (click)="verOportunidadMnt(data)"></button>
                     </div>
                 </td>
@@ -123,9 +134,8 @@
         </ng-template>
     </p-table>
 </div>
-}
-@if (visMntOportunidad) {
-    <app-c-lead-reg  [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)"/>
+} @if (visMntOportunidad) {
+<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidadKanban($event)" />
 }
 
 <p-toast />

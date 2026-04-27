@@ -19,8 +19,7 @@
                 <ng-template pTemplate="opposite" let-event> {{event.title}} </ng-template>
             </p-timeline>
         </div>
-    </div> 
-    
+    </div>
 
     <form [formGroup]="frmDatos" class="p-fluid grid mt-2">
         <div class="flex flex-wrap gap-3 lg:w-1/1 mb-3">
@@ -48,13 +47,10 @@
                     optionLabel="titulo" appendTo="body" [filter]="true" optionValue="id" size="small"></p-select>
                 </div> -->
             <div class="flex flex-col grow basis-0 gap-1">
-                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom"
-                 class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="actualizarLista()"></button>
+                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="actualizarLista()"></button>
             </div>
         </div>
     </form>
-
-    
 
     <!-- <div class="mb-2 py-3 h-3rem flex border-round p-2 fonthead w-full text-base">
                 <span class="font-semibold">OPORTUNIDADES</span>
@@ -81,7 +77,7 @@
                 <th class="bg-teal-50 border-1">
                     <div class="flex justify-content-between align-items-center">N°</div>
                 </th>
-                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                <th [ngStyle]="{'width':'40px'}" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
                         N°<br />
                         OPOR
@@ -118,7 +114,7 @@
                     <div class="flex justify-content-between align-items-center">DETALLE</div>
                 </th>
                 <th style="width: 80px" class="bg-teal-50 border-1">
-                    <div class="flex justify-content-between align-items-center">ACCIONES</div>
+                    <div class="flex justify-content-between align-items-center">TRANSACCIONES</div>
                 </th>
             </tr>
             <tr>
@@ -132,7 +128,9 @@
             <!-- [pSelectableRow]="data" -->
             <tr>
                 <td>{{rowIndex + 1}}</td>
-                <td>{{data.id}}</td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">{{data.id }}</div>
+                </td>
                 <td>
                     <div pTooltip="{{data.title | uppercase}}">{{(data.title.length > 40) ? ((data.title).slice(0, 40) + '...' | uppercase) : data.title | uppercase}}</div>
                 </td>
@@ -164,20 +162,44 @@
                 <td>{{data.startDate }}</td>
                 <td>
                     <div class="flex align-items-center">
-                        <span *ngIf="data.nrotareas" pTooltip="Tareas" class="flex align-items-center font-semibold mr-3 text-blue-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>
+                        <span *ngIf="data.nrotareas" pTooltip="Acciones" class="flex align-items-center font-semibold mr-3 text-green-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>
                         <span *ngIf="data.nroadjuntos" pTooltip="Adjuntos" class="flex align-items-center font-semibold mr-3 text-orange-600"><i class="pi pi-paperclip mr-2"></i>{{data.nroadjuntos}}</span>
-                        <span *ngIf="data.nroasignados" pTooltip="Asignados" class="flex align-items-center font-semibold mr-3 text-green-600"><i class="pi pi-users mr-2"></i>{{data.nroasignados}}</span>
+                        <span *ngIf="data.nroasignados" pTooltip="Vinculados" class="flex align-items-center font-semibold mr-3 text-red-600"><i class="pi pi-users mr-2"></i>{{data.nroasignados}}</span>
                         <!-- <span pTooltip="Fecha Final" class="flex align-items-center font-semibold white-space-nowrap" *ngIf="data.startDate"><i class="pi pi-clock mr-2"></i>{{data.fechafinal }}</span>-->
                     </div>
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Oportunidad" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="verMntOportunidad(data)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button>
-
+                        @if(data.idlista !== 0){
+                        <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Ir Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Ir Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
+                        }
+                        <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Agregar Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button>
                         <button
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-check-square"
+                            severity="success"
+                            tooltipPosition="left"
+                            pTooltip="Agregar Acción"
+                            class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"
+                            (click)="agregarAccion(data, 4)"
+                        ></button>
+                        <button
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-spin pi-cog"
+                            severity="warn"
+                            tooltipPosition="left"
+                            pTooltip="Calificar Oportunidad"
+                            class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"
+                            (click)="calificarOportunidad(data)"
+                        ></button>
+
+                        <!-- <button
                             *ngIf="data.acciones"
                             pButton
                             pRipple
@@ -187,7 +209,7 @@
                             (click)="toggleMenu($event, data)"
                             pTooltip="Transacciones Disponibles"
                             tooltipPosition="left"
-                        ></button>
+                        ></button> -->
                     </div>
                 </td>
             </tr>
@@ -206,12 +228,8 @@
     </p-table>
     <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
 </div>
-} 
-
-@if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidad($event)" />} 
-@if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidad($event)" />}
-@if(visMntOportunidad()) {<app-c-lead-reg [IS_Data]="dataOportunidad" (OB_back)="getOportunidad($event)" />}
-
-
-@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
-<p-confirmDialog [style]="{width: '30vw'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>
+} @if(visQuote()){<app-c-cotizacion [IA_data]="dataCT" (OB_back)="getOportunidad($event)" />} @if(visBussines()){<app-c-business-case [IS_codigo]="codigoBC" (OB_back)="getOportunidad($event)" />} @if(visMntOportunidad()) {<app-c-lead-reg
+    [IS_Data]="dataOportunidad"
+    (OB_back)="getOportunidad($event)"
+/>} @if(visCalOportunidad()) {<app-calificaroportunidad [IS_Data]="dataOportunidad" (OB_back)="getOportunidad($event)" />} @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
+<p-confirmDialog styleClass="zw-confirm-dialog" [style]="{width: '30rem'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>

@@ -1,15 +1,17 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage } from '../model/constantes';
 import { UtilitariosService } from '../service/utilitarios.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { I_rptaDataLogin, KanbanCard } from '../model/interfaces';
+import { I_rptaDataLogin } from '../model/interfaces';
 import { Subscription } from 'rxjs';
 import { LeadService } from './lead.services';
 import { CProgressSpinnerComponent } from '../shared/c-progress-spinner/c-progress-spinner.component';
 import { PRIMENG_MODULES } from '../shared/primeng_modules';
 import { CLeadReg } from './lead-reg/lead-reg';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { mAccion } from '../oportunidad/m-acciones/m-accion';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
     selector: 'app-lead',
@@ -17,7 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
     templateUrl: './lead.html',
     standalone: true,
-    providers: [MessageService, UtilitariosService, ConfirmationService],
+    providers: [MessageService, UtilitariosService, ConfirmationService, DialogService],
     styleUrls: ['./lead.scss']
 })
 export class Lead {
@@ -42,7 +44,7 @@ export class Lead {
         private utilitariosService: UtilitariosService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private cdr: ChangeDetectorRef
+        public dialogService: DialogService,
     ) {}
 
     ngOnInit() {
@@ -162,4 +164,34 @@ export class Lead {
                 complete() {}
             });
     }
+
+    agregarAccion(data: any, tipo: number) {
+            console.log('data...', data);
+            data.tipopro = tipo;
+            data.idtarea = 0;    
+            data.idoportunidad = data.id;        
+    
+            console.log('onAccion...', data.idtarea);
+    
+            const ref = this.dialogService.open(mAccion, {
+                data: data,
+                header: 'Agregar Acción',
+                styleClass: 'testDialog',
+                closeOnEscape: false,
+                closable: true,
+                width: '35%'
+            });
+    
+            if (ref) {
+                ref.onClose.subscribe((rpta: any) => {
+                    //this.cargarOportunidades();
+                    console.log('onClose', rpta);
+                    if (rpta !== undefined) {
+                        ref.onClose.subscribe(() => {
+                            this.getBuscar();
+                        });
+                    }
+                });
+            }
+        }
 }

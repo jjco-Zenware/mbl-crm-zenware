@@ -40,40 +40,40 @@
                         </div>
 
                         <div class="flex lg:w-1/1 mt-3 justify-between gap-2">
-                            <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #DEBBF2" (click)="mostrarDetalle(1)">
-                                <span class="font-medium text-lg text-white">Lead</span>
+                            <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #DEBBF2" (click)="mostrarDetalle(0)">
+                                <span class="font-medium text-lg text-white">Lead ({{ cntLea() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloLea() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #9c27b0" (click)="mostrarDetalle(1)">
-                                <span class="font-medium text-lg text-white">Contacto</span>
+                                <span class="font-medium text-lg text-white">Contacto ({{ cntCon() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloCon() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #673ab7" (click)="mostrarDetalle(2)">
-                                <span class="font-medium text-lg text-white">Calificiación</span>
+                                <span class="font-medium text-lg text-white">Calificiación ({{ cntCal() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloCal() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #27eccb" (click)="mostrarDetalle(3)">
-                                <span class="font-medium text-lg text-white">Investigación</span>
+                                <span class="font-medium text-lg text-white">Investigación ({{ cntInv() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloInv() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #607d8b" (click)="mostrarDetalle(4)">
-                                <span class="font-medium text-lg text-white">Presentación</span>
+                                <span class="font-medium text-lg text-white">Presentación ({{ cntPre() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloPre() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #ff9800" (click)="mostrarDetalle(5)">
-                                <span class="font-medium text-lg text-white">Cierre</span>
+                                <span class="font-medium text-lg text-white">Cierre ({{ cntCie() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloCie() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #1ba436" (click)="mostrarDetalle(6)">
-                                <span class="font-medium text-lg text-white">Cerrado</span>
+                                <span class="font-medium text-lg text-white">Cerrado ({{ cntCer() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloCer() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg cursor-pointer flex-1" style="background-color: #f32905" (click)="mostrarDetalle(7)">
-                                <span class="font-medium text-lg text-white">Perdido</span>
+                                <span class="font-medium text-lg text-white">Perdido ({{ cntPer() }})</span>
                                 <span class="mb-2 text-lg text-white">$ {{ totalCloPer() | number: "3.2" }}</span>
                             </div>
                             <div class="text-center p-2 flex flex-col rounded-lg flex-1" style="background-color: #374151">
-                                <span class="font-medium text-lg text-white">TOTALES</span>
+                                <span class="font-medium text-lg text-white">TOTALES ({{ this.totalesOport }}) </span> 
                                 <span class="mb-2 text-lg text-white">$ {{ totales | number: "3.2" }}</span>
                             </div>
                         </div>

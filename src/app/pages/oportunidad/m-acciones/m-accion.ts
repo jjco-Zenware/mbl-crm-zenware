@@ -26,6 +26,12 @@ export class mAccion implements OnInit, OnDestroy {
         { iditem: 2, valoritem: '2. Media' },
         { iditem: 3, valoritem: '3. Baja' }
     ]);
+    lstTipoTarea = signal<any[]>([
+        { iditem: 1, valoritem: 'Llamada' },
+        { iditem: 2, valoritem: 'Reunión' },
+        { iditem: 3, valoritem: 'WhatsApp' },
+        { iditem: 4, valoritem: 'Email' }
+    ]);
     frmAccion!: FormGroup;
     tipopro = signal<number>(1);
 
@@ -60,19 +66,22 @@ export class mAccion implements OnInit, OnDestroy {
     }
 
     createFrm() {
-        const editMode = this.tipopro() === 2;
+        const editMode = this.tipopro() === 2 || this.tipopro() === 4;
         this.frmAccion = this.fb.group({
             nomoportunidad: [{ value: null, disabled: true }],
             fecplan_ant: [{ value: null, disabled: !editMode }],
             desplan_ant: [{ value: null, disabled: !editMode }],
             idprioridad_ant: [{ value: null, disabled: !editMode }],
+            idtipotarea_ant: [{ value: null, disabled: !editMode }],
             fecplan: [{ value: this.utilitariosService.obtenerFechaActual(), disabled: false }, [Validators.required]],
             desplan: [{ value: null, disabled: false }, [Validators.required]],
             idprioridad: [{ value: null, disabled: false }, [Validators.required]],
             fecplan_ant2: [{ value: null, disabled: false }],
             tipopro: [{ value: null, disabled: false }],
             idoportunidad: [{ value: 0, disabled: false }],
-            idtarea: [{ value: 0, disabled: false }]
+            idtarea: [{ value: this.config.data.idtarea, disabled: false }],
+            idtipotarea: [{ value: null, disabled: false }],
+            resultado: [{ value: null, disabled: false }]
         });
     }
 
@@ -94,27 +103,40 @@ export class mAccion implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     console.log('cargarPlanAccion...', rpta);
-                    if (rpta.length > 0) {
-                          const maxItem = rpta.reduce((prev: any, current: any) => (current.idtarea > prev.idtarea ? current : prev));
+                    if (rpta.length > 0 && this.data.tipopro !== 4) {
+                        const maxItem = rpta.reduce((prev: any, current: any) => (current.idtarea > prev.idtarea ? current : prev));
 
-                          this.idtareaanterior = maxItem.idtarea;
-                          console.log('idtareaanterior...', this.idtareaanterior);
+                        if (this.data.tipopro === 3) {
+                            this.idtareaanterior = this.data.idtarea;
+                        } else {
+                            this.idtareaanterior = maxItem.idtarea;
+                        }
 
-                    console.log('maxItem...', maxItem);
-                    this.frmAccion.patchValue({
-                        nomoportunidad: this.data.title,
-                        fecplan_ant: maxItem.fecha,
-                        fecplan_ant2: maxItem.fecha,
-                        desplan_ant: maxItem.descripcion,
-                        idprioridad_ant: maxItem.idprioridad,
-                        idtarea: maxItem.idtarea,
-                        idoportunidad:maxItem.idoportunidad,
-                        tipopro:this.data.tipopro
-                    });
+                        console.log('idtareaanterior...', this.idtareaanterior);
 
-                    console.log('this.frmAccion...', this.frmAccion.value);
+                        console.log('maxItem...', maxItem);
+                        this.frmAccion.patchValue({
+                            nomoportunidad: this.data.title,
+                            fecplan_ant: maxItem.fecha,
+                            fecplan_ant2: maxItem.fecha,
+                            desplan_ant: maxItem.descripcion,
+                            idprioridad_ant: maxItem.idprioridad,
+                            idtipotarea_ant: maxItem.idtipotarea,
+                            idoportunidad: maxItem.idoportunidad,
+                            tipopro: this.data.tipopro,
+                            idtarea: this.data.idtarea
+                        });
+
+                        console.log('this.frmAccion...', this.frmAccion.value);
                     }
-                  
+                    if (this.data.tipopro === 4) {
+                        this.frmAccion.patchValue({
+                            idoportunidad: this.data.id,
+                            tipopro: this.data.tipopro,
+                            idtarea: this.data.idtarea,
+                            fecplan_ant: new Date(),
+                        });
+                    }
                 },
                 error: (err) => {
                     this.messageService.add({
@@ -181,7 +203,7 @@ export class mAccion implements OnInit, OnDestroy {
         let _error = false;
         this.errorMensaje = '';
 
-        if (this.tipopro() === 2) {
+        if (this.tipopro() === 2 || this.tipopro() === 4) {
             if (!_error && (this.frmAccion.get('idprioridad_ant')?.value === 0 || this.frmAccion.get('idprioridad_ant')?.value === null)) {
                 this.errorMensaje = 'Seleccionar Prioridad...!';
                 _error = true;
@@ -191,11 +213,20 @@ export class mAccion implements OnInit, OnDestroy {
                 this.errorMensaje = 'Ingresar Descripción de la Acción...';
                 _error = true;
             }
+        } else if (this.tipopro() === 3) {
+            if (!_error && (this.frmAccion.get('resultado')?.value === null || this.frmAccion.get('resultado')?.value === '')) {
+                this.errorMensaje = 'Ingresar Resultado de la Acción...';
+                _error = true;
+            }
         } else {
+            if (!_error && (this.frmAccion.get('resultado')?.value === null || this.frmAccion.get('resultado')?.value === '')) {
+                this.errorMensaje = 'Ingresar Resutado de la Acción Anterior...';
+                _error = true;
+            }
             if (this.frmAccion.get('fecplan_ant2')?.value != null) {
                 const fecplan_ant2 = new Date(this.utilitariosService.formatFecha(this.frmAccion.get('fecplan_ant2')?.value));
 
-                if (this.frmAccion.get('fecplan')?.value <= fecplan_ant2) {
+                if (this.frmAccion.get('fecplan')?.value < fecplan_ant2) {
                     this.errorMensaje = 'La Fecha de Planificación debe ser mayor a la Fecha Anterior...!';
                     _error = true;
                 }
@@ -206,8 +237,13 @@ export class mAccion implements OnInit, OnDestroy {
                 _error = true;
             }
 
+            if (!_error && (this.frmAccion.get('idtipotarea')?.value === 0 || this.frmAccion.get('idtipotarea')?.value === null)) {
+                this.errorMensaje = 'Seleccionar Tipo Tarea...!';
+                _error = true;
+            }
+
             if (!_error && (this.frmAccion.get('desplan')?.value === null || this.frmAccion.get('desplan')?.value === '')) {
-                this.errorMensaje = 'Ingresar Descripción de Planificación...';
+                this.errorMensaje = 'Ingresar Descripción de la Acción...';
                 _error = true;
             }
         }
@@ -216,27 +252,29 @@ export class mAccion implements OnInit, OnDestroy {
     }
 
     prcPlanAccion() {
-        this.data = this.config.data;
-         if (this.validarDatos()) {
+        console.log('prcPlanAccion', this.frmAccion.value);
+        if (this.validarDatos()) {
             console.log('errorMensaje : ', this.errorMensaje);
             this.messageService.add({ severity: 'info', summary: 'Validación', detail: this.errorMensaje });
             return;
         }
 
-        console.log('prcPlanAccion', this.frmAccion.value);
-        let fechaant = this.frmAccion.get('fecplan_ant')?.value
+        
+        let fechaant = this.frmAccion.get('fecplan_ant')?.value;
         console.log('fechaant...', fechaant);
-        let fechaant2 = this.frmAccion.get('fecplan_ant2')?.value
+        let fechaant2 = this.frmAccion.get('fecplan_ant2')?.value;
         console.log('fechaant2...', fechaant2);
 
         if (fechaant.length === 10) {
-            fechaant = new Date(this.utilitariosService.formatFecha(fechaant))
+            fechaant = new Date(this.utilitariosService.formatFecha(fechaant));
         }
 
-        if (fechaant2.length === 10) {
-            fechaant2 = new Date(this.utilitariosService.formatFecha(fechaant2))
+        if (fechaant2 !== null) {
+            if (fechaant2.length === 10) {
+                fechaant2 = new Date(this.utilitariosService.formatFecha(fechaant2));
+            }
         }
-         
+
         const objeto = {
             idtarea: this.frmAccion.get('idtarea')?.value,
             idoportunidad: this.frmAccion.get('idoportunidad')?.value,
@@ -252,6 +290,8 @@ export class mAccion implements OnInit, OnDestroy {
             idtarea_acti: 0,
             idetapa: 0,
             idprioridad: this.tipopro() === 1 ? this.frmAccion.get('idprioridad')?.value : this.frmAccion.get('idprioridad_ant')?.value,
+            idtipotarea: this.tipopro() === 1 ? this.frmAccion.get('idtipotarea')?.value : this.frmAccion.get('idtipotarea_ant')?.value,
+            resultado: '',
             idusuario: constantesLocalStorage.idusuario
         };
         console.log('agregarEtapa', objeto);
@@ -260,10 +300,10 @@ export class mAccion implements OnInit, OnDestroy {
             next: (rpta: any) => {
                 this.setSpinner(false);
                 console.log('tareaPrc', rpta);
-                if (this.tipopro() === 1 ) {
+                if (this.tipopro() === 1) {
                     this.completarTarea(this.idtareaanterior);
                 }
-                
+
                 this.cerrar(objeto);
             },
             error: (err) => {
@@ -274,11 +314,11 @@ export class mAccion implements OnInit, OnDestroy {
         this.$listSubcription.push($agregarSubTarea);
     }
 
-
     completarTarea(idtarea: number) {
         console.log('completarTarea...', idtarea);
         const objeto = {
-            idtarea: idtarea
+            idtarea: idtarea,
+            resultado: this.frmAccion.get('resultado')?.value
         };
         console.log('objeto...', objeto);
         const $completarTarea = this.leadService.completarTarea(objeto).subscribe({
@@ -287,7 +327,30 @@ export class mAccion implements OnInit, OnDestroy {
             },
             error: (err) => {
                 this.serviceSharedApp.messageToast();
+            }
+        });
+    }
+
+    completarTarea2() {
+        if (this.validarDatos()) {
+            console.log('errorMensaje : ', this.errorMensaje);
+            this.messageService.add({ severity: 'info', summary: 'Validación', detail: this.errorMensaje });
+            return;
+        }
+        const objeto = {
+            idtarea: this.idtareaanterior,
+            resultado: this.frmAccion.get('resultado')?.value
+        };
+
+        console.log('objeto...', objeto);
+
+        const $completarTarea = this.leadService.completarTarea(objeto).subscribe({
+            next: (rpta: any) => {
+                this.cerrar(objeto);
             },
+            error: (err) => {
+                this.serviceSharedApp.messageToast();
+            }
         });
     }
 }

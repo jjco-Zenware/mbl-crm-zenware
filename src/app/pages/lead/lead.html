@@ -35,13 +35,11 @@
                 optionLabel="titulo" appendTo="body" [filter]="true" optionValue="id" size="small"></p-select>
             </div> -->
             <div class="flex grow basis-0 gap-1">
-                <button pButton type="button"  pTooltip="Consultar" tooltipPosition="bottom" [raised]="true"
-                                class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="getBuscar()"></button>
+                <button pButton type="button" pTooltip="Consultar" tooltipPosition="bottom" [raised]="true" class="font-semibold mt-5 h-3rem w-3rem w-auto bg-blue-500 ml-2" icon="pi pi-search" (click)="getBuscar()"></button>
 
-                            <!-- <button pButton icon="pi pi-file" label="Nuevo" (click)="onNuevo()" pTooltip="Nuevo" tooltipPosition="bottom"
+                <!-- <button pButton icon="pi pi-file" label="Nuevo" (click)="onNuevo()" pTooltip="Nuevo" tooltipPosition="bottom"
                             
                             class="font-semibold mt-5 justify-content-center h-3rem w-3rem w-auto bg-blue-500 ml-2"></button> -->
-
             </div>
         </div>
     </form>
@@ -105,18 +103,17 @@
                     <div style="width: 200px">{{data.razonsocial}}</div>
                 </td>
                 <td>{{data.origenopor}}</td>
-                <td>{{data.simbmoneda }} </td>
+                <td>{{data.simbmoneda }}</td>
                 <td>{{ data.monto }}</td>
                 <td>{{data.dueDate}}</td>
                 <td>
-                        <div [ngStyle]="{'width':'100px'}" class="justify-start align-items-center flex">
-                            <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
-                                <i [ngClass]="data.bgicon"></i>
-                            </span>
-                            <span class="mt-1">{{ data.nomlista | uppercase}}</span>
-
-                        </div>
-                    </td>
+                    <div [ngStyle]="{'width':'100px'}" class="justify-start align-items-center flex">
+                        <span class="custom-marker shadow-2 mr-2" [style.backgroundColor]="data.bgcolor">
+                            <i [ngClass]="data.bgicon"></i>
+                        </span>
+                        <span class="mt-1">{{ data.nomlista | uppercase}}</span>
+                    </div>
+                </td>
                 <!-- <td>
                         <div class="flex align-items-center">
                             <span *ngIf="data.nrotareas" pTooltip="Tareas" class="flex align-items-center font-semibold mr-3 text-blue-600"><i class="pi pi-check-square mr-2"></i>{{data.nrotareas}}</span>
@@ -125,18 +122,29 @@
                             <span pTooltip="Fecha Final" class="flex align-items-center font-semibold white-space-nowrap" *ngIf="data.startDate"><i class="pi pi-clock mr-2"></i>{{data.fechafinal | formatoFecha}}</span>
                         </div>
                     </td> -->
-                  <td>
-                        <div class="flex align-items-center m:justify-content-end">
-                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="ver Lead" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            <!-- <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end">
+                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="ver Lead" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="onEditar(data)"></button>
+                        <button
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-check-square"
+                            severity="success"
+                            tooltipPosition="left"
+                            pTooltip="Agregar Acción"
+                            class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"
+                            (click)="agregarAccion(data, 4)"
+                        ></button>
+                        <!-- <button pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="businessCase(data)"></button>
                             <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Quote" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="quote(data)"></button>
                             <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Anexos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="anexos(data, 'B')"></button> -->
 
-                            <!-- <button *ngIf="data.acciones" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
+                        <!-- <button *ngIf="data.acciones" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                                 pTooltip="Transacciones Disponibles" tooltipPosition="left"></button>
                             <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu> -->
-                        </div>
-                    </td> 
+                    </div>
+                </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -161,11 +169,11 @@
         <div class="flex border-round fonthead w-full align-items-center">
             <span class="text-base font-bold mt-2 ml-2">{{tituloDetalle}}</span>
         </div>
-    </div>    
+    </div>
     <app-c-lead-reg [IS_Data]="dataPrc"></app-c-lead-reg>
 </div>
 
 } @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
 <p-toast />
 
- <p-confirmdialog />
+<p-confirmdialog />

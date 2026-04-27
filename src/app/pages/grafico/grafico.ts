@@ -31,6 +31,7 @@ export class Grafico implements OnDestroy {
     platformId = inject(PLATFORM_ID);
     periodo: any;
     resumenEtapas = signal<any[]>([]);
+    perdidoRow = signal<any>(null);
     selectedQ = signal<any[]>([]);
     lstQ = [
         { id: 1, desQ: 'Q1' },
@@ -40,11 +41,17 @@ export class Grafico implements OnDestroy {
     ];
     Vendedor = signal<Users[]>([]);
     idvendedor: number = 0;
+    idperfil: number = constantesLocalStorage.idperfil;
     chartOption!: EChartsOption;
     chartOption2!: EChartsOption;
 tot_cantidad: number = 0;
 tot_monto: number = 0;
 tot_ponderado: number = 0;
+cerradoRow = signal<any>(null);
+forecastCnt = signal<number>(0);
+forecastMonto = signal<number>(0);
+closingRatioCnt = signal<number>(0);
+closingRatioMonto = signal<number>(0);
     
 
     constructor(
@@ -59,8 +66,8 @@ tot_ponderado: number = 0;
         this.annio = this.utilitariosService.obtenerFechaActual();
         this.selectedQ.set(this.lstQ);
         this.periodo = this.utilitariosService.obtenerFechaInicioMes();
-        //this.getBuscar();
-        this.listaVendedor();
+        //this.idvendedor = constantesLocalStorage.idusuario;
+        if (this.idperfil === 4) this.listaVendedor();
         this.getDataFunnel();
     }
 
@@ -182,7 +189,8 @@ tot_ponderado: number = 0;
                 let data = rpta[0].data[0].dataPoints;
                 console.log('obtenerFunnel5...', data);
 
-                const totalSteps = rpta[0].data[0].dataPoints.length;
+                data = data.filter((x: any) => x.name !== 'PERDIDO');
+                const totalSteps = data.length;
                 const dataTransformada = data.map((x: { name: any; value: any; cantidad: any; bgcolor: any  }, index: number) => {
                     return {
                         name: x.name,
@@ -202,10 +210,39 @@ tot_ponderado: number = 0;
                     };
                 });
 
+                // Diamond graphic between CONTACTO and CIERRE
+                const N = data.length;
+                const ciIdx = data.findIndex((x: any) => x.name?.toUpperCase() === 'CONTACTO');
+                const ziIdx = data.findIndex((x: any) => x.name?.toUpperCase() === 'CIERRE');
+                let diamondGraphic: any[] = [];
+                if (ciIdx >= 0 && ziIdx >= 0) {
+                    const ciRow = N - 4 - ciIdx;
+                    const ziRow = N - 1 - ziIdx;
+                    const topRow = Math.min(ciRow, ziRow);
+                    const botRow = Math.max(ciRow, ziRow);
+                    const titleH = 60, funnelH = 140;
+                    const itemH = funnelH / N;
+                    const midY = titleH + ((topRow + 1 + botRow) / 2) * itemH;
+                    // Width of each stage proportional to its funnel value
+                    const funnelHalfW = 500 * 0.30; // 60% funnel width, half = 30% of ~600px estimated
+                    const topDataIdx = N - 1 - topRow;
+                    const botDataIdx = N - 1 - botRow;
+                    const topHalfW = ((topDataIdx + 1) / N) * funnelHalfW;
+                    const botHalfW = ((botDataIdx + 1) / N) * funnelHalfW * 1.3;
+                    const h = (botRow - topRow + 1) * itemH / 2;
+                    diamondGraphic = [{
+                        type: 'group',
+                        left: 'center',
+                        top: midY,
+                        children: [{
+                            type: 'polygon',
+                            shape: { points: [[-topHalfW, -h], [topHalfW, -h], [botHalfW, h], [-botHalfW, h]] },
+                            style: { fill: 'rgba(99, 102, 241, 0.1)', stroke: '#343586', lineWidth: 2 }
+                        }]
+                    }];
+                }
+
                 this.chartOption = {
-                    title: {
-                        text: 'Funnel por Monto'
-                    },
                     tooltip: {
                         trigger: 'item',
                         formatter: (params: any) => {
@@ -236,13 +273,11 @@ tot_ponderado: number = 0;
                             },
                             data: dataTransformada
                         }
-                    ]
+                    ],
+                    graphic: diamondGraphic
                 };
 
                 this.chartOption2 = {
-                    title: {
-                        text: 'Por Cantidad'
-                    },
                     tooltip: {
                         trigger: 'item',
                         formatter: (params: any) => {
@@ -261,7 +296,8 @@ tot_ponderado: number = 0;
                             },
                             data: dataTransformada2
                         }
-                    ]
+                    ],
+                    graphic: diamondGraphic
                 };
             },
             error: (err) => {
@@ -307,12 +343,33 @@ tot_ponderado: number = 0;
 
     getDataFunnel2(objeto:any) {
 
-       
+
         const obtenerFunnel = this.oportunidadService.obtenerFunnel(objeto).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
                 console.log('getDataFunnel2', rpta[0].data[0]);
-                this.resumenEtapas.set(rpta[0].data[0].dataPoints)
+                const dataPoints = (rpta[0].data[0].dataPoints as any[]).map((item: any) => ({
+                    ...item,
+                    ponderado: (item.y ?? 0) === 0 ? 0 : (item.ponderado ?? 0)
+                }));
+                const sinPerdido = dataPoints.filter((item: any) => item.name !== 'PERDIDO').reverse();
+                const perdido = dataPoints.find((item: any) => item.name === 'PERDIDO') ?? null;
+                this.resumenEtapas.set(sinPerdido);
+                this.perdidoRow.set(perdido);
+                const pipelineStates = ['CIERRE', 'PRESENTACION', 'INVESTIGACION', 'CALIFICACION', 'CONTACTO'];
+                const pipelineItems = sinPerdido.filter((item: any) => pipelineStates.includes(item.name?.toUpperCase()));
+                this.tot_cantidad = pipelineItems.reduce((acc: number, item: any) => acc + (item.cantidad ?? 0), 0);
+                this.tot_monto = pipelineItems.reduce((acc: number, item: any) => acc + (item.y ?? 0), 0);
+                this.tot_ponderado = pipelineItems.reduce((acc: number, item: any) => acc + (item.ponderado ?? 0), 0);
+                const cerrado = sinPerdido.find((item: any) => item.name === 'CERRADO') ?? null;
+                const forecastItems = sinPerdido.filter((item: any) => item.name === 'PRESENTACION' || item.name === 'CIERRE');
+                const fCnt = forecastItems.reduce((acc: number, item: any) => acc + (item.cantidad ?? 0), 0);
+                const fMonto = forecastItems.reduce((acc: number, item: any) => acc + (item.y ?? 0), 0);
+                this.cerradoRow.set(cerrado);
+                this.forecastCnt.set(fCnt);
+                this.forecastMonto.set(fMonto);
+                this.closingRatioCnt.set(this.tot_cantidad > 0 && cerrado ? +((cerrado.cantidad / this.tot_cantidad) * 100).toFixed(2) : 0);
+                this.closingRatioMonto.set(this.tot_monto > 0 && cerrado ? +((cerrado.y / this.tot_monto) * 100).toFixed(2) : 0);
             },
             error: (err) => {
                 this.setSpinner(false);

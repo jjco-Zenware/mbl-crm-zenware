@@ -366,7 +366,7 @@ export class Listatareas implements OnInit, OnDestroy {
     }
 
     onEditar(data: any) {
-        
+
         const refMensaje = this.dialogService.open(mTarea, {
             data: data,
             header: 'Editar Tarea',

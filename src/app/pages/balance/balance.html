@@ -23,9 +23,65 @@
         <p-divider />
     </div>
 
-    <p-card >
+    <p-card>
         <p-chart type="bar" [data]="data" [options]="options" class="h-[20rem]" />
     </p-card>
+
+    <!-- @if(listaAccionesDia().length > 0) {
+    <div class="mt-4">
+        <div class="flex align-items-center gap-2 mb-2">
+            <i class="pi pi-calendar text-primary"></i>
+            <span class="font-semibold text-base">Acciones del día {{diaSeleccionado}}</span>
+            <p-tag [value]="listaAccionesDia().length + ' acción' + (listaAccionesDia().length !== 1 ? 'es' : '')" severity="info" />
+        </div>
+        <p-table
+            [value]="listaAccionesDia()"
+            [tableStyle]="{'min-width': '50rem'}"
+            [rowHover]="true"
+            size="small"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:30px" class="bg-teal-50 border-1">N°</th>
+                    <th style="width:180px" class="bg-teal-50 border-1">CLIENTE</th>
+                    <th style="width:180px" class="bg-teal-50 border-1">OPORTUNIDAD</th>
+                    <th style="width:80px"  class="bg-teal-50 border-1">PRIORIDAD</th>
+                    <th style="width:200px" class="bg-teal-50 border-1">PLAN ACCIÓN</th>
+                    <th style="width:80px"  class="bg-teal-50 border-1">TIPO ACCIÓN</th>
+                    <th style="width:180px" class="bg-teal-50 border-1">RESULTADO</th>
+                    <th style="width:100px" class="bg-teal-50 border-1">ESTADO</th>
+                    <th style="width:50px"  class="bg-teal-50 border-1"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                <tr style="line-height:1">
+                    <td style="padding:3px 8px">{{rowIndex + 1}}</td>
+                    <td style="padding:3px 8px">{{data.cliente}}</td>
+                    <td style="padding:3px 8px">{{data.oportunidad}}</td>
+                    <td style="padding:3px 8px">{{data.desprioridad}}</td>
+                    <td style="padding:3px 8px">{{data.descripcion | uppercase}}</td>
+                    <td style="padding:3px 8px">{{data.destipotarea | uppercase}}</td>
+                    <td style="padding:3px 8px">{{data.resultado | uppercase}}</td>
+                    <td style="padding:3px 8px">
+                        <p-tag [value]="data.nomestado" [severity]="getSeverity(data.nomestado)"
+                            [style]="{'font-size':'0.75rem','padding':'2px 8px','min-width':'80px','text-align':'center'}"/>
+                    </td>
+                    <td style="padding:3px 4px">
+                        @if(data.nomestado !== 'COMPLETADO') {
+                        <button pButton pRipple type="button" icon="pi pi-file-edit"
+                            pTooltip="Editar Plan de Acción" tooltipPosition="left"
+                            class="p-button-rounded p-button-text"
+                            (click)="onAccion(data)"></button>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="9">No se encontraron registros.</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+    } -->
 </div>
 
 @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

@@ -12,18 +12,20 @@
     }
 
     .empty {
-        height: 100px;
+       
         border: 2px dashed #ccc;
         display: flex;
         align-items: center;
         justify-content: center;
     }
     .kanban-column {
-        width: 230px;
+        width: 200px;
         background: #ffffff;
         border-radius: 8px;
         padding: 0px;
-        min-height: 500px;
+        min-height: 310px;
+        max-height: calc(100vh - 220px);
+        overflow-y: auto;
     }
 
    

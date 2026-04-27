@@ -7,6 +7,8 @@ import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '../mo
 import { Subscription } from 'rxjs';
 import { OportunidadService } from '../oportunidad/oportunidad.service';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { mAccion } from '../oportunidad/m-acciones/m-accion';
 //import ChartDataLabels from 'chartjs-plugin-datalabels';
 //import { Chart } from 'chart.js';
 
@@ -17,7 +19,7 @@ import { MessageService } from 'primeng/api';
     imports: [CProgressSpinnerComponent, PRIMENG_MODULES],
     templateUrl: './balance.html',
     standalone: true,
-    providers: [MessageService, UtilitariosService]
+    providers: [MessageService, UtilitariosService, DialogService]
 })
 export class Balance {
     $listSubcription: Subscription[] = [];
@@ -34,12 +36,15 @@ export class Balance {
     platformId = inject(PLATFORM_ID);
     periodo: any;
     tot_acciones: number = 0;
+    listaAccionesDia = signal<any[]>([]);
+    diaSeleccionado: number | null = null;
 
     constructor(
         private cd: ChangeDetectorRef,
         private utilitariosService: UtilitariosService,
         private oportunidadService: OportunidadService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        public dialogService: DialogService
     ) {}
 
     ngOnInit() {
@@ -190,9 +195,72 @@ export class Balance {
                             drawBorder: false
                         }
                     }
-                }
+                },
+                // onClick: (_event: any, elements: any[]) => {
+                //     if (elements.length > 0) {
+                //         this.onBarClick(elements[0].index);
+                //     }
+                // }
             };
+
             this.cd.markForCheck();
+        }
+    }
+
+    onBarClick(index: number) {
+        const dia = this.lstMes[index];
+        this.diaSeleccionado = dia;
+        const fecha = new Date(this.periodo.getFullYear(), this.periodo.getMonth(), dia);
+        const objeto = {
+            fechaini: fecha,
+            fechafin: fecha,
+            idusuario: constantesLocalStorage.idusuario,
+            idcliente: 0,
+            idoportunidad: 0,
+            idvendedor: constantesLocalStorage.idusuario
+        };
+        this.setSpinner(true);
+        const $sub = this.oportunidadService.listaAcciones(objeto).subscribe({
+            next: (rpta: any) => {
+                console.log('onBarClick...', rpta);
+                this.setSpinner(false);
+                this.listaAccionesDia.set(rpta);
+                this.cd.markForCheck();
+            },
+            error: (_err) => {
+                this.setSpinner(false);
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: mensajesQuestion.msgErrorGenerico });
+            }
+        });
+        this.$listSubcription.push($sub);
+    }
+
+    getSeverity(nomestado: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
+        switch (nomestado) {
+            case 'COMPLETADO': return 'success';
+            case 'HOY': return 'warn';
+            case 'PENDIENTE': return 'info';
+            case 'VENCIDO': return 'danger';
+            default: return 'info';
+        }
+    }
+
+    onAccion(data: any) {
+        data.tipopro = 2;
+        const ref = this.dialogService.open(mAccion, {
+            data: data,
+            header: 'Editar Acción',
+            styleClass: 'testDialog',
+            closeOnEscape: false,
+            closable: true,
+            width: '35%'
+        });
+        if (ref) {
+            ref.onClose.subscribe(() => {
+                if (this.diaSeleccionado !== null) {
+                    this.onBarClick(this.lstMes.indexOf(this.diaSeleccionado));
+                }
+            });
         }
     }
 }

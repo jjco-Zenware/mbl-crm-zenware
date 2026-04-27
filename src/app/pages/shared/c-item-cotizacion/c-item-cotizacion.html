@@ -1,87 +1,83 @@
-<div class="p-fluid py-0 border-1 surface-border border-round bg-blue-50 col-12 mt-2">
-
+<div class="card">
     <form [formGroup]="frmDatosItem">
-            <div class="flex grid col-12 h-7rem">
-                <div class="col-12 sm:col-12 lg:col-7 md:col-12">
-                    <label class="block text-900 font-semibold">Producto</label>
-                    <p-select [options]="lstTipoProducto()" formControlName="idtipoprod" optionLabel="nomtipoprod"
-                        optionValue="idtipoprod" placeholder="Seleccionar Producto"></p-select>
+        <div class="grid p-3">
+            <!-- Producto + Marca -->
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-1">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold">Producto</label>
+                    <p-select [options]="lstTipoProducto()" formControlName="idtipoprod" optionLabel="nomtipoprod" optionValue="idtipoprod" placeholder="Seleccionar Producto" class="w-full"></p-select>
                 </div>
-                <div class="col-12 sm:col-12 lg:col-5 md:col-12">
-                    <!-- <label class="block text-900 font-semibold">Marca</label> -->
-                    <div class="flex">
-                        <label class="block text-900 font-semibold">Marca</label>
-                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
-                            tooltipPosition="right" (click)="NuevaMarca();"></i>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <div class="flex align-items-center gap-2 mb-1">
+                        <label class="font-semibold">Marca</label>
+                        <i class="pi pi-tag cursor-pointer" pTooltip="Agregar Marca" tooltipPosition="right" (click)="NuevaMarca();"></i>
                     </div>
-                    <p-select [options]="lstMarcas()" formControlName="idmarca" optionLabel="nommarca"
-                        optionValue="idmarca" placeholder="Seleccionar Marca"></p-select>
-                </div>
-            </div>
-            <div class="flex grid col-12 ">
-                <div class="col-12 sm:col-12 lg:col-12 md:col-12">
-                    <label class="font-semibold">Descripción</label>
-                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="3"
-                        style="resize: none" class="w-full mt-1"></textarea>
-                </div>
-            </div>
-            <div class="flex grid col-12 h-7rem ">
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
-                    <label class="font-semibold">N° Serie</label>
-                    <input pInputText type="text" formControlName="serialnumber"/>
-                </div>
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
-                    <label class="font-semibold">SKU</label>
-                    <input pInputText type="text" formControlName="sku"/>
-                </div>
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
-                    <label class="font-semibold">N° Contrato</label>
-                    <input pInputText type="text" formControlName="nrocontrato"/>
-                </div>
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
-                    <label class="font-semibold">N° Meses</label>
-                    <input pInputText type="text" formControlName="nromeses"/>
-                </div>
-            </div>
-            <div class="flex grid col-12 h-7rem ">
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12">
-                    <label class="font-semibold">Cantidad</label>
-                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad"></p-inputNumber>
-                </div>
-                <div class="col-3 sm:col-12 lg:col-3 md:col-12 ">
-                    <label class="font-semibold">Precio Unitario</label>
-                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
-                </div>
-                <div class="col-4 sm:col-12 lg:col-5 md:col-12">
-                    <label class="font-semibold">Total</label>
-                    <p-inputNumber class="surface-100 font-bold" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                    <p-select [options]="lstMarcas()" formControlName="idmarca" optionLabel="nommarca" optionValue="idmarca" placeholder="Seleccionar Marca" class="w-full"></p-select>
                 </div>
             </div>
 
-    </form>
-    <div class="flex justify-content-end flex-wrap p-dialog-footer bg-blue-50">
-        <div class="flex bg-blue-50">
-            <button pButton icon="pi pi-check" label="Agregar" (click)="guardarItem()"
-                class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary -mt-2"></button>
+            <!-- Descripción -->
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-1">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="font-semibold mb-1">Descripción</label>
+                    <textarea pInputTextarea formControlName="descripcion" [rows]="3" style="resize: none" class="w-full"></textarea>
+                </div>
+            </div>
+
+            <!-- N° Serie | SKU | N° Contrato | N° Meses -->
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-1">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">N° Serie</label>
+                    <input pInputText type="text" formControlName="serialnumber" class="w-full" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">SKU</label>
+                    <input pInputText type="text" formControlName="sku" class="w-full" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">N° Contrato</label>
+                    <input pInputText type="text" formControlName="nrocontrato" class="w-full" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">N° Meses</label>
+                    <input pInputText type="text" formControlName="nromeses" class="w-full" />
+                </div>
+            </div>
+
+            <!-- Cantidad | Precio Unitario | Total -->
+            <div class="flex flex-wrap gap-3 lg:w-1/1 mb-1">
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">Cantidad</label>
+                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad" class="w-full"></p-inputNumber>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">Precio Unitario</label>
+                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2" class="w-full"></p-inputNumber>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-1">
+                    <label class="block font-semibold mb-1">Total</label>
+                    <p-inputNumber formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2" class="w-full font-bold"></p-inputNumber>
+                </div>
+            </div>
         </div>
+    </form>
+
+    <div class="flex justify-content-end px-3 pb-3 bg-blue-50">
+        <button pButton icon="pi pi-check" label="Agregar" (click)="guardarItem()" class="p-button-primary"></button>
     </div>
 </div>
 
 <p-dialog [(visible)]="marcaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
-    <p-header styleClass="testDialog"> <i class="pi pi-tag" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
-        <form [formGroup]="registerFormMarca" (ngSubmit)="guardarMarca()">
-            <div class="p-fluid py-4 border-1 surface-border mb-3 bg-blue-50 p-3 border-round mt-2">
-                <div class="mb-3 field">
-                    <label class="font-semibold">Marca</label>
-                    <input pInputText type="text" formControlName="nommarca" id="nommarca"/>
-                    <!-- <p class="text-red-600" *ngIf="submitted && formContacto.nombrecontacto.errors">* Debe ingresar Marca</p> -->
-                </div>
+    <p-header styleClass="testDialog"> <i class="pi pi-tag" style="margin-right: 10px"></i>{{ headerTitle }} </p-header>
+    <form [formGroup]="registerFormMarca" (ngSubmit)="guardarMarca()">
+        <div class="p-fluid border-1 surface-border bg-blue-50 p-3 border-round mt-2 mb-3">
+            <div class="field">
+                <label class="block font-semibold mb-1">Marca</label>
+                <input pInputText type="text" formControlName="nommarca" id="nommarca" class="w-full" />
             </div>
-            <div class="flex justify-content-end">
-                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
-            </div>
-        </form>
+        </div>
+        <div class="flex justify-content-end">
+            <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
+        </div>
+    </form>
 </p-dialog>
-
-
-

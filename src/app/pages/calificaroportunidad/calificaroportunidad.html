@@ -1,0 +1,336 @@
+<p-toast />
+@if(blockedDocument()){
+<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+}
+
+<div class="col-span-12 card">
+    <div class="flex col-12 gap-2 mb-3">
+        <div>
+            <button pButton class="font-semibold p-button-outlined" icon="pi pi-backward" label="Regresar" (click)="getBack()"></button>
+        </div>
+        <div class="flex border-round fonthead w-full align-items-center">
+            <span class="text-base font-bold m-2">CALIFICACIÓN DE OPORTUNIDAD</span>
+        </div>
+    </div>
+    <!-- Header -->
+    <!-- <div>
+        <button pButton class="font-semibold p-button-outlined" icon="pi pi-backward" label="Regresar" (click)="getBack()"></button>
+    </div>
+    <div class="flex justify-between items-center mb-3 fonthead">
+        <div class="flex flex-col m-2">
+            <span class="text-xl font-bold">Calificación de Oportunidades</span>
+        </div>
+    </div> -->
+
+    <p-divider />
+    <div class="flex flex-col gap-2">
+        <div class="flex gap-2">
+            <label class="font-semibold text-blue-800">OPORTUNIDAD: </label>
+            <span>{{ nomoportunidad | uppercase }}</span>
+        </div>
+        <div class="flex gap-2">
+            <label class="font-semibold text-green-700">CLIENTE: </label>
+            <span>{{ nomcliente | uppercase }}</span>
+        </div>
+    </div>
+
+    <p-divider />
+
+    <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0"><i class="pi pi-exclamation-circle mr-1"></i>1. Problema</p-tab>
+            <p-tab value="1"><i class="pi pi-users mr-1"></i>2. Personas</p-tab>
+            <p-tab value="2"><i class="pi pi-file mr-1"></i>3. Proyecto</p-tab>
+            <p-tab value="3"><i class="pi pi-wallet mr-1"></i>4. Presupuesto</p-tab>
+            <p-tab value="4"><i class="pi pi-bolt mr-1"></i>5. Prioridad</p-tab>
+            <p-tab value="5"><i class="pi pi-calendar mr-1"></i>6. Plazos</p-tab>
+            <p-tab value="6"><i class="pi pi-sitemap mr-1"></i>7. Proc. Decisorio</p-tab>
+            <p-tab value="7"><i class="pi pi-flag mr-1"></i>C. Competencia</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <!-- 1. PROBLEMA -->
+            <p-tabpanel value="0">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Coloque una descripción detallada del <strong>Problema de Negocios</strong> del Cliente. Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['problema'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['problema']" rows="8" placeholder="Describir el problema de negocio del cliente..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('problema')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 2. PERSONAS -->
+            <p-tabpanel value="1">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Complete la tabla con las personas involucradas en la oportunidad y documente las 5 dimensiones. Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['personas'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Mapa de Personas</span>
+                        <p-button label="Agregar Persona" icon="pi pi-plus" size="small" (click)="abrirDlgPersona()" />
+                    </div>
+
+                    <p-table [value]="personas()" [tableStyle]="{'min-width':'60rem'}" size="small" [rowHover]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 40px" class="bg-indigo-50">#</th>
+                                <th style="width: 160px" class="bg-indigo-50">Nombre</th>
+                                <th style="width: 140px" class="bg-indigo-50">Cargo</th>
+                                <th style="width: 160px" class="bg-indigo-50">Rol</th>
+                                <th style="width: 220px" class="bg-indigo-50">Perfil</th>
+                                <th style="width: 220px" class="bg-indigo-50">Agenda Personal</th>
+                                <th style="width: 70px" class="bg-indigo-50"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-ri="rowIndex">
+                            <tr>
+                                <td style="padding: 4px 8px">{{ ri + 1 }}</td>
+                                <td style="padding: 4px 8px">{{ row.nombrecontacto }}</td>
+                                <td style="padding: 4px 8px">{{ row.cargo }}</td>
+                                <td style="padding: 4px 8px">
+                                    <p-tag [value]="row.nomtiporol" severity="info" />
+                                </td>
+                                <td style="padding: 4px 8px; white-space: pre-wrap">{{ row.perfil }}</td>
+                                <td style="padding: 4px 8px; white-space: pre-wrap">{{ row.agenda_personal }}</td>
+                                <td style="padding: 4px 8px">
+                                    <div class="flex gap-1">
+                                        <p-button icon="pi pi-pencil" size="small" severity="secondary" [text]="true" (click)="abrirDlgPersona(row)" pTooltip="Editar" />
+                                        <p-button icon="pi pi-trash" size="small" severity="danger" [text]="true" (click)="eliminarPersona(row)" pTooltip="Eliminar" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted-color p-4">Sin personas registradas. Use el botón "Agregar Persona".</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('personas')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 3. PROYECTO -->
+            <p-tabpanel value="2">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Coloque la información que posea del Proyecto para esa oportunidad. Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['proyecto'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['proyecto']" rows="8" placeholder="Describir el proyecto, documentos disponibles, RFI/RFQ/RFP..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('proyecto')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 4. PRESUPUESTO -->
+            <p-tabpanel value="3">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Documente la información del Presupuesto que posea de esta oportunidad. Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['presupuesto'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['presupuesto']" rows="8" placeholder="Describir la situación presupuestaria del cliente..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('presupuesto')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 5. PRIORIDAD -->
+            <p-tabpanel value="4">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Documente la información de <strong>Prioridad</strong> (Razón Apremiante / Razón para Actuar). Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['prioridad'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['prioridad']" rows="8" placeholder="Describir el impacto en el negocio, razones cuantitativas y cualitativas..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('prioridad')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 6. PLAZOS -->
+            <p-tabpanel value="5">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">
+                            Documente las fechas de esta oportunidad. Se recomienda conocer 3 fechas:
+                            <strong>Fecha de Decisión (Cierre)</strong>, <strong>Fecha de Inicio de Proyecto</strong> y <strong>Fecha de Finalización de Proyecto</strong>. Si no posee la información, genere una actividad en el Plan de Acción.
+                        </p>
+                        @for(p of consignas['plazos'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-wrap gap-6">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-semibold text-red-600"> <i class="pi pi-calendar-clock mr-1"></i>Fecha de Decisión (Cierre) </label>
+                            <p-datepicker [(ngModel)]="fec_decision" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" size="small" placeholder="dd/mm/aaaa" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-semibold text-blue-600"> <i class="pi pi-calendar-plus mr-1"></i>Fecha de Inicio de Proyecto </label>
+                            <p-datepicker [(ngModel)]="fec_inicio" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" size="small" placeholder="dd/mm/aaaa" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-semibold text-green-600"> <i class="pi pi-calendar-minus mr-1"></i>Fecha de Finalización de Proyecto </label>
+                            <p-datepicker [(ngModel)]="fec_fin" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" size="small" placeholder="dd/mm/aaaa" />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['plazos']" rows="6" placeholder="Comentarios adicionales sobre plazos y fechas..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('plazos')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- 7. PROCESO DECISORIO -->
+            <p-tabpanel value="6">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">
+                            Documente los pasos o procesos que el cliente tiene para tomar la decisión y otorgar el proyecto o la orden de compra. Si no posee la información, genere una actividad en el Plan de Acción.
+                        </p>
+                        @for(p of consignas['proceso'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['proceso']" rows="8" placeholder="Describir el proceso interno de decisión del cliente..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('proceso')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- C. COMPETENCIA -->
+            <p-tabpanel value="7">
+                <div class="flex flex-col gap-4 p-2">
+                    <p-fieldset legend="Consigna" [toggleable]="true">
+                        <p class="text-sm text-muted-color mb-2">Documente toda la información que tenga de la <strong>situación competitiva</strong> de esta oportunidad. Si no posee la información, genere una actividad en el Plan de Acción.</p>
+                        @for(p of consignas['competencia'].preguntas; track p){
+                        <div class="flex items-start gap-2 mb-1">
+                            <i class="pi pi-angle-right text-primary mt-1"></i>
+                            <span class="text-sm">{{ p }}</span>
+                        </div>
+                        }
+                    </p-fieldset>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold">Notas</label>
+                        <textarea pTextarea [(ngModel)]="notas['competencia']" rows="8" placeholder="Describir competidores, diferenciadores, nivel de acceso al cliente..." class="w-full"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Guardar" icon="pi pi-save" severity="success" (click)="guardarSeccion('competencia')" size="small" />
+                    </div>
+                </div>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>
+
+<!-- Dialog Persona -->
+<p-dialog header="Persona" [(visible)]="dlgPersona" [modal]="true" [style]="{'width':'42rem'}" [closeOnEscape]="true" [closable]="true">
+    @if(personaEditando){
+    <div class="flex flex-col gap-3 pt-2">
+        <div class="flex gap-3">
+            <div class="flex flex-col gap-1 flex-1">
+                <label class="font-semibold">Nombre</label>
+                <input pInputText [(ngModel)]="personaEditando.nombre" placeholder="Nombre completo" />
+            </div>
+            <div class="flex flex-col gap-1 flex-1">
+                <label class="font-semibold">Cargo</label>
+                <input pInputText [(ngModel)]="personaEditando.cargo" placeholder="Cargo / Posición" />
+            </div>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="font-semibold">Rol</label>
+            <p-select [(ngModel)]="personaEditando.rol" [options]="rolesOpciones" optionLabel="label" optionValue="value" placeholder="Seleccionar rol" appendTo="body" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="font-semibold">Perfil</label>
+            <textarea pTextarea [(ngModel)]="personaEditando.perfil" rows="3" placeholder="Características, comportamiento, experiencia..."></textarea>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="font-semibold">Agenda Personal</label>
+            <textarea pTextarea [(ngModel)]="personaEditando.agenda_personal" rows="3" placeholder="Motivaciones, intereses personales, relaciones..."></textarea>
+        </div>
+    </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [text]="true" (click)="dlgPersona = false" />
+        <p-button label="Confirmar" icon="pi pi-check" severity="success" (click)="confirmarPersona()" />
+    </ng-template>
+</p-dialog>

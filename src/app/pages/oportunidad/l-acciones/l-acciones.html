@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-2 p-2">
+
+    @if (listaAcciones().length === 0) {
+        <div class="text-center text-color-secondary py-4">No se encontraron registros.</div>
+    }
+
+    @for (data of listaAcciones(); track data; let i = $index) {
+        <div class="border-1 surface-border border-round p-3 m-0 bg-gray-300">
+            <div class="flex justify-between align-items-center mb-2">
+                <div class="flex align-items-center gap-2">
+                    <span class="text-xs text-color-secondary font-bold">#{{ i + 1 }}</span>
+                    <span class="text-xs text-color-secondary">{{ data.s_fechaini }}</span>
+                    <span class="text-xs font-semibold text-primary">{{ data.desprioridad }}</span>
+                </div>
+                <p-tag
+                    [value]="data.nomestado"
+                    [severity]="getSeverity(data.nomestado)"
+                    [style]="{'font-size': '0.75rem', 'padding': '2px 8px', 'min-width': '80px', 'text-align': 'center'}"
+                ></p-tag>
+            </div>
+            <div class="text-sm font-medium mb-1">{{ data.descripcion | uppercase }}</div>
+            @if (data.resultado) {
+                <!-- <div class="text-sm font-medium mb-1">RESULTADO:</div> -->
+                <div class="text-xs text-color-secondary">{{ data.resultado | uppercase }}</div>
+            }
+        </div>
+    }
+
+</div>
+
+@if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}

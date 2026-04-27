@@ -40,9 +40,10 @@ export class AppMenu {
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-gauge', routerLink: ['/dashboard/dashboard'] },
                     { label: 'Kanban', icon: 'pi pi-fw pi-objects-column', routerLink: ['/kanban/kanban'] },
-                    { label: 'Acciones Pendientes', icon: 'pi pi-fw pi-list', routerLink: ['/oportunidad/oportunidad'], visible: this.idperfil === 2  },
+                    { label: 'Acciones Pendientes', icon: 'pi pi-fw pi-list', routerLink: ['/oportunidad/oportunidad'], visible: this.idperfil === 2 },
                     { label: 'Registro Lead', icon: 'pi pi-fw pi-table', routerLink: ['/lead/lead'], visible: this.idperfil === 2 },
                     { label: 'Oportunidades', icon: 'pi pi-fw pi-list', routerLink: ['/listaopor/listaopor'] },
+                    //{ label: 'Calificación Oportunidad', icon: 'pi pi-fw pi-star', routerLink: ['/n1/n1'], visible: this.idperfil === 2 || this.idperfil === 3 },
                     { label: 'Agenda', icon: 'pi pi-fw pi-calendar', routerLink: ['/agenda/agenda'] },
                     { label: 'Plan de Acción', icon: 'pi pi-fw pi-list', routerLink: ['/accion/accion'], visible: this.idperfil === 2 },
                     //{ label: 'Tareas', icon: 'pi pi-fw pi-list', routerLink: ['/listatarea/listatarea'], visible: this.idperfil === 3 },
@@ -60,7 +61,8 @@ export class AppMenu {
                             {
                                 label: 'Graficos',
                                 icon: 'pi pi-fw pi-chart-line',
-                                routerLink: ['/grafico/grafico']
+                                routerLink: ['/grafico/grafico'],
+                                visible: this.idperfil === 2 || this.idperfil === 4
                             },
                             {
                                 label: 'Balance Actividades',

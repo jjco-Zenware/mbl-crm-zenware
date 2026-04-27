@@ -24,6 +24,7 @@ export const appRoutes: Routes = [
             { path: 'tareaspre', data: { breadcrumb: 'Oportunidad > Actividad > Iniciativa Preventa' }, loadChildren: () => import('./app/pages/tareaspre/tareaspre.routes') },
             { path: 'grafico', data: { breadcrumb: 'Oportunidad > Reportes > Graficos' }, loadChildren: () => import('./app/pages/grafico/grafico.routes') },
             { path: 'listaopor', data: { breadcrumb: 'Oportunidad > Lista de Oportunidades' }, loadChildren: () => import('./app/pages/lista-opor/lista-opor.routes') },
+            //{ path: 'n1', data: { breadcrumb: 'Oportunidad > Calificación de Oportunidades' }, loadChildren: () => import('./app/pages/calificaroportunidad/calificaroportunidad.routes') },
           
         ]
 

@@ -46,6 +46,12 @@
             <form class="p-fluid grid">
                 <div class="flex">
                     <div class="card flex flex-col gap-4 md:w-1/2">
+                        <div class="flex flex-wrap mt-4">
+                            <div class="flex flex-col gap-1">
+                                <label class="block text-900 font-semibold">N° Oportunidad</label>
+                                <input pInputText type="text" [(ngModel)]="frmDatos.id" pSize="small" class="w-auto font-bold" [ngModelOptions]="{standalone: true}" [disabled]="true" />
+                            </div>
+                        </div>
                         <div class="flex flex-wrap">
                             <div class="flex flex-col grow basis-0 gap-1">
                                 <div class="flex">

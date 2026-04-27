@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { UIChart } from 'primeng/chart';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -25,6 +25,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     @Input() IA_data: any;
     @Input() IS_codigo!: number;
     @ViewChild('doughnut') doughnutViewChild!: UIChart;
+    @Output() kpiData = new EventEmitter<{ montoTotal: number}>();
     $listSubcription: Subscription[] = [];
     doughnutData: any;
     doughnutOptions: any
@@ -36,7 +37,16 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     totalCloCie= signal<number>(0);
     totalCloCer= signal<number>(0);
     totalCloPer= signal<number>(0);
+    cntLea= signal<number>(0);
+    cntCon= signal<number>(0);
+    cntCal= signal<number>(0);
+    cntInv= signal<number>(0);
+    cntPre= signal<number>(0);
+    cntCie= signal<number>(0);
+    cntCer= signal<number>(0);
+    cntPer= signal<number>(0);
     totales: number = 0;
+    totalesOport: number = 0;
     //totalCloWon2= signal<number>(0);
     chartOptionsData= signal<number[]>([]);
     chartOptionsLabel= signal<string[]>([]);
@@ -105,7 +115,7 @@ export class CDistOportunidad implements OnInit, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['IA_data']) {
+        if (changes['IA_data'] && this.IA_data?.estadoString) {
             switch (this.IS_codigo) {
                 case 0:
                     this.getDataFunnel(this.IA_data);
@@ -148,7 +158,17 @@ export class CDistOportunidad implements OnInit, OnDestroy {
         this.totalCloCie.set(0);
         this.totalCloCer.set(0);
         this.totalCloPer.set(0);
+        this.cntLea.set(0);
+        this.cntCon.set(0);
+        this.cntCal.set(0);
+        this.cntInv.set(0);
+        this.cntPre.set(0);
+        this.cntCie.set(0);
+        this.cntCer.set(0);
+        this.cntPer.set(0);
         this.totales = data.reduce((acc: any, item: any) => acc + item.y, 0);
+        this.totalesOport = data.reduce((acc: any, item: any) => acc + item.cantidad, 0);
+        this.kpiData.emit({ montoTotal: this.totales, });
         this.chartOptionsLabel.set([]);
         this.chartOptionsData.set([]);
         this.chartOptionscolor.set([]);
@@ -159,29 +179,40 @@ export class CDistOportunidad implements OnInit, OnDestroy {
             if (this.IS_codigo === 0) {
                 if (item.name === 'LEAD') {
                     this.totalCloLea.set(item.y);
+                    this.cntLea.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'CONTACTO') {
                     this.totalCloCon.set(item.y);
+                    this.cntCon.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'CALIFICACION') {
                     this.totalCloCal.set(item.y);
+                    this.cntCal.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'INVESTIGACION') {
                     this.totalCloInv.set(item.y);
+                    this.cntInv.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'PRESENTACION') {
                     this.totalCloPre.set(item.y);
+                    this.cntPre.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'CIERRE') {
                     this.totalCloCie.set(item.y);
+                    this.cntCie.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'PERDIDO') {
                     this.totalCloPer.set(item.y);
+                    this.cntPer.set(item.cantidad ?? 0);
                 }
                 if (item.name === 'CERRADO') {
                     this.totalCloCer.set(item.y);
+                    this.cntCer.set(item.cantidad ?? 0);
                 }
+
+               
             }
+            
         });
         this.doughnutChartInit();
     }

@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { mAccion } from './m-acciones/m-accion';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CLeadReg } from '../lead/lead-reg/lead-reg';
+import { lAcciones } from './l-acciones/l-acciones';
 
 @Component({
     selector: 'app-oportunidad',
@@ -71,6 +72,9 @@ export class Oportunidad {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (rpta: any) => {
+
+                    console.log('cargarOportunidades...', rpta);
+
                     this.setSpinner(false);
                     if (rpta !== null) {
                         const hoy = new Date();
@@ -80,7 +84,12 @@ export class Oportunidad {
                         });
                         this.opor_pendiente = filtrado.length;
                         this.opor_total = rpta.length;
-                        this.lstOportunidades.set(filtrado);
+                        const sorted = [...rpta].sort((a: any, b: any) => {
+                            const aHoy = this.isHoy(a.fecplan) ? 0 : 1;
+                            const bHoy = this.isHoy(b.fecplan) ? 0 : 1;
+                            return aHoy - bHoy;
+                        });
+                        this.lstOportunidades.set(sorted);
                     }
                 },
                 error: (err) => {
@@ -95,12 +104,18 @@ export class Oportunidad {
             });
     }
 
-    onAccion(data: any) {
-        data.tipopro = 1
-        data.idtarea = 0
+    onAccion(data: any, tipo: number) {
+        console.log('data...', data);
+        data.tipopro = tipo;
+        if (tipo === 1) {
+            data.idtarea = 0
+        }
+
+        console.log('onAccion...', data.idtarea);
+
         const ref = this.dialogService.open(mAccion, {
             data: data,
-            header: 'Configurar Acción',
+            header: tipo === 1 ? 'Gestionar Acción' : 'Culminar Acción',
             styleClass: 'testDialog',
             closeOnEscape: false,
             closable: true,
@@ -108,8 +123,14 @@ export class Oportunidad {
         });
 
         if (ref) {
-            ref.onClose.subscribe(() => {
+            ref.onClose.subscribe((rpta: any) => {
                 this.cargarOportunidades();
+                console.log('onClose', rpta);
+                // if (rpta != undefined) {
+                //     ref.onClose.subscribe(() => {
+                //         this.cargarOportunidades();
+                //     });
+                // }
             });
         }
     }
@@ -125,4 +146,33 @@ export class Oportunidad {
         this.visMntOportunidad = false;
         this.cargarOportunidades();
     }
+
+    isHoy(fecplan: string): boolean {
+        if (!fecplan) return false;
+        const hoy = new Date();
+        const fecha = new Date(this.utilitariosService.formatFecha(fecplan));
+        return fecha.getFullYear() === hoy.getFullYear() && fecha.getMonth() === hoy.getMonth() && fecha.getDate() === hoy.getDate();
+    }
+
+    verAcciones(dato: any) {
+        console.log('verAcciones', dato);
+        const ref = this.dialogService.open(lAcciones, {
+            data: dato,
+            header: dato.title,
+            styleClass: 'testDialog',
+            closeOnEscape: false,
+            closable: true,
+            width: '25%'
+        });
+
+        if (ref) {
+            ref.onClose.subscribe(() => {
+                //this.cargarOportunidades();
+            });
+        }
+    }
+
+    //  onNuevo() {
+        
+    // }
 }

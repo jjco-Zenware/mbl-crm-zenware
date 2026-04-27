@@ -38,6 +38,7 @@ export interface I_respuestaGeneral {
 export interface I_ConfirmDialog {
     message?: string;
     header?: string;
+    icon?: string;
     rejectButtonStyleClass?: string;
     acceptButtonStyleClass?: string;
     acceptLabel?: string;

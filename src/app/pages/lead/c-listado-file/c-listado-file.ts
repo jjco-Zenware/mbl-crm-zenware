@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { LeadService } from '../lead.services';
 import { PRIMENG_MODULES } from '../../shared/primeng_modules';
 import { CProgressSpinnerComponent } from '../../shared/c-progress-spinner/c-progress-spinner.component';
@@ -17,7 +17,7 @@ import { I_RespuestaProceso } from '../../model/interfaces';
     imports: [PRIMENG_MODULES, CProgressSpinnerComponent],
     templateUrl: './c-listado-file.html',
     standalone: true,
-    providers: [MessageService, UtilitariosService, ShareService, ConfirmationService, SharedAppService]
+    providers: [MessageService, UtilitariosService, ShareService, SharedAppService]
 })
 export class CListadoFile implements OnInit, OnDestroy {
     @Input() I_CodCotiza: number = 0;
@@ -44,7 +44,6 @@ export class CListadoFile implements OnInit, OnDestroy {
         public ref: DynamicDialogRef,
         public config: DynamicDialogConfig,
         private leadService: LeadService,
-        private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private serviceSharedApp: SharedAppService
     ) {
@@ -70,8 +69,9 @@ export class CListadoFile implements OnInit, OnDestroy {
         if (this.I_Quote === 2) {
             this.data.codtipoproc = 2;
             this.data.idoportunidad = this.data.data.idoportunidad;
-            //this.data.idnroproceso = this.data.data.idcotiza;
+            this.data.idnroproceso = this.data.data.idcotiza;
             this.data.parametro = 'B';
+            this._idnroproceso = this.data.data.idcotiza
         }
 
         if (this.data.idindicador === 3) {
@@ -184,137 +184,57 @@ export class CListadoFile implements OnInit, OnDestroy {
     }
 
     async deleteArchivo(idmovasset: number) {
-        console.log('deleteArchivo : ', this.data.parametro);
-        if (this.data.parametro === 'B') {
-            console.log('desde bandeja : entro...', this.data.parametro);
-            const rpta = await this.serviceSharedApp.confirmDialog({ message: '¿Desea Eliminar Adjunto?' });
-            if (!rpta) return;
+        const rpta = await this.serviceSharedApp.confirmDialog({ message: '¿Desea Eliminar Adjunto?' });
+        if (!rpta) return;
 
-            const $eliminarArchivo = this.leadService.eliminarArchivo({ idmovasset }).subscribe({
-                next: (rpta: I_RespuestaProceso) => {
-                    console.log('eliminar archivo : ', rpta);
-                    this.serviceSharedApp.messageToast({
-                        severity: rpta.procesoSwitch == respuestaProceso.ConExito ? 'success' : 'info',
-                        summary: rpta.procesoSwitch == respuestaProceso.ConExito ? 'Exito' : 'Aviso',
-                        detail: rpta.mensaje
-                    });
-                    this.Listar();
-                    //this.getListaArchivos();
-                },
-                error: (err) => {
-                    //this.setSpinner(false);
-                    this.serviceSharedApp.messageToast();
-                },
-                complete: () => {}
-            });
-            this.$listSubcription.push($eliminarArchivo);
-        } else {
-            this.confirmationService.confirm({
-                key: 'confirm1',
-                header: 'Confirmación',
-                message: '¿Estás seguro de Eliminar el Adjunto?...',
-                accept: () => {
-                    const $eliminarArchivo = this.leadService.eliminarArchivo({ idmovasset }).subscribe({
-                        next: (rpta: I_RespuestaProceso) => {
-                            console.log('eliminar archivo : ', rpta);
-                            this.serviceSharedApp.messageToast({
-                                severity: rpta.procesoSwitch == respuestaProceso.ConExito ? 'success' : 'info',
-                                summary: rpta.procesoSwitch == respuestaProceso.ConExito ? 'Exito' : 'Aviso',
-                                detail: rpta.mensaje
-                            });
-                            this.Listar();
-                            //this.getListaArchivos();
-                        },
-                        error: (err) => {
-                            //this.setSpinner(false);
-                            this.serviceSharedApp.messageToast();
-                        },
-                        complete: () => {}
-                    });
-                    this.$listSubcription.push($eliminarArchivo);
-                }
-            });
-        }
+        const $eliminarArchivo = this.leadService.eliminarArchivo({ idmovasset }).subscribe({
+            next: (rpta: I_RespuestaProceso) => {
+                this.serviceSharedApp.messageToast({
+                    severity: rpta.procesoSwitch == respuestaProceso.ConExito ? 'success' : 'info',
+                    summary: rpta.procesoSwitch == respuestaProceso.ConExito ? 'Exito' : 'Aviso',
+                    detail: rpta.mensaje
+                });
+                this.Listar();
+            },
+            error: (err) => {
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {}
+        });
+        this.$listSubcription.push($eliminarArchivo);
     }
 
     async download(dato: any) {
-        if (this.data.parametro === 'B') {
-            const rpta = await this.serviceSharedApp.confirmDialog({ message: '¿Desea Descargar Adjunto?' });
-            if (!rpta) return;
+        const rpta = await this.serviceSharedApp.confirmDialog({ message: '¿Desea Descargar Adjunto?' });
+        if (!rpta) return;
 
-            const objeto = {
-                idoportunidad: dato.idoportunidad,
-                urlasset: dato.urlasset
-            };
-            const $downloadArchivo = this.leadService.downloadArchivo(objeto).subscribe({
-                next: (rpta: any) => {
-                    console.log('download archivo : ', rpta);
+        const objeto = {
+            idoportunidad: dato.idoportunidad,
+            urlasset: dato.urlasset
+        };
+        const $downloadArchivo = this.leadService.downloadArchivo(objeto).subscribe({
+            next: (rpta: any) => {
+                const blob = new Blob([rpta.body], { type: rpta.body.type || 'application/octet-stream' });
+                const filename = dato.nomasset;
 
-                    const mediaType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                    const blob = new Blob([rpta.body], { type: mediaType });
-                    const filename = dato.nomasset;
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
 
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.target = '_blank';
-                    a.click();
-
-                    setTimeout(() => {
-                        document.body.removeChild(a);
-                        window.URL.revokeObjectURL(url);
-                    }, 100);
-                },
-                error: (err) => {
-                    //this.setSpinner(false);
-                    this.serviceSharedApp.messageToast();
-                },
-                complete: () => {}
-            });
-            this.$listSubcription.push($downloadArchivo);
-        } else {
-            this.confirmationService.confirm({
-                key: 'confirm1',
-                header: 'Confirmación',
-                message: '¿Estás seguro de Descargar el Adjunto?...',
-                accept: () => {
-                    const objeto = {
-                        idoportunidad: dato.idoportunidad,
-                        urlasset: dato.urlasset
-                    };
-                    const $downloadArchivo = this.leadService.downloadArchivo(objeto).subscribe({
-                        next: (rpta: any) => {
-                            console.log('download archivo : ', rpta);
-
-                            const mediaType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                            const blob = new Blob([rpta.body], { type: mediaType });
-                            const filename = dato.nomasset;
-
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.target = '_blank';
-                            a.click();
-
-                            setTimeout(() => {
-                                document.body.removeChild(a);
-                                window.URL.revokeObjectURL(url);
-                            }, 100);
-                        },
-                        error: (err) => {
-                            //this.setSpinner(false);
-                            this.serviceSharedApp.messageToast();
-                        },
-                        complete: () => {}
-                    });
-                    this.$listSubcription.push($downloadArchivo);
-                }
-            });
-        }
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            },
+            error: (err) => {
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {}
+        });
+        this.$listSubcription.push($downloadArchivo);
     }
 
     onUpload(event: any, fubauto: any) {

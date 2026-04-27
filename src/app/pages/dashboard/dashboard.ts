@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { PRIMENG_MODULES } from '../shared/primeng_modules';
 import { Subscription } from 'rxjs';
 import { Users } from '../model/interfaces';
@@ -71,12 +71,23 @@ export class Dashboard implements OnInit, OnDestroy {
     ];
 
     lstNotificacion: any;
-    completos: number = 0;
-    pendientes: number = 0;
+    completos = signal<number>(0);
+    pendientes = signal<number>(0);
+    totalOportunidades = signal<number>(0);
+    montoTotalOportunidades = signal<number>(0);
+    montoTotalOporCierre = signal<number>(0);
+    montoTotalOporPerdi = signal<number>(0);
     porcierre: number = 0;
     idtipoprod: number = 0;
     lstTipoProducto = signal<any[]>([]);
     idmonto: number = 0;
+
+    activeFilterCount = computed(() => {
+        let count = 0;
+        if (this.selectedEstados().length > 0 && this.selectedEstados().length < this.events().length) count++;
+        if (this.selectedQ().length < this.lstQ.length) count++;
+        return count;
+    });
 
     constructor(
         private messageService: MessageService,
@@ -99,6 +110,7 @@ export class Dashboard implements OnInit, OnDestroy {
         
         this.annio = this.utilitariosService.obtenerFechaActual();
         this.selectedQ.set(this.lstQ);
+        this.lstCantTareas();
         this.getListakanban();
         this.listaClientes();
         this.listaProveedor();
@@ -110,7 +122,6 @@ export class Dashboard implements OnInit, OnDestroy {
             { id: 'P', name: 'SECTOR PRIVADO' },
             { id: 'E', name: 'SECTOR PÚBLICO' }
         ]);
-        this.consultarData();
     }
 
     ngOnDestroy() {
@@ -292,17 +303,39 @@ export class Dashboard implements OnInit, OnDestroy {
     }
 
     lstCantTareas() {
-        this.completos = 0;
-        this.pendientes = 0;
+        this.completos.set(0);
+        this.pendientes.set(0);
         const usuario = constantesLocalStorage.idperfil === 4 ? this.idvendedor : constantesLocalStorage.idusuario;
         const sub = this.kanbanService.lstCantTareas({ annio: this.annio.getFullYear(), idusuario: usuario }).subscribe({
             next: (rpta: any) => {
-                this.completos = rpta[0].completo;
-                this.pendientes = rpta[1].completo;
+                this.completos.set(rpta[0].completo);
+                this.pendientes.set(rpta[1].completo);
             },
             error: (err) => console.error('lstCantTareas error:', err)
         });
         this.$listSubcription.push(sub);
+    }
+
+    onKpiData(data: { total: number}) {
+        this.totalOportunidades.set(data.total);
+    }
+
+    limpiarFiltros() {
+        this.selectedEstados.set(this.events());
+        this.selectedQ.set(this.lstQ);
+        this.porcierre = 0;
+        this.idmonto = 0;
+        this.idtipoprod = 0;
+        this.idcliente = 0;
+        this.tipoentidad = 'T';
+        this.idvendedor = 0;
+        this.idpreventa = 0;
+        this.annio = this.utilitariosService.obtenerFechaActual();
+    }
+
+    onKpiDataMto(data: { montoTotal: number}) {
+        console.log('onKpiDataMto...', data);
+        this.montoTotalOportunidades.set(data.montoTotal);
     }
 
     listaTipoProducto() {

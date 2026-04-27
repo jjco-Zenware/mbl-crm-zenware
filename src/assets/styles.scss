@@ -11,15 +11,26 @@ html {
     background:var(--primary-color);
     color: #ffffff;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   //estilos del header de p-table
   .p-datatable thead th {
-    background: linear-gradient(180deg, #ffffff, #e1e4eb);
+    background: linear-gradient(180deg, #ffffff, #d8dff0);
     color: #222429;
     border-bottom: 1px solid #c0d4dd;
     font-size: 9px;
+  }
+
+  .p-datatable tbody td {
+    font-size: 8px;
+    border: 1px solid #e2e8f0;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .p-datatable thead th {
+    border: 1px solid #c0d4dd;
   }
 
   //colorel calendario
@@ -54,5 +65,71 @@ html {
   white-space: normal;
   text-align: left;
   font-size: 1rem;
+}
+
+.zw-confirm-dialog {
+  border-radius: 1.4rem !important;
+  overflow: hidden;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.24) !important;
+
+  .p-dialog-header {
+    background: var(--primary-color);
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+
+    .p-dialog-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    .p-dialog-header-icons .p-dialog-header-icon {
+      color: rgba(255, 255, 255, 0.8);
+
+      &:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 2.4rem 2.4rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    background: #ffffff;
+
+    .p-confirm-dialog-icon {
+      font-size: 3.2rem;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+
+    .p-confirm-dialog-message {
+      font-size: 1.4rem;
+      line-height: 1.7;
+      color: #374151;
+    }
+  }
+
+  .p-dialog-footer {
+    padding: 1.2rem 2rem 1.8rem;
+    border-top: 1px solid #e5e7eb;
+    background: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+
+    .p-button {
+      border-radius: 0.8rem !important;
+      font-weight: 600;
+      font-size: 1.2rem;
+      padding: 0.6rem 1.6rem;
+      min-width: 9rem;
+    }
+  }
 }
 }

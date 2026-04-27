@@ -60,13 +60,20 @@
                     <p-select [options]="lstMonedas()" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda" size="small"></p-select>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-1">
-                    
-                     <div class="flex">
+                    <div class="flex">
                         <label class="font-semibold">Proveedor</label>
                         <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px" pTooltip="Nuevo Proveedor" tooltipPosition="right" (click)="NuevoProveedor();"></i>
                     </div>
-                    <p-select [options]="lstProveedores()" placeholder="Seleccionar Proveedor" formControlName="idproveedor" optionLabel="razonsocial" optionValue="idcliente" 
-                    size="small" [filter]="true" (onChange)="getContactos2($event.value)"></p-select>
+                    <p-select
+                        [options]="lstProveedores()"
+                        placeholder="Seleccionar Proveedor"
+                        formControlName="idproveedor"
+                        optionLabel="razonsocial"
+                        optionValue="idcliente"
+                        size="small"
+                        [filter]="true"
+                        (onChange)="getContactos2($event.value)"
+                    ></p-select>
                 </div>
             </div>
 
@@ -83,7 +90,7 @@
         <div class="flex flex-col grow basis-0 gap-1">
             <div class="flex">
                 <label class="font-semibold mb-3">Contactos Proveedor</label>
-                 <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event);"></i>
+                <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event);"></i>
             </div>
             <p-autoComplete
                 name="contacs"
@@ -99,12 +106,16 @@
             >
                 <ng-template let-contac pTemplate="selectedItem">
                     <div class="flex align-items-center gap-3 border-round">
-                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" (click)="op2.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer" />
+                        <p-avatar image="{{ contac.image }}" shape="circle" (click)="op2.toggle($event)" class="cursor-pointer"></p-avatar>
+
+                        <!-- <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" (click)="op2.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer" /> -->
                         <span class="text-900">{{contac.nombrecontacto}}</span>
                         <p-popover #op2>
                             <div>
                                 <div class="flex">
-                                    <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" class="h-3rem w-3rem border-2 border-circle surface-border mr-2" />
+                                    <p-avatar image="{{ contac.image }}" shape="circle"></p-avatar>
+
+                                    <!-- <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.image" class="h-3rem w-3rem border-2 border-circle surface-border mr-2" /> -->
                                     <div>
                                         <span class="text-900 font-semibold">{{contac.nombrecontacto}}</span>
                                         <br />
@@ -131,7 +142,9 @@
                 </ng-template>
                 <ng-template let-contac pTemplate="item">
                     <div class="flex align-items-center border-round">
-                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" class="h-2rem w-2rem border-2 border-circle surface-border mr-2" />
+                        <p-avatar image="{{ contac.image }}" shape="circle"></p-avatar>
+
+                        <!-- <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" class="h-2rem w-2rem border-2 border-circle surface-border mr-2" /> -->
                         <span class="text-900">{{contac.nombrecontacto}}</span>
                     </div>
                 </ng-template>
@@ -144,7 +157,7 @@
     <p-tabs lazy value="0">
         <p-tablist>
             <p-tab value="0">Items</p-tab>
-            <p-tab value="1">Documentos</p-tab>
+            <p-tab value="1" [disabled]="visibleDocument()">Documentos</p-tab>
         </p-tablist>
         <p-tabpanels>
             <p-tabpanel value="0">
@@ -156,7 +169,7 @@
                     <!-- <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" (uploadHandler)="ReadExcel($event, fubauto)" [auto]="true" chooseIcon="pi pi-cloud-download" class="text-sm ml-3" pTooltip="Importar Archivo">
                     </p-fileUpload> -->
                 </div>
-                <p-table [value]="lstCotizacionItem()" class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm">
+                <p-table [value]="lstCotizacionItem()" class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" >
                     <ng-template pTemplate="header">
                         <tr>
                             <th class="surface-200">Producto</th>
@@ -211,9 +224,7 @@
 </div>
 
 @if(blockedDocument()){<app-c-progress-spinner [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>}
-<p-confirmDialog header="Confirmation" key="confirm3" [style]="{width: '450px'}" acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-danger"></p-confirmDialog>
-
-
+<p-confirmDialog styleClass="zw-confirm-dialog" key="confirm3" [style]="{width: '30rem'}"></p-confirmDialog>
 
 <p-dialog [(visible)]="proveedorVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '45vw'}" [breakpoints]="{'960px': '85vw'}">
     <p-header> <i class="pi pi-user" style="margin-right: 10px"></i> {{ headerTitle }} </p-header>
@@ -297,13 +308,13 @@
     </form>
 </p-dialog>
 
-<p-dialog [(visible)]="contactoVisible" [modal]="true" [closeOnEscape]="false" [style]="{width: '20vw'}" >
+<p-dialog [(visible)]="contactoVisible" [modal]="true" [closeOnEscape]="false" [style]="{width: '20vw'}">
     <ng-template #header>
         <div class="inline-flex items-center justify-center gap-2">
             <i class="pi pi-user" style="margin-right: 10px"></i>
             <span class="font-bold whitespace-nowrap">{{ headerTitle }}</span>
         </div>
-    </ng-template>   
+    </ng-template>
 
     <form [formGroup]="registerFormContacto" (ngSubmit)="guardarContacto()">
         <div class="p-fluid py-4 border-1 surface-border mb-3 bg-blue-50 p-3 border-round mt-2">
@@ -333,5 +344,4 @@
             <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
         </div>
     </form>
-
 </p-dialog>
